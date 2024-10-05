@@ -2,56 +2,59 @@
 left to right direction
 
 ' Definir a Homepage fora de qualquer pacote
-[Homepage]
+[Homepage (UI01)]
 
 package "Static Pages" {
-    [About (FR.061)] --> [Homepage]
-    [Services (FR.062)] --> [Homepage]
-    [FAQ] --> [Homepage]
-    [Contact Us (FR.063)] --> [Homepage]
+    [About (UI02)] --> [Homepage (UI01)]
+    [Services (UI03)] --> [Homepage (UI01)]
+    [FAQ (UI04)] --> [Homepage (UI01)]
+    [Contact Us (UI05)] --> [Homepage (UI01)]
 }
 
 package "User Pages" {
-    [Login (FR.011)] --> [Homepage]
-    [Registration (FR.012)] --> [Homepage]
-    [Password Recovery (FR.013)] --> [Homepage]
-    collections "User Profile (FR.021)" as prof
-    prof --> [Homepage]
-    [Edit Profile (FR.022)] --> prof
+    [Login (UI06)] --> [Homepage (UI01)]
+    [Registration (UI07)] --> [Homepage (UI01)]
+    [Password Recovery (UI08)] --> [Homepage (UI01)]
+    collections "User Profile (UI09)" as prof
+    prof --> [Homepage (UI01)]
+    [Edit Profile (UI10)] --> prof
+    [Followed Auctions (UI11)] --> prof
+    [Add Credit (UI12)] --> prof
+    [Create Auction (UI13)] --> prof
 }
 
 package "Admin Pages" {
-    [Administration (FR.015)] --> [Homepage]
-    [Manage Auctions (FR.601)] --> [Administration (FR.015)]
-    [Manage Reports (FR.611)] --> [Administration (FR.015)]
-    [Category Management (FR.612)] --> [Administration (FR.015)]
-    [User Management (FR.42)] --> [Administration (FR.015)]
+    [Administration (UI14)] --> [Homepage (UI01)]
+    [Manage Auctions (UI15)] --> [Administration (UI14)]
+    [Manage Reports (UI16)] --> [Administration (UI14)]
+    [Category Management (UI17)] --> [Administration (UI14)]
+    [User Management (UI18)] --> [Administration (UI14)]
 }
 
-package "Item Library" {
-    collections "Items Catalog (FR.101)" as icat
-    icat --> [Homepage]
-    [Search (FR.104)] --> [Homepage]
-    [Item Management (FR.13)] --> icat
-    [Item Details (FR.11)] --> icat
-    [Auction Creation (FR.201)] --> icat
-    [Followed Auctions (FR.203)] --> icat
-    collections "Bidding History (FR.204)" as bid_hist 
+package "Auction Library" {
+    collections "View Auction (UI19)" as icat
+    collections "View Category (UI20)" as vcat
+    vcat --> [Homepage (UI01)]
+    icat --> [Homepage (UI01)]
+    [Search (UI21)] --> [Homepage (UI01)]
+    [Auction Details (UI22)] --> icat
+    [Bidding History (UI23)] as bid_hist 
     bid_hist --> icat
-    collections "My Auctions (FR.205)" as myauc
-    myauc --> icat
-    [Add Credit (FR.206)] --> icat
-    [Report (FR.211)] --> icat
+    [Report (UI24)] --> icat
 }
 
 package "Auction Owner Pages" {
-    [Edit Auction (FR.401)] --> myauc
-    [Manage Auction Status (FR.402)] --> myauc
-    [Cancel Auction (FR.403)] --> myauc
+    collections "My Auctions (UI25)" as myauc
+    myauc --> prof
+    [Edit Auction (UI26)] --> myauc
+    [Manage Auction Status (UI27)] --> myauc
+    [Cancel Auction (UI28)] --> myauc
+    [Auction Management (UI29)] --> myauc
 }
 
 package "Bidder Pages" {
-    [View Auction Bidding History (FR.302)] --> icat
+    [View Auction Bidding History (UI30)] --> icat
+    [Bid on Auction (UI31)] --> icat
 }
 
 @enduml
