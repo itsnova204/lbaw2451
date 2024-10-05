@@ -1,0 +1,57 @@
+@startuml sitemap
+left to right direction
+
+' Definir a Homepage fora de qualquer pacote
+[Homepage]
+
+package "Static Pages" {
+    [About (FR.061)] --> [Homepage]
+    [Services (FR.062)] --> [Homepage]
+    [FAQ] --> [Homepage]
+    [Contact Us (FR.063)] --> [Homepage]
+}
+
+package "User Pages" {
+    [Login (FR.011)] --> [Homepage]
+    [Registration (FR.012)] --> [Homepage]
+    [Password Recovery (FR.013)] --> [Homepage]
+    collections "User Profile (FR.021)" as prof
+    prof --> [Homepage]
+    [Edit Profile (FR.022)] --> prof
+}
+
+package "Admin Pages" {
+    [Administration (FR.015)] --> [Homepage]
+    [Manage Auctions (FR.601)] --> [Administration (FR.015)]
+    [Manage Reports (FR.611)] --> [Administration (FR.015)]
+    [Category Management (FR.612)] --> [Administration (FR.015)]
+    [User Management (FR.42)] --> [Administration (FR.015)]
+}
+
+package "Item Library" {
+    collections "Items Catalog (FR.101)" as icat
+    icat --> [Homepage]
+    [Search (FR.104)] --> [Homepage]
+    [Item Management (FR.13)] --> icat
+    [Item Details (FR.11)] --> icat
+    [Auction Creation (FR.201)] --> icat
+    [Followed Auctions (FR.203)] --> icat
+    collections "Bidding History (FR.204)" as bid_hist 
+    bid_hist --> icat
+    collections "My Auctions (FR.205)" as myauc
+    myauc --> icat
+    [Add Credit (FR.206)] --> icat
+    [Report (FR.211)] --> icat
+}
+
+package "Auction Owner Pages" {
+    [Edit Auction (FR.401)] --> myauc
+    [Manage Auction Status (FR.402)] --> myauc
+    [Cancel Auction (FR.403)] --> myauc
+}
+
+package "Bidder Pages" {
+    [View Auction Bidding History (FR.302)] --> icat
+}
+
+@enduml
