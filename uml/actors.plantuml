@@ -1,16 +1,14 @@
 @startuml actors
-actor "Guest User" as Guest
-actor "Registered User" as User
+actor "Authenticated User" as User
 actor "Auction Owner" as Owner
 actor "Bidder" as Bidder
 actor "Administrator" as Admin
-actor "OAuth2 API" as Api
 actor "User" as SUser
-actor "System (Scheduler)" as System
-
+actor "Guest User" as Guest
 SUser <|-- User
 User <|-- Owner
 User <|-- Bidder
+SUser <|-- Admin
 SUser <|-- Guest
 
 @enduml
