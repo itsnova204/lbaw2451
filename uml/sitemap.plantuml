@@ -18,6 +18,9 @@ package "User Pages" {
     collections "User Profile (FR.021)" as prof
     prof --> [Homepage]
     [Edit Profile (FR.022)] --> prof
+    [Followed Auctions (FR.203)] --> prof
+    [Add Credit (FR.206)] --> prof
+    [Create Auction (FR.201)] --> prof
 }
 
 package "Admin Pages" {
@@ -28,30 +31,30 @@ package "Admin Pages" {
     [User Management (FR.42)] --> [Administration (FR.015)]
 }
 
-package "Item Library" {
-    collections "Items Catalog (FR.101)" as icat
+package "Auction Library" {
+    collections "View Auction (FR.101)" as icat
+    collections "View Category (FR.999)" as vcat
+    vcat --> [Homepage]
     icat --> [Homepage]
     [Search (FR.104)] --> [Homepage]
-    [Item Management (FR.13)] --> icat
-    [Item Details (FR.11)] --> icat
-    [Auction Creation (FR.201)] --> icat
-    [Followed Auctions (FR.203)] --> icat
-    collections "Bidding History (FR.204)" as bid_hist 
+    [Auction Details (FR.11)] --> icat
+    [Bidding History (FR.204)] as bid_hist 
     bid_hist --> icat
-    collections "My Auctions (FR.205)" as myauc
-    myauc --> icat
-    [Add Credit (FR.206)] --> icat
     [Report (FR.211)] --> icat
 }
 
 package "Auction Owner Pages" {
+    collections "My Auctions (FR.205)" as myauc
+    myauc --> prof
     [Edit Auction (FR.401)] --> myauc
     [Manage Auction Status (FR.402)] --> myauc
     [Cancel Auction (FR.403)] --> myauc
+    [Auction Management (FR.13)] --> myauc
 }
 
 package "Bidder Pages" {
     [View Auction Bidding History (FR.302)] --> icat
+    [Bid on Auction] --> icat
 }
 
 @enduml
