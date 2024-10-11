@@ -1,3 +1,99 @@
-@startuml ClassDiagram
+@startuml
+entity User {
+  +User_ID : int
+  --
+  Username : varchar
+  Email : varchar
+  Password : varchar
+  Role : enum
+  Registration_Date : date
+  Profile_Picture : varchar
+}
+
+entity Auction {
+  +Auction_ID : int
+  --
+  Title : varchar
+  Description : varchar
+  Category_ID : int
+  Owner_ID : int
+  Start_Date : date
+  End_Date : date
+  Status : enum
+  Current_Bid : decimal
+  Minimum_Bid : decimal
+}
+
+entity Category {
+  +Category_ID : int
+  --
+  Category_Name : varchar
+}
+
+entity Bid {
+  +Bid_ID : int
+  --
+  Auction_ID : int
+  Bidder_ID : int
+  Bid_Amount : decimal
+  Bid_Time : datetime
+}
+
+entity Rating {
+  +Rating_ID : int
+  --
+  Auction_ID : int
+  Rater_ID : int
+  Rated_User_ID : int
+  Rating_Score : int
+  Rating_Comment : text
+  Rating_Date : date
+}
+
+entity Comment {
+  +Comment_ID : int
+  --
+  Auction_ID : int
+  User_ID : int
+  Comment_Text : text
+  Comment_Date : datetime
+}
+
+entity Report {
+  +Report_ID : int
+  --
+  Auction_ID : int
+  Reporter_ID : int
+  Report_Reason : text
+  Report_Date : date
+  Status : enum
+}
+
+entity Admin {
+  +Admin_ID : int
+  --
+  User_ID : int
+  Admin_Level : enum
+  Action_Log : text
+}
+
+entity Notification {
+  +Notification_ID : int
+  --
+  User_ID : int
+  Notification_Text : text
+  Notification_Date : datetime
+  Notification_Type : enum
+}
+
+entity Transaction {
+  +Transaction_ID : int
+  --
+  Auction_ID : int
+  Buyer_ID : int
+  Seller_ID : int
+  Amount : decimal
+  Transaction_Date : date
+}
 
 @enduml
