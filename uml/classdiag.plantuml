@@ -1,4 +1,5 @@
 @startuml
+
 entity User {
   +User_ID : int
   --
@@ -8,6 +9,8 @@ entity User {
   Role : enum
   Registration_Date : date
   Profile_Picture : varchar
+  Birth_Date : date
+  Address : varchar
 }
 
 entity Auction {
@@ -69,14 +72,6 @@ entity Report {
   Status : enum
 }
 
-entity Admin {
-  +Admin_ID : int
-  --
-  User_ID : int
-  Admin_Level : enum
-  Action_Log : text
-}
-
 entity Notification {
   +Notification_ID : int
   --
@@ -95,5 +90,20 @@ entity Transaction {
   Amount : decimal
   Transaction_Date : date
 }
+
+User "1" -- "0..*" Auction : creates
+Auction "1" -- "0..*" Bid : receives
+User "1" -- "0..*" Bid : places
+Auction "1" -- "0..*" Comment : receives
+User "1" -- "0..*" Comment : writes
+Category "1" -- "0..*" Auction : categorizes
+Auction "1" -- "0..*" Rating : is_rated_on
+User "1" -- "0..*" Rating : gives
+User "1" -- "0..*" Rating : receives
+Auction "1" -- "0..*" Report : has_report
+User "1" -- "0..*" Report : reports
+User "1" -- "0..*" Notification : receives
+Auction "1" -- "0..1" Transaction : results_in
+User "1" -- "0..*" Transaction : buys/sells
 
 @enduml
