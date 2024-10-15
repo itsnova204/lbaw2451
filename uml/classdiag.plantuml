@@ -2,10 +2,10 @@
 skinparam groupInheritance 2
 
 entity Account {
-  Username : varchar
-  Email : varchar
-  Password : varchar
-  Registration_Date : date
+  {field}Username : varchar (not null)
+  {field}Email : varchar (not null)
+  {field}Password : varchar (not null)
+  {field}Registration_Date : date (not null)
   Profile_Picture : varchar
   Birth_Date : date
   Address : varchar
@@ -18,50 +18,50 @@ entity Admin {
 }
 
 entity Auction {
-  Title : varchar
+  {field}Title : varchar (not null)
   Description : varchar
-  Start_Date : date
-  End_Date : date
+  {field}Start_Date : date (not null)
+  {field}End_Date : date (not null, >= Start_Date + 1 day)
   Status : enum
-  Current_Bid : decimal
+  {field}Current_Bid : decimal (>= Minimum_Bid)
   Minimum_Bid : decimal
 }
 
 entity Category {
-  Category_Name : varchar
+  {field}Category_Name : varchar (not null)
 }
 
 entity Bid {
-  Bid_Amount : decimal
-  Bid_Time : datetime
+  {field}Bid_Amount : decimal (not null)
+  {field}Bid_Time : datetime (not null)
 }
 
 entity Rating {
-  Rating_Score : int
+  {field}Rating_Score : int (not null, >=0 and <=5)
   Rating_Comment : text
   Rating_Date : date
 }
 
 entity Comment {
-  Comment_Text : text
-  Comment_Date : datetime
+  {field}Comment_Text : text (not null)
+  {field}Comment_Date : datetime (nt null)
 }
 
 entity Report {
-  Report_Reason : text
-  Report_Date : date
+  {field}Report_Reason : text (not null)
+  {field}Report_Date : date (not null)
   Status : enum
 }
 
 entity Notification {
-  Notification_Text : text
-  Notification_Date : datetime
+  {field}Notification_Text : text (not null)
+  {field}Notification_Date : datetime (not null)
   Notification_Type : enum
 }
 
 entity Transaction {
-  Amount : decimal
-  Transaction_Date : date
+  {field}Amount : decimal (not null)
+  {field}Transaction_Date : date (not null)
 }
 
 Account <|-- User
