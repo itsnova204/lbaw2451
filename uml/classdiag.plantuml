@@ -2,13 +2,19 @@
 skinparam groupInheritance 2
 
 entity Account {
-  {field}Username : varchar (not null)
-  {field}Email : varchar (not null)
-  {field}Password : varchar (not null)
-  {field}Registration_Date : date (not null)
+  Username : varchar
+  Email : varchar
+  Password : varchar
+  Registration_Date : date
   Profile_Picture : varchar
   Birth_Date : date
   Address : varchar
+  
+  ..constraints..
+  (Username NOT NULL)
+  (Email NOT NULL)
+  (Email UNIQUE)
+  (Registration_Date NOT NULL)
 }
 
 entity User {
@@ -18,53 +24,92 @@ entity Admin {
 }
 
 entity Auction {
-  {field}Title : varchar (not null)
+  Title : varchar
   Description : varchar
-  {field}Start_Date : date (not null)
-  {field}End_Date : date (not null, >= Start_Date + 1 day)
+  Start_Date : date
+  End_Date : date
   Status : enum
-  {field}Current_Bid : decimal (>= Minimum_Bid)
+  Current_Bid : decimal
   Minimum_Bid : decimal
+  
+  ..constraints..
+  (Title NOT NULL)
+  (Start_Date NOT NULL)
+  (End_Date >= Start_Date + 1 day)
+  (Status DEFAULT active)
+  (Current_Bid >= Minimum_Bid)
+  (Minimum_Bid DEFAULT 0)
 }
 
 entity Category {
-  {field}Category_Name : varchar (not null)
+  Category_Name : varchar
+  
+  ..constraints..
+  (Category_Name NOT NULL)
+  (Category_Name UNIQUE)
 }
 
 entity Bid {
-  {field}Bid_Amount : decimal (not null)
-  {field}Bid_Time : datetime (not null)
+  Bid_Amount : decimal
+  Bid_Date : datetime
+  
+  ..constraints..
+  (Bid_Amount NOT NULL)
+  (Bid_Date NOT NULL)
 }
 
 entity Rating {
-  {field}Rating_Score : int (not null, >=0 and <=5)
+  Rating_Score : int
   Rating_Comment : text
   Rating_Date : date
+  
+  ..constraints..
+  (Rating_Score NOT NULL)
+  (0 <= Rating_Score <= 5)
+  (Rating_Date NOT NULL)
 }
 
 entity Comment {
-  {field}Comment_Text : text (not null)
-  {field}Comment_Date : datetime (nt null)
+  Comment_Text : text
+  Comment_Date : datetime
+  
+  ..constraints..
+  (Comment_Text NOT NULL)
+  (Comment_Date NOT NULL)
 }
 
 entity Report {
-  {field}Report_Reason : text (not null)
-  {field}Report_Date : date (not null)
+  Report_Reason : text
+  Report_Date : date
   Status : enum
+  
+  ..constraints..
+  (Report_Reason NOT NULL)
+  (Report_Date NOT NULL)
+  (Status DEFAULT not_processed)
 }
 
 entity Notification {
-  {field}Notification_Text : text (not null)
-  {field}Notification_Date : datetime (not null)
+  Notification_Text : text
+  Notification_Date : datetime
   Notification_Type : enum
+  
+  ..constraints..
+  (Notification_Text NOT NULL)
+  (Notification_Date NOT NULL)
+  (Notification_Type DEFAULT generic)
 }
 
 entity Transaction {
-  {field}Amount : decimal (not null)
-  {field}Transaction_Date : date (not null)
+  Amount : decimal
+  Transaction_Date : date
+  
+  ..constraints..
+  (Amount NOT NULL)
+  (Transaction_Date NOT NULL)
 }
 
-Account <|-- User
+Account <|-- User : {complete; disjoint}
 Account <|-- Admin
 User "1" -- "0..*" Auction : creates
 Auction "1" -- "0..*" Bid : receives
@@ -80,5 +125,7 @@ User "1" -- "0..*" Report : reports
 User "1" -- "0..*" Notification : receives
 Auction "1" -- "0..1" Transaction : results_in
 User "1" -- "0..*" Transaction : buys/sells
+
+hide empty members
 
 @enduml
