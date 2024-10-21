@@ -1,3 +1,4 @@
+
 @startuml
 skinparam groupInheritance 2
 
@@ -18,7 +19,6 @@ entity Account {
 }
 
 entity User {
-  Is_deleted : boolean
 }
 
 entity Admin {
@@ -29,7 +29,7 @@ entity Auction {
   Description : varchar
   Start_Date : date
   End_Date : date
-  Status : auctionstatus
+  Status : enum
   Minimum_Bid : decimal
   
   ..constraints..
@@ -80,7 +80,7 @@ entity Comment {
 entity Report {
   Report_Reason : text
   Report_Date : date
-  Status : reportstatus
+  Status : enum
   
   ..constraints..
   (Report_Reason NOT NULL)
@@ -91,7 +91,7 @@ entity Report {
 entity Notification {
   Notification_Text : text
   Notification_Date : datetime
-  Notification_Type : notiftype
+  Notification_Type : enum
   
   ..constraints..
   (Notification_Text NOT NULL)
@@ -112,7 +112,7 @@ Account <|-- User : {complete; disjoint}
 Account <|-- Admin
 User "1" -- "0..*" Auction : creates
 Auction "1" -- "0..*" Bid : receives
-Auction "1" -- "1" Bid : is_highest
+Bid "1" <-- "1" Auction : is_highest
 User "1" -- "0..*" Bid : places
 Auction "1" -- "0..*" Comment : receives
 User "1" -- "0..*" Comment : writes
@@ -124,7 +124,9 @@ Auction "1" -- "0..*" Report : has_report
 User "1" -- "0..*" Report : reports
 User "1" -- "0..*" Notification : receives
 Auction "1" -- "0..1" Transaction : results_in
-User "1" -- "0..*" Transaction : buys/sells
+User "1" -- "0..*" Transaction : buys
+User "1" -- "0..*" Transaction : sells
+
 
 hide empty members
 
