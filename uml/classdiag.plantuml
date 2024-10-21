@@ -18,6 +18,7 @@ entity Account {
 }
 
 entity User {
+  Is_deleted : boolean
 }
 
 entity Admin {
