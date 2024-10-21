@@ -28,8 +28,7 @@ entity Auction {
   Description : varchar
   Start_Date : date
   End_Date : date
-  Status : enum
-  Current_Bid : decimal
+  Status : auctionstatus
   Minimum_Bid : decimal
   
   ..constraints..
@@ -37,7 +36,6 @@ entity Auction {
   (Start_Date NOT NULL)
   (End_Date >= Start_Date + 1 day)
   (Status DEFAULT active)
-  (Current_Bid >= Minimum_Bid)
   (Minimum_Bid DEFAULT 0)
 }
 
@@ -81,7 +79,7 @@ entity Comment {
 entity Report {
   Report_Reason : text
   Report_Date : date
-  Status : enum
+  Status : reportstatus
   
   ..constraints..
   (Report_Reason NOT NULL)
@@ -92,7 +90,7 @@ entity Report {
 entity Notification {
   Notification_Text : text
   Notification_Date : datetime
-  Notification_Type : enum
+  Notification_Type : notiftype
   
   ..constraints..
   (Notification_Text NOT NULL)
@@ -113,6 +111,7 @@ Account <|-- User : {complete; disjoint}
 Account <|-- Admin
 User "1" -- "0..*" Auction : creates
 Auction "1" -- "0..*" Bid : receives
+Auction "1" -- "1" Bid : is_highest
 User "1" -- "0..*" Bid : places
 Auction "1" -- "0..*" Comment : receives
 User "1" -- "0..*" Comment : writes
