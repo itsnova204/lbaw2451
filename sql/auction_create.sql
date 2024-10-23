@@ -18,7 +18,7 @@ DROP TYPE IF EXISTS notif_type;
 
 CREATE TYPE auction_status AS ENUM ('active', 'ended', 'canceled');
 CREATE TYPE report_status AS ENUM ('not_processed', 'discarded', 'processed');
-CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'new_comment', 'report');
+CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'auction_end', 'new_comment', 'report');
 
 CREATE TABLE account (
     id SERIAL PRIMARY KEY,
