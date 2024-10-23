@@ -12,6 +12,14 @@ DROP TABLE IF EXISTS report CASCADE;
 DROP TABLE IF EXISTS notification CASCADE;
 DROP TABLE IF EXISTS transactions CASCADE;
 
+DROP TYPE IF EXISTS auction_status;
+DROP TYPE IF EXISTS report_status;
+DROP TYPE IF EXISTS notif_type;
+
+CREATE TYPE auction_status AS ENUM ('active', 'ended', 'canceled');
+CREATE TYPE report_status AS ENUM ('not_processed', 'discarded', 'processed');
+CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'new_comment', 'report');
+
 CREATE TABLE account (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL,
@@ -43,7 +51,7 @@ CREATE TABLE auction (
     description TEXT,
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL CHECK (end_date >= start_date + INTERVAL '1 day'),
-    status TEXT DEFAULT 'active',
+    status auction_status DEFAULT 'active',
     minimum_bid NUMERIC CHECK (minimum_bid >= 0) DEFAULT 0,
     current_bid NUMERIC CHECK (current_bid >= minimum_bid),
     category_id INTEGER REFERENCES category(id),
@@ -81,7 +89,7 @@ CREATE TABLE report (
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
     date TIMESTAMP NOT NULL,
-    status TEXT DEFAULT 'not_processed',
+    status report_status DEFAULT 'not_processed',
     auction_id INTEGER REFERENCES auction(id),
     user_id INTEGER REFERENCES users(id)
 );
@@ -90,7 +98,7 @@ CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
     date TIMESTAMP NOT NULL,
-    type TEXT DEFAULT 'generic',
+    type notif_type DEFAULT 'generic',
     receiver_id INTEGER REFERENCES users(id)
 );
 
