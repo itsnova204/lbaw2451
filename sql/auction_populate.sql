@@ -51,8 +51,8 @@ INSERT INTO report (reason, date, status, auction_id, user_id) VALUES
 
 -- Populate notifications table
 INSERT INTO notification (text, date, type, receiver_id) VALUES
-('You have a new bid on your auction!', '2024-10-02 15:00:00', 'bid', 1),
-('Your auction has ended!', '2024-10-04 09:00:00', 'end', 1);
+('You have a new bid on your auction!', '2024-10-02 15:00:00', 'new_bid', 1),
+('Your auction has ended!', '2024-10-04 09:00:00', 'auction_end', 1);
 
 -- Populate transactions table
 INSERT INTO transactions (amount, date, auction_id) VALUES
