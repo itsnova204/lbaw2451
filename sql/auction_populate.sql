@@ -10,7 +10,6 @@ INSERT INTO account (username, email, password, registration_date, profile_pictu
 INSERT INTO users (id, is_deleted) VALUES
 (1, FALSE), -- john_doe
 (2, FALSE), -- jane_smith
-(3, FALSE); -- admin_user (id 3) will have is_deleted FALSE
 
 -- Populate admins table
 INSERT INTO admin (id) VALUES (3); -- Only the admin_user is an admin

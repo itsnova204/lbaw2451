@@ -108,3 +108,162 @@ CREATE TABLE transactions (
     date TIMESTAMP NOT NULL,
     auction_id INTEGER NOT NULL REFERENCES auction(id)
 );
+
+CREATE INDEX IDX01 ON auction USING BTREE(creator_id);
+CREATE INDEX IDX02 ON bid USING BTREE(auction_id);
+CREATE INDEX IDX03 ON transactions USING BTREE(auction_id);
+
+-- IDX11
+ALTER TABLE auction
+ADD COLUMN tsvectors TSVECTOR;
+
+CREATE FUNCTION auction_search_update() RETURNS TRIGGER AS $$
+BEGIN
+ IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.title <> OLD.title OR NEW.description <> OLD.description)) THEN
+     NEW.tsvectors = (
+         setweight(to_tsvector('english', NEW.title), 'A') ||
+         setweight(to_tsvector('english', NEW.description), 'B')
+     );
+ END IF;
+ RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER auction_search_update
+ BEFORE INSERT OR UPDATE ON auction
+ FOR EACH ROW
+ EXECUTE PROCEDURE auction_search_update();
+
+CREATE INDEX auction_search_idx ON auction USING GIN (tsvectors);
+
+--TRIGGER01
+CREATE OR REPLACE FUNCTION check_bids_before_cancellation()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (SELECT COUNT(*) FROM bid WHERE auction_id = NEW.id) > 0 THEN
+        RAISE EXCEPTION 'Auction with id % cannot be canceled because there are existing bids.', NEW.id;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_auction_cancellation_with_bids
+BEFORE UPDATE ON auction
+FOR EACH ROW
+WHEN (NEW.status = 'canceled')  
+EXECUTE FUNCTION check_bids_before_cancellation();
+
+--TRIGGER02
+CREATE OR REPLACE FUNCTION prevent_duplicate_highest_bid()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (SELECT user_id 
+        FROM bid
+        WHERE auction_id = NEW.auction_id 
+        ORDER BY amount DESC, date DESC 
+        LIMIT 1) = NEW.user_id THEN
+        RAISE EXCEPTION 'User % already has the highest bid on auction %.', NEW.user_id, NEW.auction_id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_user_duplicate_highest_bid
+BEFORE INSERT ON bid
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_highest_bid();
+
+--TRIGGER03
+CREATE OR REPLACE FUNCTION extend_auction_if_bid_late()
+RETURNS TRIGGER AS $$
+BEGIN
+    
+    IF (NEW.date >= (SELECT end_date - INTERVAL '15 minutes' 
+                     FROM auction 
+                     WHERE id = NEW.auction_id)) THEN
+        UPDATE auction
+        SET end_date = end_date + INTERVAL '30 minutes'
+        WHERE id = NEW.auction_id;
+    END IF;
+
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER extend_auction_on_late_bid
+AFTER INSERT ON bid
+FOR EACH ROW
+EXECUTE FUNCTION extend_auction_if_bid_late();
+
+--TRIGGER04
+CREATE OR REPLACE FUNCTION prevent_self_review()
+RETURNS TRIGGER AS $$
+BEGIN
+    
+    IF (SELECT creator_id FROM auction WHERE id = NEW.auction_id) = NEW.rater_id THEN
+        RAISE EXCEPTION 'User cannot review their own auction (ID: %).', NEW.auction_id;
+    END IF;
+    IF NEW.receiver_id = NEW.rater_id THEN
+        RAISE EXCEPTION 'User cannot review their own account (ID: %).', NEW.receiver_id;
+    END IF;
+
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_user_self_review
+BEFORE INSERT ON rating
+FOR EACH ROW
+EXECUTE FUNCTION prevent_self_review();
+
+--TRIGGER05
+CREATE OR REPLACE FUNCTION anonymize_user_account()
+RETURNS TRIGGER AS $$
+BEGIN
+    
+    UPDATE account
+    SET 
+        username = 'deleted_user_' || NEW.id,
+        email = 'deleted_' || NEW.id || '@example.com',
+        password = NULL,  -- Clear the password for security
+        profile_picture = NULL,
+        address = NULL,
+        birth_date = NULL
+    WHERE id = NEW.id;
+
+    
+    UPDATE users
+    SET is_deleted = TRUE
+    WHERE id = NEW.id;
+
+    
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER anonymize_user_before_delete
+BEFORE DELETE ON account
+FOR EACH ROW
+EXECUTE FUNCTION anonymize_user_account();
+
+--TRIGGER06
+CREATE OR REPLACE FUNCTION check_auction_dates()
+RETURNS TRIGGER AS $$
+BEGIN
+    
+    IF NEW.end_date < NEW.start_date + INTERVAL '1 day' THEN
+        RAISE EXCEPTION 'End date must be at least one day greater than start date for auction ID: %', NEW.id;
+    END IF;
+
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER enforce_auction_date_constraints
+BEFORE INSERT OR UPDATE ON auction
+FOR EACH ROW
+EXECUTE FUNCTION check_auction_dates();
