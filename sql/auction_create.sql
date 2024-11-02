@@ -56,7 +56,8 @@ CREATE TABLE auction (
     current_bid NUMERIC CHECK (current_bid >= minimum_bid),
     category_id INTEGER REFERENCES category(id),
     creator_id INTEGER REFERENCES users(id),
-    buyer_id INTEGER REFERENCES users(id)
+    buyer_id INTEGER REFERENCES users(id),
+    picture TEXT
 );
 
 CREATE TABLE bid (

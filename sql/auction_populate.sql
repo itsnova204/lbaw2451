@@ -23,10 +23,10 @@ INSERT INTO category (name) VALUES
 ('Toys');
 
 -- Populate auctions table
-INSERT INTO auction (title, description, start_date, end_date, status, minimum_bid, current_bid, category_id, creator_id, buyer_id) VALUES
-('Laptop for Sale', 'A gently used laptop in great condition.', '2024-10-01 10:00:00', '2024-10-03 10:00:00', 'active', 100, 150, 1, 1, NULL),
-('Vintage Chair', 'A beautiful vintage chair for your living room.', '2024-10-02 09:00:00', '2024-10-05 09:00:00', 'active', 50, 70, 2, 2, NULL),
-('Programming Book', 'Learn Haskell programming with this great book.', '2024-10-03 11:00:00', '2024-10-10 11:00:00', 'active', 20, 20, 3, 1, NULL);
+INSERT INTO auction (title, description, start_date, end_date, status, minimum_bid, current_bid, category_id, creator_id, buyer_id, picture) VALUES
+('Laptop for Sale', 'A gently used laptop in great condition.', '2024-10-01 10:00:00', '2024-10-03 10:00:00', 'active', 100, 150, 1, 1, NULL, '/path'),
+('Vintage Chair', 'A beautiful vintage chair for your living room.', '2024-10-02 09:00:00', '2024-10-05 09:00:00', 'active', 50, 70, 2, 2, NULL, '/path'),
+('Programming Book', 'Learn Haskell programming with this great book.', '2024-10-03 11:00:00', '2024-10-10 11:00:00', 'active', 20, 20, 3, 1, NULL, '/path');
 
 -- Populate bids table
 INSERT INTO bid (amount, date, auction_id, user_id) VALUES
