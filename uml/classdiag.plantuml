@@ -31,6 +31,7 @@ entity Auction {
   End_Date : date
   Status : enum
   Minimum_Bid : decimal
+  Image : varchar
   
   ..constraints..
   (Title NOT NULL)
