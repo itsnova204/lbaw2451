@@ -268,3 +268,161 @@ CREATE TRIGGER enforce_auction_date_constraints
 BEFORE INSERT OR UPDATE ON auction
 FOR EACH ROW
 EXECUTE FUNCTION check_auction_dates();
+
+--TRIGGER07
+CREATE OR REPLACE FUNCTION prevent_admin_auction_creation()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.creator_id) THEN
+        RAISE EXCEPTION 'Administrators are not allowed to create auctions.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_admin_auction_creation_trigger
+BEFORE INSERT ON auction
+FOR EACH ROW
+EXECUTE FUNCTION prevent_admin_auction_creation();
+
+--TRIGGER08
+CREATE OR REPLACE FUNCTION prevent_admin_bid_placement()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.user_id) THEN
+        RAISE EXCEPTION 'Administrators are not allowed to place bids.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_admin_bid_placement_trigger
+BEFORE INSERT ON bid
+FOR EACH ROW
+EXECUTE FUNCTION prevent_admin_bid_placement();
+
+--TRIGGER09
+CREATE OR REPLACE FUNCTION prevent_auction_cancellation_with_bids()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (SELECT COUNT(*) FROM bid WHERE auction_id = NEW.id) > 0 THEN
+        RAISE EXCEPTION 'Cannot cancel auction with existing bids.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_auction_cancellation_trigger
+BEFORE UPDATE ON auction
+FOR EACH ROW
+WHEN (NEW.status = 'canceled')
+EXECUTE FUNCTION prevent_auction_cancellation_with_bids();
+
+--TRIGGER10
+CREATE OR REPLACE FUNCTION prevent_duplicate_highest_bid()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM bid
+        WHERE auction_id = NEW.auction_id
+          AND user_id = NEW.user_id
+          AND amount = (SELECT MAX(amount) FROM bid WHERE auction_id = NEW.auction_id)
+    ) THEN
+        RAISE EXCEPTION 'You cannot place a bid if you already have the highest bid.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_duplicate_highest_bid_trigger
+BEFORE INSERT ON bid
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_highest_bid();
+
+--TRIGGER11
+CREATE OR REPLACE FUNCTION extend_auction_deadline()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (SELECT end_date FROM auction WHERE id = NEW.auction_id) - NEW.date <= INTERVAL '15 minutes' THEN
+        UPDATE auction
+        SET end_date = end_date + INTERVAL '30 minutes'
+        WHERE id = NEW.auction_id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER extend_auction_deadline_trigger
+AFTER INSERT ON bid
+FOR EACH ROW
+EXECUTE FUNCTION extend_auction_deadline();
+
+--TRIGGER12
+CREATE OR REPLACE FUNCTION prevent_self_review()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Ensure the receiver is the creator of the auction
+    IF NOT EXISTS (
+        SELECT 1
+        FROM auction
+        WHERE id = NEW.auction_id
+          AND creator_id = NEW.receiver_id
+    ) THEN
+        RAISE EXCEPTION 'The receiver must be the creator of the auction.';
+    END IF;
+
+    -- Ensure the rater is not the same as the receiver
+    IF NEW.rater_id = NEW.receiver_id THEN
+        RAISE EXCEPTION 'You cannot review your own account.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to call the function before inserting a new row into the rating table
+CREATE TRIGGER prevent_self_review_trigger
+BEFORE INSERT ON rating
+FOR EACH ROW
+EXECUTE FUNCTION prevent_self_review();
+
+--TRIGGER13
+CREATE OR REPLACE FUNCTION anonymize_user_data()
+RETURNS TRIGGER AS $$
+BEGIN
+    
+    UPDATE account
+    SET username = 'deleted_user_' || NEW.id,
+        email = 'deleted_user_' || NEW.id || '@example.com',
+        password = 'deleted',  
+        profile_picture = NULL,
+        birth_date = NULL,
+        address = NULL
+    WHERE id = OLD.id;  
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER anonymize_user_trigger
+AFTER DELETE ON users
+FOR EACH ROW
+EXECUTE FUNCTION anonymize_user_data();
+
+--TRIGGER14
+CREATE OR REPLACE FUNCTION check_auction_dates()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.end_date <= NEW.start_date + INTERVAL '1 day' THEN
+        RAISE EXCEPTION 'The auction end date must be at least one day after the start date.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_auction_dates_trigger
+BEFORE INSERT OR UPDATE ON auction
+FOR EACH ROW
+EXECUTE FUNCTION check_auction_dates();
