@@ -30,7 +30,8 @@ CREATE TABLE users (
                        birth_date DATE,
                        address TEXT,
                        is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-                       is_admin BOOLEAN
+                       is_admin BOOLEAN,
+                       remember_token TEXT
 );
 
 CREATE TABLE category (
