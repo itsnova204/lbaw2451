@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Bid extends Model
+class Rating extends Model
 {
     use HasFactory;
 
-    protected $table = 'bid';
+    protected $table = 'rating';
 
     protected $fillable = [
-        'amount',
+        'score',
+        'comment',
         'auction_id',
-        'user_id',
+        'rater_id',
+        'receiver_id',
     ];
 
     protected $casts = [
@@ -23,13 +25,21 @@ class Bid extends Model
         'updated_at' => 'datetime',
     ];
 
+    // A rating belongs to an auction
     public function auction() : BelongsTo
     {
         return $this->belongsTo(Auction::class, 'auction_id');
     }
 
-    public function user() : BelongsTo
+    // A rating is given by a user (the rater)
+    public function rater() : BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'rater_id');
+    }
+
+    // A rating is received by a user (the receiver)
+    public function receiver() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 }
