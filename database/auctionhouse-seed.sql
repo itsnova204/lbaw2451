@@ -1,8 +1,6 @@
 SET search_path TO lbaw2451;
 
-DROP TABLE IF EXISTS account CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS admin CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS auction CASCADE;
 DROP TABLE IF EXISTS bid CASCADE;
@@ -20,25 +18,19 @@ CREATE TYPE auction_status AS ENUM ('active', 'ended', 'canceled');
 CREATE TYPE report_status AS ENUM ('not_processed', 'discarded', 'processed');
 CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'auction_end', 'new_comment', 'report');
 
-CREATE TABLE account (
-                         id SERIAL PRIMARY KEY,
-                         username TEXT NOT NULL,
-                         email TEXT NOT NULL UNIQUE,
-                         password TEXT NOT NULL,
-                         created_at TIMESTAMP NOT NULL,
-                         updated_at TIMESTAMP,
-                         profile_picture TEXT,
-                         birth_date DATE,
-                         address TEXT
-);
 
 CREATE TABLE users (
-                       id INTEGER PRIMARY KEY REFERENCES account(id),
-                       is_deleted BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE TABLE admin (
-                       id INTEGER PRIMARY KEY REFERENCES account(id)
+                       id SERIAL PRIMARY KEY,
+                       username TEXT NOT NULL,
+                       email TEXT NOT NULL UNIQUE,
+                       password TEXT NOT NULL,
+                       created_at TIMESTAMP NOT NULL,
+                       updated_at TIMESTAMP,
+                       profile_picture TEXT,
+                       birth_date DATE,
+                       address TEXT,
+                       is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+                       is_admin BOOLEAN
 );
 
 CREATE TABLE category (
@@ -234,7 +226,7 @@ CREATE OR REPLACE FUNCTION anonymize_user_account()
 RETURNS TRIGGER AS $$
 BEGIN
 
-UPDATE account
+UPDATE users
 SET
     username = 'deleted_user_' || NEW.id,
     email = 'deleted_' || NEW.id || '@example.com',
@@ -255,7 +247,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER anonymize_user_before_delete
-    BEFORE DELETE ON account
+    BEFORE DELETE ON users
     FOR EACH ROW
     EXECUTE FUNCTION anonymize_user_account();
 
@@ -282,7 +274,7 @@ CREATE TRIGGER enforce_auction_date_constraints
 CREATE OR REPLACE FUNCTION prevent_admin_auction_creation()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.creator_id) THEN
+    IF EXISTS (SELECT 1 FROM users WHERE id = NEW.creator_id AND is_admin = TRUE) THEN
         RAISE EXCEPTION 'Administrators are not allowed to create auctions.';
 END IF;
 RETURN NEW;
@@ -298,7 +290,8 @@ CREATE TRIGGER prevent_admin_auction_creation_trigger
 CREATE OR REPLACE FUNCTION prevent_admin_bid_placement()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.user_id) THEN
+    -- Check if the user placing the bid (user_id) is an admin
+    IF EXISTS (SELECT 1 FROM users WHERE id = NEW.user_id AND is_admin = TRUE) THEN
         RAISE EXCEPTION 'Administrators are not allowed to place bids.';
 END IF;
 RETURN NEW;
@@ -401,7 +394,7 @@ CREATE OR REPLACE FUNCTION anonymize_user_data()
 RETURNS TRIGGER AS $$
 BEGIN
 
-UPDATE account
+UPDATE users
 SET username = 'deleted_user_' || NEW.id,
     email = 'deleted_user_' || NEW.id || '@example.com',
     password = 'deleted',
@@ -436,20 +429,14 @@ CREATE TRIGGER check_auction_dates_trigger
                          FOR EACH ROW
                          EXECUTE FUNCTION check_auction_dates();
 
+SET search_path TO lbaw2451;
 
 -- Populate accounts table
-INSERT INTO account (username, email, password, created_at, profile_picture, birth_date, address) VALUES
-                                                                                                      ('john_doe', 'john.doe@example.com', 'hashed_password_1', '2024-01-10 08:30:00', 'profile1.jpg', '1990-05-15', '123 Main St, Lisbon'),
-                                                                                                      ('jane_smith', 'jane.smith@example.com', 'hashed_password_2', '2024-01-11 09:00:00', 'profile2.jpg', '1995-08-20', '456 Elm St, Porto'),
-                                                                                                      ('admin_user', 'admin@example.com', 'hashed_password_admin', '2024-01-05 07:45:00', 'admin.jpg', '1988-11-30', '789 Maple St, Coimbra');
+INSERT INTO users (id, username, email, password, created_at, profile_picture, birth_date, address, is_deleted, is_admin) VALUES
+                                                                                                                              (1, 'john_doe', 'john.doe@example.com', 'hashed_password_1', '2024-01-10 08:30:00', 'profile1.jpg', '1990-05-15', '123 Main St, Lisbon', FALSE, FALSE),  -- john_doe
+                                                                                                                              (2, 'jane_smith', 'jane.smith@example.com', 'hashed_password_2', '2024-01-11 09:00:00', 'profile2.jpg', '1995-08-20', '456 Elm St, Porto', FALSE, FALSE),  -- jane_smith
+                                                                                                                              (3, 'admin_user', 'admin@example.com', 'hashed_password_admin', '2024-01-05 07:45:00', 'admin.jpg', '1988-11-30', '789 Maple St, Coimbra', FALSE, TRUE); -- admin_user (is_admin = TRUE)
 
--- Populate users table
-INSERT INTO users (id, is_deleted) VALUES
-                                       (1, FALSE), -- john_doe
-                                       (2, FALSE); -- jane_smith
-
--- Populate admins table
-INSERT INTO admin (id) VALUES (3); -- Only the admin_user is an admin
 
 -- Populate categories table
 INSERT INTO category (name) VALUES
