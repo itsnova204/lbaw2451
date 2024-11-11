@@ -1,8 +1,6 @@
 SET search_path TO lbaw2451;
 
-DROP TABLE IF EXISTS account CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS admin CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS auction CASCADE;
 DROP TABLE IF EXISTS bid CASCADE;
@@ -20,7 +18,8 @@ CREATE TYPE auction_status AS ENUM ('active', 'ended', 'canceled');
 CREATE TYPE report_status AS ENUM ('not_processed', 'discarded', 'processed');
 CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'auction_end', 'new_comment', 'report');
 
-CREATE TABLE account (
+
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
@@ -29,16 +28,10 @@ CREATE TABLE account (
     updated_at TIMESTAMP,
     profile_picture TEXT,
     birth_date DATE,
-    address TEXT
-);
-
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY REFERENCES account(id),
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE TABLE admin (
-    id INTEGER PRIMARY KEY REFERENCES account(id)
+    address TEXT,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    is_admin BOOLEAN,
+    remember_token TEXT
 );
 
 CREATE TABLE category (
@@ -234,7 +227,7 @@ CREATE OR REPLACE FUNCTION anonymize_user_account()
 RETURNS TRIGGER AS $$
 BEGIN
     
-    UPDATE account
+    UPDATE users
     SET 
         username = 'deleted_user_' || NEW.id,
         email = 'deleted_' || NEW.id || '@example.com',
@@ -255,7 +248,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER anonymize_user_before_delete
-BEFORE DELETE ON account
+BEFORE DELETE ON users
 FOR EACH ROW
 EXECUTE FUNCTION anonymize_user_account();
 
@@ -282,7 +275,7 @@ EXECUTE FUNCTION check_auction_dates();
 CREATE OR REPLACE FUNCTION prevent_admin_auction_creation()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.creator_id) THEN
+    IF EXISTS (SELECT 1 FROM users WHERE id = NEW.creator_id AND is_admin = TRUE) THEN
         RAISE EXCEPTION 'Administrators are not allowed to create auctions.';
     END IF;
     RETURN NEW;
@@ -298,10 +291,11 @@ EXECUTE FUNCTION prevent_admin_auction_creation();
 CREATE OR REPLACE FUNCTION prevent_admin_bid_placement()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.user_id) THEN
+    -- Check if the user placing the bid (user_id) is an admin
+    IF EXISTS (SELECT 1 FROM users WHERE id = NEW.user_id AND is_admin = TRUE) THEN
         RAISE EXCEPTION 'Administrators are not allowed to place bids.';
-    END IF;
-    RETURN NEW;
+END IF;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -401,7 +395,7 @@ CREATE OR REPLACE FUNCTION anonymize_user_data()
 RETURNS TRIGGER AS $$
 BEGIN
     
-    UPDATE account
+    UPDATE users
     SET username = 'deleted_user_' || NEW.id,
         email = 'deleted_user_' || NEW.id || '@example.com',
         password = 'deleted',  

@@ -1,18 +1,11 @@
 SET search_path TO lbaw2451;
 
 -- Populate accounts table
-INSERT INTO account (username, email, password, created_at, profile_picture, birth_date, address) VALUES
-('john_doe', 'john.doe@example.com', 'hashed_password_1', '2024-01-10 08:30:00', 'profile1.jpg', '1990-05-15', '123 Main St, Lisbon'),
-('jane_smith', 'jane.smith@example.com', 'hashed_password_2', '2024-01-11 09:00:00', 'profile2.jpg', '1995-08-20', '456 Elm St, Porto'),
-('admin_user', 'admin@example.com', 'hashed_password_admin', '2024-01-05 07:45:00', 'admin.jpg', '1988-11-30', '789 Maple St, Coimbra');
+INSERT INTO users (id, username, email, password, created_at, profile_picture, birth_date, address, is_deleted, is_admin) VALUES
+                                                                                                                              (1, 'john_doe', 'john.doe@example.com', 'hashed_password_1', '2024-01-10 08:30:00', 'profile1.jpg', '1990-05-15', '123 Main St, Lisbon', FALSE, FALSE),  -- john_doe
+                                                                                                                              (2, 'jane_smith', 'jane.smith@example.com', 'hashed_password_2', '2024-01-11 09:00:00', 'profile2.jpg', '1995-08-20', '456 Elm St, Porto', FALSE, FALSE),  -- jane_smith
+                                                                                                                              (3, 'admin_user', 'admin@example.com', 'hashed_password_admin', '2024-01-05 07:45:00', 'admin.jpg', '1988-11-30', '789 Maple St, Coimbra', FALSE, TRUE); -- admin_user (is_admin = TRUE)
 
--- Populate users table
-INSERT INTO users (id, is_deleted) VALUES
-(1, FALSE), -- john_doe
-(2, FALSE); -- jane_smith
-
--- Populate admins table
-INSERT INTO admin (id) VALUES (3); -- Only the admin_user is an admin
 
 -- Populate categories table
 INSERT INTO category (name) VALUES
