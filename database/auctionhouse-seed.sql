@@ -30,7 +30,7 @@ CREATE TABLE users (
                        birth_date DATE,
                        address TEXT,
                        is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-                       is_admin BOOLEAN,
+                       is_admin BOOLEAN NOT NULL DEFAULT FALSE,
                        remember_token TEXT
 );
 
