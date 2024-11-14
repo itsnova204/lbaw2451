@@ -26,7 +26,15 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $currentUser = auth()->user();
+        // Check if the current logged-in user is the same as the user being shown
+        if ($currentUser && $currentUser->id === $user->id) {
+            // Return the account view for the current user
+            return view('users.account', compact('user'));
+        } else {
+            // Return the profile view for a different user
+            return view('users.profile', compact('user'));
+        }
     }
 
     /**
