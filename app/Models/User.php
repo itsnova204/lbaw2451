@@ -98,4 +98,8 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Transaction::class, Auction::class, 'creator_id', 'auction_id', 'id', 'id');
     }
+
+    public function isAdmin() : bool {
+        return $this->is_admin;
+    }
 }
