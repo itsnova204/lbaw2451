@@ -49,4 +49,8 @@ class User extends Authenticatable
         'password' => 'hashed',
         'birth_date' => 'date',
     ];
+
+    public function comments() : HasMany {
+        return $this->hasMany(Comment::class);
+    }
 }
