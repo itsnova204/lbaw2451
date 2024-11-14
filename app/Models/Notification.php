@@ -36,7 +36,7 @@ class Notification extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function receiver() : BelongsTo {
+    public function user() : BelongsTo {
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
