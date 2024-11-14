@@ -56,7 +56,7 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::get('/admin/users', [UserController::class, 'index'])->name('user.index');
 });
 
 
