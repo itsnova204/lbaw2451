@@ -29,11 +29,11 @@ class Transaction extends Model
     //NOT WORKING!!!!!!!!!!!Q
     public function buyer(): BelongsTo
     {
-        return $this->auction()->belongsTo(User::class, 'buyer_id');
+        return $this->auction->belongsTo(User::class, 'buyer_id');
     }
 
     public function seller(): BelongsTo
     {
-        return $this->auction()->belongsTo(User::class, 'creator_id');
+        return $this->auction->belongsTo(User::class, 'creator_id');
     }
 }
