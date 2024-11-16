@@ -1,52 +1,7 @@
-<!--
-<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <!-- CSRF Token 
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Styles 
-        <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
-        <link href="{{ url('css/app.css') }}" rel="stylesheet">
-        <script type="text/javascript">
-            // Fix for Firefox autofocus CSS bug
-            // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-        </script>
-        <script type="text/javascript" src={{ url('js/app.js') }} defer>
-        </script>
-    </head>
-    <body>
-        <main>
-            <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-                @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-                @endif
-            </header>
-            <section id="content">
-                @yield('content')
-            </section>
-        </main>
-    </body>
-    
-</html>
--->
-
-<!-- resources/views/profile.blade.php -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+@section('content')
 <body class="bg-gray-100 font-sans antialiased">
     <!-- Navbar -->
     <header class="bg-white shadow-sm p-4 flex justify-between items-center">
@@ -73,7 +28,7 @@
     </div>
 
     <!-- Profile Section -->
-    <section class="max-w-10xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg flex space-x-8">
+    <section class="max-w-5xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg flex space-x-8">
         <!-- Profile Info -->
         <div class="flex-none w-48">
             <div class="bg-gray-300 w-32 h-32 rounded-full mx-auto mb-4"></div>
@@ -164,4 +119,5 @@
         </div>
     </section>
 </body>
-</html>
+
+@endsection
