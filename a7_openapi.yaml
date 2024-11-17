@@ -1,0 +1,230 @@
+openapi: 3.0.0
+info:
+  title: AuctionPeer API
+  version: 1.0.0
+  description: API for the AuctionPeer application, supporting user authentication, auction management, bidding, and review features.
+
+servers:
+  - url: https://api.auctionpeer.com/v1
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid registration data
+
+  /auth/login:
+    post:
+      summary: User login
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+
+  /admin/users:
+    get:
+      summary: List all user accounts
+      tags: [User Administration]
+      description: Retrieve a list of all user accounts. Requires admin permissions.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of user accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden - requires admin privileges
+
+  /admin/users/{userId}:
+    get:
+      summary: Get user account details
+      tags: [User Administration]
+      description: Retrieve details of a specific user account by user ID. Requires admin permissions.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User account details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Forbidden - requires admin privileges
+        '404':
+          description: User not found
+
+    put:
+      summary: Update user account
+      tags: [User Administration]
+      description: Update details of a specific user account by user ID. Requires admin permissions.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                status:
+                  type: string
+                  enum: [active, inactive]
+      responses:
+        '200':
+          description: User account updated successfully
+        '403':
+          description: Forbidden - requires admin privileges
+        '404':
+          description: User not found
+
+    delete:
+      summary: Delete user account
+      tags: [User Administration]
+      description: Delete a specific user account by user ID. Requires admin permissions.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User account deleted successfully
+        '403':
+          description: Forbidden - requires admin privileges
+        '404':
+          description: User not found
+
+  /auctions:
+    get:
+      summary: List all auctions
+      tags: [Auction Management]
+      responses:
+        '200':
+          description: List of auctions
+    post:
+      summary: Create a new auction
+      tags: [Auction Management]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+                minimumBid:
+                  type: number
+      responses:
+        '201':
+          description: Auction created successfully
+        '400':
+          description: Invalid data or insufficient permission (admin restriction)
+
+  #... (remaining paths for auctions, bids, and reviews)
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+    Auction:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        minimumBid:
+          type: number
+        status:
+          type: string
+          enum: [active, ended, canceled]
