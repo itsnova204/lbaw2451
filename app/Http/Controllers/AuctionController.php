@@ -122,6 +122,14 @@ class AuctionController extends Controller
         // Fetch auctions belonging to the authenticated user
         $auctions = Auction::where('user_id', auth()->id())->get();
 
-        return view('auctions.my_auctions', compact('auctions'));
+        return view('pages.auction.my_auctions', compact('auctions'));
+    }
+
+    public function biddingHistory(Auction $auction)
+    {
+        // Retrieve bids for this auction, ordered by the bid amount or created_at
+        $bids = $auction->bids()->orderBy('created_at', 'desc')->get();
+
+        return view('pages.auction.bidding_history', compact('auction', 'bids'));
     }
 }
