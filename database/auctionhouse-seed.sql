@@ -482,3 +482,5 @@ INSERT INTO notification (text, created_at, type, receiver_id) VALUES
 -- Populate transactions table
 INSERT INTO transactions (amount, created_at, auction_id) VALUES
                                                               (40, '2024-10-05 11:00:00', 4); -- Transaction for Laptop sal
+
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));

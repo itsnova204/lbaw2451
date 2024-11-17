@@ -56,7 +56,7 @@
 
             <!-- sign up link -->
             <div class="text-center mt-6">
-                <p class="text-sm text-gray-600">Don't have an account? 
+                <p class="text-sm text-gray-600">Don't have an account?
                     <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Sign up</a>
                 </p>
             </div>
