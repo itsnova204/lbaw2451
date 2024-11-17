@@ -3,8 +3,8 @@
 @section('content')
 <section class="flex justify-center items-start p-10 h-screen bg-gray-100">
     <div class="w-full max-w-xl bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-semibold text-center text-gray-800">Login</h2>
-        <p class="text-sm text-gray-600 text-center mt-1">Sign in to your AuctionPeer account</p>
+        <h2 class="text-2xl font-semibold text-center text-gray-800">Register</h2>
+        <p class="text-sm text-gray-600 text-center mt-1">Sign up to AuctionPeer</p>
 
         <!-- register form -->
         <form method="POST" action="{{ route('login') }}" class="mt-6">
@@ -56,7 +56,7 @@
             <span class="px-3 text-sm text-gray-500">OR</span>
             <span class="w-full border-t border-gray-300"></span>
         </div>
-        
+
         <!-- sign in link -->
         <div class="text-center mt-6">
             <p class="text-sm text-gray-600">Already have an account? 
