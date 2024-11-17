@@ -45,15 +45,15 @@ CREATE TABLE auction (
                          description TEXT,
                          start_date TIMESTAMP NOT NULL,
                          end_date TIMESTAMP NOT NULL CHECK (end_date >= start_date + INTERVAL '1 day'),
-    status auction_status DEFAULT 'active',
-    minimum_bid NUMERIC CHECK (minimum_bid >= 0) DEFAULT 0,
-    current_bid NUMERIC CHECK (current_bid >= minimum_bid),
-    category_id INTEGER REFERENCES category(id),
-    creator_id INTEGER REFERENCES users(id),
-    buyer_id INTEGER REFERENCES users(id),
-    picture TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP
+                        status auction_status DEFAULT 'active',
+                        minimum_bid NUMERIC CHECK (minimum_bid >= 0) DEFAULT 0,
+                        current_bid NUMERIC CHECK (current_bid >= minimum_bid),
+                        category_id INTEGER REFERENCES category(id),
+                        creator_id INTEGER REFERENCES users(id),
+                        buyer_id INTEGER REFERENCES users(id),
+                        picture TEXT,
+                        created_at TIMESTAMP NOT NULL,
+                        updated_at TIMESTAMP
 );
 
 CREATE TABLE bid (
