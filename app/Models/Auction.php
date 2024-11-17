@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-
 class Auction extends Model
 {
     use HasFactory;
@@ -26,6 +25,7 @@ class Auction extends Model
         'creator_id',
         'buyer_id',
         'picture',
+        'status',
     ];
 
     protected $casts = [
@@ -37,6 +37,7 @@ class Auction extends Model
         'current_bid' => 'integer',
         'created_at' => 'datetime',
         'updaded_at' => 'datetime',
+        'status' => 'string',
     ];
 
     public function category() : BelongsTo
@@ -85,4 +86,13 @@ class Auction extends Model
         return $this->hasOne(Transaction::class);
     }
 
+    public static function search(string $query)
+    {
+        return self::whereRaw(
+            "tsvectors @@ plainto_tsquery('english', ?)",
+            [$query]
+        )
+            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
+            ->get();
+    }
 }
