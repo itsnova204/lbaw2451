@@ -85,4 +85,14 @@ class Auction extends Model
     public function transaction() : HasOne {
         return $this->hasOne(Transaction::class);
     }
+
+    public static function search(string $query)
+    {
+        return self::whereRaw(
+            "tsvectors @@ plainto_tsquery('english', ?)",
+            [$query]
+        )
+            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
+            ->get();
+    }
 }

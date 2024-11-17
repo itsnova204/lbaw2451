@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
-use App\Enums\AuctionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,5 +101,19 @@ class AuctionController extends Controller
             return redirect()->route('auction.index')->with('success', 'Auction cancelled successfully.');
         }
         return redirect()->route('auction.index')->with('error', 'You cannot delete an auction you do not own');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (!$query) {
+            return redirect()->back()->with('error', 'Search query cannot be empty.');
+        }
+
+        // Call the search function in the Auction model
+        $results = Auction::search($query);
+
+        return view('pages.auction.search', compact('results', 'query'));
     }
 }
