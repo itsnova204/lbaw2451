@@ -116,4 +116,12 @@ class AuctionController extends Controller
 
         return view('pages.auction.search', compact('results', 'query'));
     }
+
+    public function myAuctions()
+    {
+        // Fetch auctions belonging to the authenticated user
+        $auctions = Auction::where('user_id', auth()->id())->get();
+
+        return view('auctions.my_auctions', compact('auctions'));
+    }
 }
