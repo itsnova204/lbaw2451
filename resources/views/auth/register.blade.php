@@ -1,39 +1,69 @@
 @extends('layouts.app')
 
 @section('content')
-<form method="POST" action="{{ route('register') }}">
-    {{ csrf_field() }}
+<section class="flex justify-center items-start p-10 h-screen bg-gray-100">
+    <div class="w-full max-w-xl bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold text-center text-gray-800">Login</h2>
+        <p class="text-sm text-gray-600 text-center mt-1">Sign in to your AuctionPeer account</p>
 
-    <label for="name">Name</label>
-    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
-    @if ($errors->has('name'))
-      <span class="error">
-          {{ $errors->first('name') }}
-      </span>
-    @endif
+        <!-- register form -->
+        <form method="POST" action="{{ route('login') }}" class="mt-6">
+            @csrf
 
-    <label for="email">E-Mail Address</label>
-    <input id="email" type="email" name="email" value="{{ old('email') }}" required>
-    @if ($errors->has('email'))
-      <span class="error">
-          {{ $errors->first('email') }}
-      </span>
-    @endif
+            <!-- username input -->
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" name="name" id="name" placeholder="Enter a username"
+                    class="mt-1 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
+                    value="{{ old('email') }}" required>
+                @error('email')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-    <label for="password">Password</label>
-    <input id="password" type="password" name="password" required>
-    @if ($errors->has('password'))
-      <span class="error">
-          {{ $errors->first('password') }}
-      </span>
-    @endif
+            <!-- email input -->
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email"
+                    class="mt-1 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
+                    value="{{ old('email') }}" required>
+                @error('email')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-    <label for="password-confirm">Confirm Password</label>
-    <input id="password-confirm" type="password" name="password_confirmation" required>
+            <!-- password input -->
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password"
+                    class="mt-1 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
+                    required>
+                @error('password')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            
+            <!-- submit button -->
+            <button type="submit"
+                class="flex justify-center items-center w-full bg-blue-600 text-white font-semibold p-3 rounded-lg shadow hover:bg-blue-500 transition">
+                Register
+            </button>
+        </form>
 
-    <button type="submit">
-      Register
-    </button>
-    <a class="button button-outline" href="{{ route('login') }}">Login</a>
-</form>
+        <!-- divider -->
+        <div class="flex items-center justify-between mt-6">
+            <span class="w-full border-t border-gray-300"></span>
+            <span class="px-3 text-sm text-gray-500">OR</span>
+            <span class="w-full border-t border-gray-300"></span>
+        </div>
+        
+        <!-- sign in link -->
+        <div class="text-center mt-6">
+            <p class="text-sm text-gray-600">Already have an account? 
+                <a href="{{ route('login') }}" class="text-blue-500 hover:underline">Sign in</a>
+            </p>
+        </div>
+    </div>
+</section>
 @endsection
+

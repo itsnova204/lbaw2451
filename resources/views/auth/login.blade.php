@@ -32,6 +32,14 @@
                     @enderror
                 </div>
 
+                <!-- remember me -->
+                <div class="flex items-center justify-between mb-6">
+                    <label for="remember" class="inline-flex items-start">
+                        <input type="checkbox" name="remember" id="remember" class="form-checkbox h-4 w-4 text-indigo-600">
+                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    </label>
+                </div>
+
                 <!-- submit button -->
                 <button type="submit"
                     class="flex justify-center items-center w-full bg-blue-600 text-white font-semibold p-3 rounded-lg shadow hover:bg-blue-500 transition">
@@ -46,7 +54,7 @@
                 <span class="w-full border-t border-gray-300"></span>
             </div>
 
-            <!-- sign-up link -->
+            <!-- sign up link -->
             <div class="text-center mt-6">
                 <p class="text-sm text-gray-600">Don't have an account? 
                     <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Sign up</a>
