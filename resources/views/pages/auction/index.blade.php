@@ -6,43 +6,23 @@
 
     <div class="main-page">
         <div class="filter-section">
+            <div id="sort-by">
+                <label for="sort-by">Sort By:</label>
+                <select name="sort-by" id="sort-select">
+                    <option value="lowest">Lowest Price</option>
+                    <option value="highest">Highest Price</option>
+                    <option value="soonest">Ending Soonest</option>
+                </select>
+            </div>
             <div class="category">
                 <label for="category">Category:</label>
                 <select name="category" id="category">
                     <option value="">Select Category</option>
-                    <option value="cars">Cars</option>
-                    <option value="eletronics">Eletronics</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="accessories">Accessories</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                    @endforeach
                 </select>
             </div>
-            <div class="brand">
-                <!--option are in brandUpdate.js -->
-                <!-- more options will be added in the future-->
-                <label for="brand">Brand:</label>
-                <select name="brand" id="brand">
-                    <option value="">Select Brand</option>
-                </select>
-            </div>
-            <div class="auction-type">
-                <label for="auctionType">Auction Type:</label>
-                <select name="auctiontype" id="auctiontype">
-                    <option value="">Select Type</option>
-                    <option value="cars">New</option>
-                    <option value="eletronics">Used</option>
-                    <option value="clothing">Refurbished</option>
-                </select>
-            </div>
-            <!-- <div class="date">
-                <div class="date-from">
-                <label for="date_from">Date From:</label>
-                <input type="date" name="date_from" id="date_from">
-                </div>
-                <div class="date-to">
-                <label for="date_to">Date To:</label>
-                <input type="date" name="date_to" id="date_to">
-                </div>
-            </div> -->
 
             <!-- will add price display inm the future// for know just a simple range -->
             <div class="entry-price">

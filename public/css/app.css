@@ -334,4 +334,8 @@ input[type=password]:focus {
 #logout-form {
   margin: 0;
 }
+
+.submit-button {
+  color: #9b4dca;
+}
   
