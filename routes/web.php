@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,22 +26,9 @@ use App\Http\Controllers\Auth\RegisterController;
 Route::redirect('/', '/login');
 
 // Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});
-
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
+Route::controller(AuctionController::class)->group(function () {
+    Route::get('/auctions', 'index')->name('auctions.index');
+    Route::get('/auction/{id}', 'show');
 });
 
 
@@ -58,6 +47,11 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('/admin/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
+});
+
+// Search
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search', 'search')->name('search.results');
 });
 
 

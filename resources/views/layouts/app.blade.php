@@ -21,13 +21,15 @@
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+        <script type="text/javascript" src={{ url('js/brandUpdate.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/clearFilters.js') }} defer></script>
     </head>
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-                @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
+            @if (Auth::check())
+            @include('layouts.header') 
+            <!-- <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span> -->
                 @endif
             </header>
             <section id="content">
