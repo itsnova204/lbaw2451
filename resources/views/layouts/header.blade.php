@@ -12,7 +12,7 @@
     <div class="header-container">
     <div class="header-info">
         <div class="logo">
-        <a href="{{ url('/cards') }}" class="logo">
+        <a href="{{ url('/auctions') }}" class="logo">
             <div class="logo-img">not</div>
             <span>AuctionPeer</span>
         </a>

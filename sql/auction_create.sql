@@ -1,8 +1,6 @@
 SET search_path TO lbaw2451;
 
-DROP TABLE IF EXISTS account CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS admin CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS auction CASCADE;
 DROP TABLE IF EXISTS bid CASCADE;
@@ -20,24 +18,20 @@ CREATE TYPE auction_status AS ENUM ('active', 'ended', 'canceled');
 CREATE TYPE report_status AS ENUM ('not_processed', 'discarded', 'processed');
 CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'auction_end', 'new_comment', 'report');
 
-CREATE TABLE account (
+
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    registration_date TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
     profile_picture TEXT,
     birth_date DATE,
-    address TEXT
-);
-
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY REFERENCES account(id),
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE TABLE admin (
-    id INTEGER PRIMARY KEY REFERENCES account(id)
+    address TEXT,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    is_admin BOOLEAN,
+    remember_token TEXT
 );
 
 CREATE TABLE category (
@@ -57,57 +51,65 @@ CREATE TABLE auction (
     category_id INTEGER REFERENCES category(id),
     creator_id INTEGER REFERENCES users(id),
     buyer_id INTEGER REFERENCES users(id),
-    picture TEXT
+    picture TEXT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE bid (
     id SERIAL PRIMARY KEY,
     amount NUMERIC NOT NULL,
-    date TIMESTAMP NOT NULL,
     auction_id INTEGER REFERENCES auction(id),
-    user_id INTEGER REFERENCES users(id)
+    user_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE rating (
     id SERIAL PRIMARY KEY,
     score INTEGER NOT NULL CHECK (score >= 0 AND score <= 5),
     comment TEXT,
-    date TIMESTAMP NOT NULL,
     auction_id INTEGER REFERENCES auction(id),
     rater_id INTEGER REFERENCES users(id),
-    receiver_id INTEGER REFERENCES users(id)
+    receiver_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
-    date TIMESTAMP NOT NULL,
     auction_id INTEGER REFERENCES auction(id),
-    user_id INTEGER REFERENCES users(id)
+    user_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE report (
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
-    date TIMESTAMP NOT NULL,
     status report_status DEFAULT 'not_processed',
     auction_id INTEGER REFERENCES auction(id),
-    user_id INTEGER REFERENCES users(id)
+    user_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
-    date TIMESTAMP NOT NULL,
     type notif_type DEFAULT 'generic',
-    receiver_id INTEGER REFERENCES users(id)
+    receiver_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     amount NUMERIC NOT NULL,
-    date TIMESTAMP NOT NULL,
-    auction_id INTEGER NOT NULL REFERENCES auction(id)
+    auction_id INTEGER NOT NULL REFERENCES auction(id),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
 );
 
 CREATE INDEX IDX01 ON auction USING BTREE(creator_id);
@@ -118,7 +120,7 @@ CREATE INDEX IDX03 ON transactions USING BTREE(auction_id);
 ALTER TABLE auction
 ADD COLUMN tsvectors TSVECTOR;
 
-CREATE FUNCTION auction_search_update() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION auction_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.title <> OLD.title OR NEW.description <> OLD.description)) THEN
      NEW.tsvectors = (
@@ -162,7 +164,7 @@ BEGIN
     IF (SELECT user_id 
         FROM bid
         WHERE auction_id = NEW.auction_id 
-        ORDER BY amount DESC, date DESC 
+        ORDER BY amount DESC, created_at DESC
         LIMIT 1) = NEW.user_id THEN
         RAISE EXCEPTION 'User % already has the highest bid on auction %.', NEW.user_id, NEW.auction_id;
     END IF;
@@ -180,7 +182,7 @@ CREATE OR REPLACE FUNCTION extend_auction_if_bid_late()
 RETURNS TRIGGER AS $$
 BEGIN
     
-    IF (NEW.date >= (SELECT end_date - INTERVAL '15 minutes' 
+    IF (NEW.created_at >= (SELECT end_date - INTERVAL '15 minutes'
                      FROM auction 
                      WHERE id = NEW.auction_id)) THEN
         UPDATE auction
@@ -225,7 +227,7 @@ CREATE OR REPLACE FUNCTION anonymize_user_account()
 RETURNS TRIGGER AS $$
 BEGIN
     
-    UPDATE account
+    UPDATE users
     SET 
         username = 'deleted_user_' || NEW.id,
         email = 'deleted_' || NEW.id || '@example.com',
@@ -246,7 +248,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER anonymize_user_before_delete
-BEFORE DELETE ON account
+BEFORE DELETE ON users
 FOR EACH ROW
 EXECUTE FUNCTION anonymize_user_account();
 
@@ -273,7 +275,7 @@ EXECUTE FUNCTION check_auction_dates();
 CREATE OR REPLACE FUNCTION prevent_admin_auction_creation()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.creator_id) THEN
+    IF EXISTS (SELECT 1 FROM users WHERE id = NEW.creator_id AND is_admin = TRUE) THEN
         RAISE EXCEPTION 'Administrators are not allowed to create auctions.';
     END IF;
     RETURN NEW;
@@ -289,10 +291,11 @@ EXECUTE FUNCTION prevent_admin_auction_creation();
 CREATE OR REPLACE FUNCTION prevent_admin_bid_placement()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM admin WHERE id = NEW.user_id) THEN
+    -- Check if the user placing the bid (user_id) is an admin
+    IF EXISTS (SELECT 1 FROM users WHERE id = NEW.user_id AND is_admin = TRUE) THEN
         RAISE EXCEPTION 'Administrators are not allowed to place bids.';
-    END IF;
-    RETURN NEW;
+END IF;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -344,7 +347,7 @@ EXECUTE FUNCTION prevent_duplicate_highest_bid();
 CREATE OR REPLACE FUNCTION extend_auction_deadline()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF (SELECT end_date FROM auction WHERE id = NEW.auction_id) - NEW.date <= INTERVAL '15 minutes' THEN
+    IF (SELECT end_date FROM auction WHERE id = NEW.auction_id) - NEW.created_at <= INTERVAL '15 minutes' THEN
         UPDATE auction
         SET end_date = end_date + INTERVAL '30 minutes'
         WHERE id = NEW.auction_id;
@@ -392,7 +395,7 @@ CREATE OR REPLACE FUNCTION anonymize_user_data()
 RETURNS TRIGGER AS $$
 BEGIN
     
-    UPDATE account
+    UPDATE users
     SET username = 'deleted_user_' || NEW.id,
         email = 'deleted_user_' || NEW.id || '@example.com',
         password = 'deleted',  

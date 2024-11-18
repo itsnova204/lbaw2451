@@ -45,15 +45,15 @@ CREATE TABLE auction (
                          description TEXT,
                          start_date TIMESTAMP NOT NULL,
                          end_date TIMESTAMP NOT NULL CHECK (end_date >= start_date + INTERVAL '1 day'),
-    status auction_status DEFAULT 'active',
-    minimum_bid NUMERIC CHECK (minimum_bid >= 0) DEFAULT 0,
-    current_bid NUMERIC CHECK (current_bid >= minimum_bid),
-    category_id INTEGER REFERENCES category(id),
-    creator_id INTEGER REFERENCES users(id),
-    buyer_id INTEGER REFERENCES users(id),
-    picture TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP
+                        status auction_status DEFAULT 'active',
+                        minimum_bid NUMERIC CHECK (minimum_bid >= 0) DEFAULT 0,
+                        current_bid NUMERIC CHECK (current_bid >= minimum_bid),
+                        category_id INTEGER REFERENCES category(id),
+                        creator_id INTEGER REFERENCES users(id),
+                        buyer_id INTEGER REFERENCES users(id),
+                        picture TEXT,
+                        created_at TIMESTAMP NOT NULL,
+                        updated_at TIMESTAMP
 );
 
 CREATE TABLE bid (
@@ -449,15 +449,16 @@ INSERT INTO category (name) VALUES
 
 -- Populate auctions table
 INSERT INTO auction (title, description, start_date, end_date, status, minimum_bid, current_bid, category_id, creator_id, buyer_id, picture, created_at) VALUES
-                                                                                                                                                             ('Laptop for Sale', 'A gently used laptop in great condition.', '2024-10-01 10:00:00', '2024-10-03 10:00:00', 'active', 100, 150, 1, 1, NULL, '/path', '2024-10-01 10:00:00'),
-                                                                                                                                                             ('Vintage Chair', 'A beautiful vintage chair for your living room.', '2024-10-02 09:00:00', '2024-10-05 09:00:00', 'active', 50, 70, 2, 2, NULL, '/path', '2024-10-02 09:00:00'),
-                                                                                                                                                             ('Programming Book', 'Learn Haskell programming with this great book.', '2024-10-03 11:00:00', '2024-10-10 11:00:00', 'active', 20, 20, 1, 1, NULL, '/path', '2024-10-03 11:00:00');
+                                                                                                                                                             ('Laptop for Sale', 'A gently used laptop in great condition.', '2024-10-01 10:00:00', '2024-11-17 12:18:00', 'active', 100, 150, 1, 1, NULL, '/path', '2024-10-01 10:00:00'),
+                                                                                                                                                             ('Vintage Chair', 'A beautiful vintage chair for your living room.', '2024-10-02 09:00:00', '2024-12-18 09:00:00', 'active', 50, 70, 2, 2, NULL, '/path', '2024-10-02 09:00:00'),
+                                                                                                                                                             ('Programming Book', 'Learn Haskell programming with this great book.', '2024-10-03 11:00:00', '2024-12-10 11:00:00', 'active', 20, 20, 1, 1, NULL, '/path', '2024-10-03 11:00:00'),
+                                                                                                                                                             ('Sturdy Table', 'A sturdy and well-made table, still in great condition.', '2024-10-03 11:00:00','2024-10-05 11:00:00','ended', 10, 40, 2, 1,2, '/path', '2024-10-03 11:00:00');
 
 -- Populate bids table
 INSERT INTO bid (amount, created_at, auction_id, user_id) VALUES
-                                                              (120, '2024-10-01 11:00:00', 1, 2), -- Jane bids on the Laptop
-                                                              (160, '2024-10-02 10:00:00', 1, 1), -- John bids on the Laptop
-                                                              (60, '2024-10-03 10:00:00', 2, 2); -- Jane bids on the Vintage Chair
+                                                              (150, '2024-10-01 11:00:00', 1, 2), -- Jane bids on the Laptop
+                                                              (60, '2024-10-03 10:00:00', 2, 2),
+                                                              (40, '2024-10-03 12:00:00', 4, 2);
 
 -- Populate ratings table
 INSERT INTO rating (score, comment, created_at, auction_id, rater_id, receiver_id) VALUES
@@ -480,6 +481,4 @@ INSERT INTO notification (text, created_at, type, receiver_id) VALUES
 
 -- Populate transactions table
 INSERT INTO transactions (amount, created_at, auction_id) VALUES
-                                                              (150, '2024-10-04 13:00:00', 1), -- Transaction for Laptop sale
-                                                              (70, '2024-10-06 15:00:00', 2); -- Transaction for Vintage Chair sale
-
+                                                              (40, '2024-10-05 11:00:00', 4); -- Transaction for Laptop sal

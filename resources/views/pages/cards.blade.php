@@ -59,11 +59,8 @@
         <button type="submit">Apply Filters</button>
         <a href="#" id="clear-filters" class="clear-filters">Clean filters</a>
 
-        </form>
     </div>
-    <div class="cards">
-        @each('partials.card', $cards, 'card')
-    </div>
+
 </div>
 
 @endsection

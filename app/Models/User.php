@@ -4,29 +4,31 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
-    // Don't add create and update timestamps in database.
-    public $timestamps  = false;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'profile_picture',
+        'birth_date',
+        'address',
+        'is_deleted',
+        'is_admin',
     ];
 
     /**
@@ -45,15 +47,59 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'birth_date' => 'date',
     ];
 
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
+    public function comments() : HasMany {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function reports() : HasMany {
+        return $this->hasMany(Report::class);
+    }
+
+    public function auctions() : HasMany {
+        return $this->hasMany(Auction::class);
+    }
+
+    public function bids() : HasMany {
+        return $this->hasMany(Bid::class);
+    }
+
+    public function ratingsGiven() : HasMany {
+        return $this->hasMany(Rating::class, 'rater_id');
+    }
+
+    public function ratingsReceived() : HasMany {
+        return $this->hasMany(Rating::class, 'receiver_id');
+    }
+
+    public function notifications() : HasMany {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function auctionsBought(): HasMany
     {
-        return $this->hasMany(Card::class);
+        return $this->hasMany(Auction::class, 'buyer_id');
+    }
+
+    public function buyerTransactions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Transaction::class, Auction::class, 'buyer_id', 'auction_id', 'id', 'id');
+    }
+
+    public function auctionsCreated(): HasMany
+    {
+        return $this->hasMany(Auction::class, 'creator_id');
+    }
+
+    public function sellerTransactions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Transaction::class, Auction::class, 'creator_id', 'auction_id', 'id', 'id');
+    }
+
+    public function isAdmin() : bool {
+        return $this->is_admin;
     }
 }
