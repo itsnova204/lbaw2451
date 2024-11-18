@@ -24,9 +24,9 @@
             <span>Services</span>
 
             @auth
-                <form action="{{ route('logout') }}" method="GET" style="display: inline;">
+                <form action="{{ route('logout') }}" method="GET" id="logout-form">
                     @csrf
-                    <button type="submit" class="logout-button" style="background: none; border: none; color: inherit; cursor: pointer; padding: 0; font: inherit;">Logout</button>
+                    <span class="submit-button" onclick="document.getElementById('logout-form').submit();">Logout</span>
                 </form>
                 <div class="select-wrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
