@@ -54,7 +54,6 @@
                         </li>
                         @endforeach
                     </ul>
-                    <a href="{{ route('auctions.active', $user->id) }}" class="text-blue-500 hover:underline block mt-2 text-center">View More</a>
                 </div>
 
                 <!-- Won Auctions -->
@@ -72,7 +71,6 @@
                         </li>
                         @endforeach
                     </ul>
-                    <a href="{{ route('auctions.won', $user->id) }}" class="text-blue-500 hover:underline block mt-2 text-center">View More</a>
                 </div>
 
                 <!-- My Auction Offers -->
@@ -90,7 +88,6 @@
                         </li>
                         @endforeach
                     </ul>
-                    <a href="{{ route('auctions.offers', $user->id) }}" class="text-blue-500 hover:underline block mt-2 text-center">View More</a>
                 </div>
             </div>
         </div>

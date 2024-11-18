@@ -30,10 +30,10 @@ class UserController extends Controller
         // Check if the current logged-in user is the same as the user being shown
         if ($currentUser && $currentUser->id === $user->id) {
             // Return the account view for the current user
-            return view('pages.users.account', compact('user'));
+            return view('pages.user.account', compact('user'));
         } else {
             // Return the profile view for a different user
-            return view('pages.users.profile', compact('user'));
+            return view('pages.user.profile', compact('user'));
         }
     }
 
