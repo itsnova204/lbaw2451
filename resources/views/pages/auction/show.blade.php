@@ -20,6 +20,7 @@
                         </li>
                     @endforeach
                 </ul>
+            </div>
         </div>
         <div class="auction-body">
             <div class="auction-title-bid">
