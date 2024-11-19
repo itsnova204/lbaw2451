@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\BidController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,7 @@ Route::redirect('/', '/login');
 // Cards
 Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
-    Route::get('/auction/{id}', 'show');
+    Route::get('/auction/{auction}', 'show')->name('auction.show');
 });
 
 
@@ -53,5 +54,7 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search.results');
 });
+
+Route::post('/auctions/{auction}/bids', [BidController::class, 'store'])->name('auctions.bids.store');
 
 
