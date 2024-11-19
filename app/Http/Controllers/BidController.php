@@ -27,6 +27,13 @@ class BidController extends Controller
                 'auction_id' => $request->auction_id,
                 'amount' => $request->amount,
             ]);
+
+            // Update the current bid on the auction
+            $auction = $bid->auction;
+            $auction->current_bid = $bid->amount;
+            // Save the auction with the new current bid
+            $auction->save();
+
             //we dont need this, we need to return to the place we were, no?
             return redirect()->back()->with('success', 'Bid placed successfully!');
             //return response()->json(['message' => 'Bid placed successfully!'], 201);
