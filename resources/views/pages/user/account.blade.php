@@ -3,46 +3,43 @@
 
 @section('content')
 
-    <!-- Profile Section -->
-    <section class="max-w-full mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg flex space-x-8">
-        <!-- Profile Info -->
-        <div class="flex-none w-48">
-            <div class="bg-gray-300 w-32 h-32 rounded-full mx-auto mb-4" style="background-image: url('{{ asset($user->profile_picture) }}'); background-size: cover;"></div>
-            <div class="text-center">
-                <h2 class="text-lg font-semibold">{{ $user->username }}</h2>
-                <p class="text-gray-600 mt-2">{{ $user->bio ?? 'No biography available.' }}</p>
-                <div class="flex justify-center items-center mt-4">
-                    @php
-                        $rating = round($user->ratingsReceived->avg('rating') ?? 0);
-                    @endphp
-                    @for ($i = 1; $i <= 5; $i++)
-                        <span class="{{ $i <= $rating ? 'text-yellow-400' : 'text-gray-300' }} text-lg">&#9733;</span>
-                    @endfor
-                </div>
-                <p class="text-sm text-gray-400 mt-2">Accession Date: {{ $user->created_at->format('d.m.Y') }}</p>
-                <a href="{{ route('logout') }}" class="text-blue-500 hover:underline mt-4 inline-block">Log Out</a>
+
+<section class="max-w-full mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg flex space-x-8">
+    <!-- profile info -->
+    <div class="flex-none w-48">
+        <div class="bg-gray-300 w-32 h-32 rounded-full mx-auto mb-4" style="background-image: url('{{ asset($user->profile_picture) }}'); background-size: cover;"></div>
+        <div class="text-center">
+            <h2 class="text-lg font-semibold">{{ $user->username }}</h2>
+            <p class="text-gray-600 mt-2">{{ $user->bio ?? 'No biography available.' }}</p>
+            <div class="flex justify-center items-center mt-4">
+                @php
+                    $rating = round($user->ratingsReceived->avg('rating') ?? 0);
+                @endphp
+                @for ($i = 1; $i <= 5; $i++)
+                    <span class="{{ $i <= $rating ? 'text-yellow-400' : 'text-gray-300' }} text-lg">&#9733;</span>
+                @endfor
             </div>
+            <p class="text-sm text-gray-400 mt-2">Accession Date: {{ $user->created_at->format('d.m.Y') }}</p>
+            <a href="{{ route('logout') }}" class="text-blue-500 hover:underline mt-4 inline-block">Log Out</a>
         </div>
+    </div>
 
-        <!-- Auction Sections -->
-        <div class="flex-1 space-y-8">
-            <!-- Navigation Tabs -->
-            <div class="flex justify-between">
-                <div class="flex space-x-6">
-                    <button class="text-gray-600 font-semibold px-3 py-1.5 border-b-2 border-transparent hover:border-gray-800">Wishlist</button>
-                    <button class="text-gray-600 font-semibold px-3 py-1.5 border-b-2 border-transparent hover:border-gray-800">Payment Methods</button>
-                    <button class="text-gray-600 font-semibold px-3 py-1.5 border-b-2 border-transparent hover:border-gray-800">Invoices and Receipts</button>
-                </div>
-                <button class="text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500">Create New Auction</button>
-            </div>
+    <!-- auction sections -->
+    <div class="flex-1 space-y-8">
 
-            <!-- Auction Lists -->
-            <div class="grid grid-cols-3 gap-4">
-                <!-- Active Auctions -->
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <h3 class="text-gray-800 font-semibold mb-4">Active Auctions</h3>
-                    <ul class="space-y-4">
-                        @foreach ($user->auctionsCreated as $auction)
+        <button class="text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500">Create New Auction</button>
+
+        <!-- auction lists -->
+        <div class="grid grid-cols-3 gap-4">
+
+            <!-- active auctions -->
+            <div class="bg-gray-100 p-4 rounded-lg shadow">
+                <h3 class="text-gray-800 font-semibold mb-4">Active Auctions</h3>
+                <ul class="space-y-4">
+                    @if ($user->auctionsCreated->isEmpty())
+                        <p> This user has not created any auctions at the moment. </p>
+                    @else
+                        @foreach ($user->paginatedAuctionsCreated(3) as $auction)
                         <li class="flex space-x-3">
                             <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
                             <div class="flex-1">
@@ -52,14 +49,18 @@
                             </div>
                         </li>
                         @endforeach
-                    </ul>
-                </div>
+                    @endif
+                </ul>
+            </div>
 
-                <!-- Won Auctions -->
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <h3 class="text-gray-800 font-semibold mb-4">Won Auctions</h3>
-                    <ul class="space-y-4">
-                        @foreach ($user->auctionsBought as $auction)
+            <!-- won auctions -->
+            <div class="bg-gray-100 p-4 rounded-lg shadow">
+                <h3 class="text-gray-800 font-semibold mb-4">Won Auctions</h3>
+                <ul class="space-y-4">
+                    @if ($user->auctionsBought->isEmpty())
+                        <p> This user has not won any auctions at the moment. </p>
+                    @else
+                        @foreach ($user->paginatedAuctionsBought(3) as $auction)
                         <li class="flex space-x-3">
                             <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
                             <div class="flex-1">
@@ -69,14 +70,18 @@
                             </div>
                         </li>
                         @endforeach
-                    </ul>
-                </div>
+                    @endif
+                </ul>
+            </div>
 
-                <!-- My Auction Offers -->
-                <div class="bg-gray-100 p-4 rounded-lg shadow">
-                    <h3 class="text-gray-800 font-semibold mb-4">My Auction Offers</h3>
-                    <ul class="space-y-4">
-                        @foreach ($user->bids as $bid)
+            <!-- my auction offers -->
+            <div class="bg-gray-100 p-4 rounded-lg shadow">
+                <h3 class="text-gray-800 font-semibold mb-4">My Auction Offers</h3>
+                <ul class="space-y-4">
+                    @if ($user->bids->isEmpty())
+                        <p> This user has no placed bids at the moment. </p>
+                    @else
+                        @foreach ($user->paginatedBids(3) as $bid)
                         <li class="flex space-x-3">
                             <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($bid->auction->image_url) }}'); background-size: cover;"></div>
                             <div class="flex-1">
@@ -86,11 +91,12 @@
                             </div>
                         </li>
                         @endforeach
-                    </ul>
-                </div>
+                    @endif
+                </ul>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 
 
