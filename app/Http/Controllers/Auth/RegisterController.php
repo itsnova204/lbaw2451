@@ -42,7 +42,7 @@ class RegisterController extends Controller
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('index')
+        return redirect()->route('auctions.index')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }

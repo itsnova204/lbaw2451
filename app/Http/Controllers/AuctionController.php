@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,8 @@ class AuctionController extends Controller
     public function index()
     {
         $auctions = Auction::where('status', 'active')->orderBy('created_at', 'desc')->get();
-        return view('pages.auction.index', compact('auctions'));
+        $categories = Category::all();
+        return view('pages.auction.index', compact('auctions', 'categories'));
     }
 
     /**

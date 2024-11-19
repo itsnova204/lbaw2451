@@ -22,24 +22,23 @@
             <span>Contact</span>
             <span>FAQ</span>
             <span>Services</span>
-            <div class="select-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
-                        <circle cx="12" cy="8" r="5" />
-                        <path d="M20 21a8 8 0 0 0-16 0" />
-                    </svg>
-                <!-- <label for="fruits">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
-                        <circle cx="12" cy="8" r="5" />
-                        <path d="M20 21a8 8 0 0 0-16 0" />
-                    </svg>
-                    User
-                </label>
 
-                <select id="user" name={{ Auth::user()->name }}>
-                    <option value="Profile">Profile</option>
-                    <option value="Logout">Logout</option>
-                </select> -->
-            </div>
+            @auth
+                <form action="{{ route('logout') }}" method="GET" id="logout-form">
+                    @csrf
+                    <span class="submit-button" onclick="document.getElementById('logout-form').submit();">Logout</span>
+                </form>
+                <div class="select-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
+                        <circle cx="12" cy="8" r="5" />
+                        <path d="M20 21a8 8 0 0 0-16 0" />
+                    </svg>
+                </div>
+            @endauth
+
+            @guest
+                <a href="{{ route('login') }}" class="login-button">Login</a>
+            @endguest
         </div>
     </div>
 

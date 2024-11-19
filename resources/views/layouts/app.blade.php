@@ -25,10 +25,7 @@
     <body>
         <main>
             <header>
-            @if (Auth::check())
-            @include('layouts.header') 
-            <!-- <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span> -->
-                @endif
+            @include('layouts.header')
             </header>
             <section id="content">
                 @yield('content')

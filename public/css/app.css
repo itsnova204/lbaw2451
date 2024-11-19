@@ -325,9 +325,17 @@ label {
 }
 
 
-  input[type=text]:focus,
-  input[type=email]:focus,
-  input[type=password]:focus {
-    border-color: #9b4dca;
-  }
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus {
+  border-color: #9b4dca;
+}
+
+#logout-form {
+  margin: 0;
+}
+
+.submit-button {
+  color: #9b4dca;
+}
   
