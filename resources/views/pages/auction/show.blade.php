@@ -7,10 +7,13 @@
         <div class="auction-image-bids">
             <img src="{{ asset('storage/images/a1.webp')}}" alt="{{ $auction->title }}" class="auction-image">
             <div class="bids">
-                <h2>Bids</h2>
+                <h2><a href="{{ url()->current() }}/bids">Bids</a></h2>
                 <p><strong>Number of Bids:</strong> {{ $auction->bids()->count() }}</p>
                 <ul>
-                    @foreach ($auction->bids()->get() as $bid)
+                    @php
+                        $bids = $auction->bids()->get()->reverse()->take(3);
+                    @endphp
+                    @foreach ($bids as $bid)
                         <li class="bid-item">
                             <div class="bid-info">
                                 <span class="bid-username">{{ $bid->user->username }}</span>

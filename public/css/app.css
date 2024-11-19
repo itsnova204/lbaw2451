@@ -355,18 +355,22 @@ input[type=password]:focus {
   gap: 20px;
   flex-direction: column;
   width: 40%;
+  justify-content: space-between;
 }
 
 .auction-image {
-  width: 50%;
   border-radius: 10px;
   object-fit: cover;
 }
 
 .bids {
   flex: 1;
-  height: fit-content;
+  height: 10px;
   margin-top: auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .bids h2 {
