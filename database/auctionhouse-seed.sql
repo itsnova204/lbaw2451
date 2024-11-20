@@ -432,6 +432,22 @@ CREATE TRIGGER check_auction_dates_trigger
 
 SET search_path TO lbaw2451;
 
+--TRIGGER15
+CREATE OR REPLACE FUNCTION prevent_lower_bids()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.amount <= (SELECT current_bid FROM auction WHERE id = NEW.auction_id) THEN
+        RAISE EXCEPTION 'Bid amount must be higher than the current bid.';
+END IF;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_lower_bids_trigger
+    BEFORE INSERT ON bid
+    FOR EACH ROW
+    EXECUTE FUNCTION prevent_lower_bids();
+
 -- Populate accounts table
 INSERT INTO users (id, username, email, password, created_at, profile_picture, birth_date, address, is_deleted, is_admin) VALUES
                                                                                                                               (1, 'john_doe', 'john.doe@example.com', 'hashed_password_1', '2024-01-10 08:30:00', 'profile1.jpg', '1990-05-15', '123 Main St, Lisbon', FALSE, FALSE),  -- john_doe
@@ -482,3 +498,5 @@ INSERT INTO notification (text, created_at, type, receiver_id) VALUES
 -- Populate transactions table
 INSERT INTO transactions (amount, created_at, auction_id) VALUES
                                                               (40, '2024-10-05 11:00:00', 4); -- Transaction for Laptop sal
+
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
