@@ -521,4 +521,12 @@ h4 {
   margin-bottom: 5px;
 }
 
-  
+#hist-bid-num {
+  margin-bottom: 2.0rem;
+}
+
+#bid-and-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

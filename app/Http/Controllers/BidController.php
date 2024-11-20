@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Auction;
 use App\Models\Bid;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -9,6 +10,15 @@ use Illuminate\Support\Facades\Log;
 
 class BidController extends Controller
 {
+    public function index($auctionId)
+    {
+        // Retrieve the auction with its bids
+        $auction = Auction::with('bids.user')->findOrFail($auctionId);
+
+        // Return the view with the auction and its bids
+        return view('pages.auction.bidding_history', compact('auction'));
+    }
+
     /**
      * Store a newly created resource in storage.
      */
