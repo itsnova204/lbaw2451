@@ -55,6 +55,10 @@ Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search.results');
 });
 
-Route::post('/auctions/{auction}/bids', [BidController::class, 'store'])->name('auctions.bids.store');
+Route::controller(BidController::class)->group(function () {
+    Route::post('/auctions/{auction}/bids', 'store')->name('auctions.bids.store');
+    Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
+});
+
 
 
