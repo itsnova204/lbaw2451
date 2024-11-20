@@ -344,7 +344,7 @@ input[type=password]:focus {
   flex-direction: row;
   gap: 20px;
   background-color: white;
-  padding: 20px;
+  padding: 30px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   justify-content: space-between;
@@ -417,6 +417,8 @@ input[type=password]:focus {
   flex-direction: column;
   gap: 20px;
   width: 50%;
+  padding: 10px;
+  justify-content: space-between;
 }
 
 .auction-title-bid {
@@ -425,10 +427,18 @@ input[type=password]:focus {
   align-items: center;
   font-size: 2rem;
   font-weight: bold;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .auction-description {
   font-size: 1.4rem;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .auction-info p {
@@ -438,8 +448,13 @@ input[type=password]:focus {
 
 .auction-bidding {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
 }
 
 .auction-bidding p {
@@ -468,7 +483,7 @@ input[type=password]:focus {
 }
 
 button[type="submit"] {
-  padding: 10px 20px;
+  padding: 0px 20px;
   font-size: 1.4rem;
   color: white;
   background-color: #9b4dca;
@@ -481,4 +496,29 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #7a3a9e;
 }
+
+#auction-name-star svg{
+  margin-left : 10px;
+  padding-top: 5px;
+}
+
+.auction-info {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.vertical {
+  border-left: 2px solid #333;
+  height: 100%;
+}
+
+h4 {
+  margin-bottom: 5px;
+}
+
   
