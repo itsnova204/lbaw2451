@@ -49,6 +49,7 @@
                             </div>
                         </li>
                         @endforeach
+                        <a href= > See all ${{ $user->auctionsCreated->count() }} </a>
                     @endif
                 </ul>
             </div>
@@ -70,6 +71,7 @@
                             </div>
                         </li>
                         @endforeach
+                        <a href= > See all ${{ $user->auctionsBought->count() }} </a>
                     @endif
                 </ul>
             </div>
@@ -91,6 +93,7 @@
                             </div>
                         </li>
                         @endforeach
+                        <a href= > See all ${{ $user->bids->count() }} </a>
                     @endif
                 </ul>
             </div>
