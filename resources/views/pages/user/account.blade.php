@@ -10,7 +10,6 @@
         <div class="bg-gray-300 w-32 h-32 rounded-full mx-auto mb-4" style="background-image: url('{{ asset($user->profile_picture) }}'); background-size: cover;"></div>
         <div class="text-center">
             <h2 class="text-lg font-semibold">{{ $user->username }}</h2>
-            <p class="text-gray-600 mt-2">{{ $user->bio ?? 'No biography available.' }}</p>
             <div class="flex justify-center items-center mt-4">
                 @php
                     $rating = round($user->ratingsReceived->avg('rating') ?? 0);
@@ -20,7 +19,7 @@
                 @endfor
             </div>
             <p class="text-sm text-gray-400 mt-2">Accession Date: {{ $user->created_at->format('d.m.Y') }}</p>
-            <a href="" > Edit Profile </a>
+            <a href="{{ route('user.edit', $user) }}" > Edit Profile </a>
             <a href="{{ route('logout') }}" class="mt-4 inline-block">Log Out</a>
         </div>
     </div>
