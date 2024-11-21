@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Edit Profile</h1>
+
+<h1>Edit Profile</h1>
+<div class="rectangle-div">
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -27,9 +28,6 @@
             @error('profile_picture')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-            @if($user->profile_picture)
-                <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="mt-3" width="100">
-            @endif
         </div>
 
         <!-- address -->
