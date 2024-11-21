@@ -13,7 +13,7 @@ class AuctionPolicy
     /**
      * Determine whether the user can view any auctions.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
         return true;
     }
@@ -21,7 +21,7 @@ class AuctionPolicy
     /**
      * Determine whether the user can view the auction.
      */
-    public function view(User $user, Auction $auction): bool
+    public function view(?User $user, Auction $auction): bool
     {
         return $auction->status === 'active';
     }
