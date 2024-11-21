@@ -108,9 +108,11 @@ class AuctionController extends Controller
         }
 
         // Call the search function in the Auction model
-        $results = Auction::search($query);
+        $results = Auction::search($query)->all();
 
-        return view('pages.auction.search', compact('results', 'query'));
+        $categories = Category::all();
+
+        return view('pages.auction.search', compact('results', 'query', 'categories'));
     }
 
     public function myAuctions()
