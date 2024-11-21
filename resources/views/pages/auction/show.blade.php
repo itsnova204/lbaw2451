@@ -5,7 +5,9 @@
 @section('content')
     <div class="auction-details">
         <div class="auction-image-bids">
-            <img src="{{ asset('storage/images/a1.webp')}}" alt="{{ $auction->title }}" class="auction-image">
+            <div class="auction-image-div">
+                <img src="https://via.placeholder.com/700" alt="{{ $auction->title }}" class="auction-image">
+            </div>
             <div class="bids">
                 <h2><a href="{{ url()->current() }}/bids">Bids</a></h2>
                 <p><strong>Number of Bids:</strong> {{ $auction->bids()->count() }}</p>

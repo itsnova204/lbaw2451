@@ -33,7 +33,7 @@ body {
   cursor: pointer;
 }
 
-.header-info .logo .logo-img { 
+.header-info .logo .logo-img {
   background-color: #9b4dca;
   color: white;
   padding: 5px;
@@ -51,7 +51,7 @@ body {
   gap: 20px;
   cursor: pointer;
   color: #424242;
-  
+
 }
 
 .search-social {
@@ -61,7 +61,7 @@ body {
   height: 100px;
   width: 100%;
   margin-top: 10px;
-  
+
 }
 
 .search-social .socials {
@@ -95,7 +95,7 @@ body {
 }
 
 .search-container input:focus {
-  border: 1px solid #424242; 
+  border: 1px solid #424242;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -167,7 +167,7 @@ input[type="range"]:focus::-moz-range-thumb{
   position: absolute;
   color: #424242;
   top: 6px;
-  left: 10px; 
+  left: 10px;
 }
 label {
   font-weight: normal;
@@ -204,12 +204,12 @@ label {
   display: flex;
 }
 
-.filter-section #clear-filters { 
+.filter-section #clear-filters {
   display: flex;
   align-self: center;
 }
 
-.auction-card { 
+.auction-card {
   background-color: #F4F4F4;
   display: flex;
   flex-direction: column;
@@ -217,22 +217,23 @@ label {
   gap: 10px;
   padding: 20px;
   border-radius: 10px;
+  width: 350px;
 
 }
-.expire-date { 
+.expire-date {
   width: 100%;
   background-color: #9c9c9c;
   color: black;
   border-radius: 10px;
 }
 
-.expire-date span { 
+.expire-date span {
   padding: 10px;
   font-size: 1.4rem;
 }
 
 .product-img {
-  width: 100%;
+  width: 300px;
   height: 200px;
   background-color: #9c9c9c;
   border-radius: 10px;
@@ -240,8 +241,14 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
+.product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 
 .cards {
@@ -259,7 +266,7 @@ label {
   border-radius: 10px;
 }
 
-.location-year { 
+.location-year {
   display: flex;
   justify-content: space-between;
 }
@@ -283,7 +290,7 @@ label {
   gap: 10px;
   width: 100%;
 }
-.product-info .product-name span { 
+.product-info .product-name span {
   font-weight: bold;
   font-size: 2rem;
 }
@@ -314,7 +321,7 @@ label {
   font-size: 1.4rem;
 }
 
-.bid { 
+.bid {
   background-color: #9c9c9c;
   border-radius: 10px;
   display: flex;
@@ -358,8 +365,18 @@ input[type=password]:focus {
   justify-content: space-between;
 }
 
+.auction-image-div {
+  width: 100%;
+  max-width: 90vw;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
 .auction-image {
-  border-radius: 10px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -567,4 +584,11 @@ h1.deleted {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px;
+  width: 100%;
 }
