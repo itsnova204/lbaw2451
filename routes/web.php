@@ -46,8 +46,9 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/admin/users', [UserController::class, 'index'])->name('user.index');
-    Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
+    Route::get('/admin/users', 'index')->name('user.index');
+    Route::get('/user/{user}', 'show')->name('user.show');
+    Route::post('/user/{user}', 'destroy')->name('user.destroy');
 });
 
 // Search

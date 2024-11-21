@@ -30,10 +30,13 @@ class UserController extends Controller
         // Check if the current logged-in user is the same as the user being shown
         if ($currentUser && $currentUser->id === $user->id) {
             // Return the account view for the current user
-            return view('pages.users.account', compact('user'));
+            return view('pages.user.account', compact('user'));
         } else {
+            if ($user->is_deleted) {
+                return view('pages.user.deleted');
+            }
             // Return the profile view for a different user
-            return view('pages.users.profile', compact('user'));
+            return view('pages.user.profile', compact('user'));
         }
     }
 
@@ -91,6 +94,22 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //not for this phase of project
+        $currentUser = auth()->user();
+        if (!$currentUser) {
+            return redirect()->route('auctions.index')->with('error', 'You are not logged in!');
+        }
+        // Check if the logged-in user is the one trying to delete their profile, or if they are an admin
+        if ($currentUser->id !== $user->id && !$currentUser->isAdmin()) {
+            return redirect()->route('index')->with('error', 'You do not have permission to delete this user\'s profile.');
+        }
+
+        // Delete the user's profile
+        $user->deleteUser();
+
+        // If the logged-in user is deleting their own profile, redirect them to the login page
+        // If an admin is deleting someone else's profile, redirect them to the users' index page
+        $redirectRoute = ($currentUser->id === $user->id) ? route('login') : route('user.index');
+
+        return redirect($redirectRoute)->with('success', 'User profile deleted successfully.');
     }
 }
