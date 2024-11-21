@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -111,5 +114,52 @@ class UserController extends Controller
         $redirectRoute = ($currentUser->id === $user->id) ? route('login') : route('user.index');
 
         return redirect($redirectRoute)->with('success', 'User profile deleted successfully.');
+    }
+
+    public function create() {
+        $currentUser = auth()->user();
+        if (!$currentUser) {
+            return redirect()->route('index')->with('error', 'You are not logged in!');
+        }
+        if (!$currentUser->isAdmin()) {
+            return redirect()->route('index')->with('error', 'You do not have permission to create a new user.');
+        }
+        return view('pages.user.create');
+    }
+
+    public function storeUser(Request $request)
+    {
+        Log::info("HERE!");
+        $currentUser = auth()->user();
+        if (!$currentUser) {
+            return redirect()->route('auctions.index')->with('error', 'You are not logged in!');
+        }
+        if (!$currentUser->isAdmin()) {
+            return redirect()->route('auctions.index')->with('error', 'You do not have permission to create a new user.');
+        }
+
+        // Validate the request data, restricting to only username, email, and password
+        $validated = $request->validate([
+            'username' => 'required|alpha_num|unique:users,username|min:3|max:20',
+            'email' => 'required|email|max:250|unique:users',
+            'password' => 'required|min:8|confirmed'
+        ]);
+
+        $is_admin = $request->has('is_admin');
+
+        DB::enableQueryLog();
+
+        // Create the new user with the validated data
+        User::create([
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'is_admin' => $is_admin,
+        ]);
+
+        $queries = DB::getQueryLog();
+        Log::info($queries);
+
+        return redirect()->route('user.index')->with('success', 'User created successfully.');
     }
 }

@@ -561,3 +561,10 @@ td:first-child, th:first-child {
 h1.deleted {
   text-align: center;
 }
+
+#user-crate {
+  display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

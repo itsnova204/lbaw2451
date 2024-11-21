@@ -4,8 +4,10 @@
 
 @section('content')
     <div class="rectangle-div">
-        <h1>Users</h1>
-
+        <div id="user-crate">
+            <h1>Users</h1>
+            <h3><a href="{{ route('user.create') }}">Create User</a></h3>
+        </div>
         <table border="1">
             <thead>
             <tr>
