@@ -11,8 +11,7 @@ function addEventListeners() {
     Object.keys(filters).forEach(function (filterId) {
       const filterInput = document.getElementById(filterId);
       if (filterInput) {
-        filterInput.addEventListener('keyup', function () {7
-          console.log("here now...");
+        filterInput.addEventListener('keyup', function () {
           const filterValue = this.value.toLowerCase();
           const columnIndex = filters[filterId];
           const rows = document.querySelectorAll('#user-table tbody tr');
