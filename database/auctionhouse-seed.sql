@@ -1,3 +1,4 @@
+CREATE SCHEMA lbaw2451;
 SET search_path TO lbaw2451;
 
 DROP TABLE IF EXISTS users CASCADE;
@@ -430,24 +431,6 @@ CREATE TRIGGER check_auction_dates_trigger
                          FOR EACH ROW
                          EXECUTE FUNCTION check_auction_dates();
 
-SET search_path TO lbaw2451;
-
---TRIGGER15
-CREATE OR REPLACE FUNCTION prevent_lower_bids()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.amount <= (SELECT current_bid FROM auction WHERE id = NEW.auction_id) THEN
-        RAISE EXCEPTION 'Bid amount must be higher than the current bid.';
-END IF;
-RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER prevent_lower_bids_trigger
-    BEFORE INSERT ON bid
-    FOR EACH ROW
-    EXECUTE FUNCTION prevent_lower_bids();
-
 -- Populate accounts table
 INSERT INTO users (id, username, email, password, created_at, profile_picture, birth_date, address, is_deleted, is_admin) VALUES
                                                                                                                               (1, 'john_doe', 'john.doe@example.com', 'hashed_password_1', '2024-01-10 08:30:00', 'profile1.jpg', '1990-05-15', '123 Main St, Lisbon', FALSE, FALSE),  -- john_doe
@@ -466,7 +449,7 @@ INSERT INTO category (name) VALUES
 -- Populate auctions table
 INSERT INTO auction (title, description, start_date, end_date, status, minimum_bid, current_bid, category_id, creator_id, buyer_id, picture, created_at) VALUES
                                                                                                                                                              ('Laptop for Sale', 'A gently used laptop in great condition.', '2024-10-01 10:00:00', '2024-11-17 12:18:00', 'active', 100, 150, 1, 1, NULL, '/path', '2024-10-01 10:00:00'),
-                                                                                                                                                             ('Vintage Chair', 'A beautiful vintage chair for your living room.', '2024-10-02 09:00:00', '2024-12-18 09:00:00', 'active', 50, 70, 2, 2, NULL, '/path', '2024-10-02 09:00:00'),
+                                                                                                                                                             ('Vintage Chair', 'A beautiful vintage chair for your living room.', '2024-10-02 09:00:00', '2024-12-18 09:00:00', 'active', 50, 60, 2, 2, NULL, '/path', '2024-10-02 09:00:00'),
                                                                                                                                                              ('Programming Book', 'Learn Haskell programming with this great book.', '2024-10-03 11:00:00', '2024-12-10 11:00:00', 'active', 20, 20, 1, 1, NULL, '/path', '2024-10-03 11:00:00'),
                                                                                                                                                              ('Sturdy Table', 'A sturdy and well-made table, still in great condition.', '2024-10-03 11:00:00','2024-10-05 11:00:00','ended', 10, 40, 2, 1,2, '/path', '2024-10-03 11:00:00');
 

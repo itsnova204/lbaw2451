@@ -31,6 +31,12 @@ class BidController extends Controller
                 'amount' => 'required|numeric|min:0',
             ]);
 
+            $auction = Auction::findOrFail($request->auction_id);
+
+            if ($request->amount <= $auction->current_bid) {
+                return response()->json(['error' => 'Bid amount must be higher than the current bid.'], 400);
+            }
+
             // Create a new bid
             $bid = Bid::create([
                 'user_id' => auth()->id(),  // Assuming the logged-in user is placing the bid
@@ -60,11 +66,6 @@ class BidController extends Controller
             if (str_contains($exception->getMessage(), 'You cannot place a bid if you already have the highest bid')) {
                 return response()->json(['error' => 'You cannot place a bid if you already have the highest bid.'], 400);
             }
-
-            if (str_contains($exception->getMessage(), 'Bid amount must be higher than the current bid')) {
-                return response()->json(['error' => 'Bid amount must be higher than the current bid.'], 400);
-            }
-
             // For other database errors
             // Log the error for further investigation
             Log::error('An error occurred while placing the bid: ' . $exception->getMessage());
