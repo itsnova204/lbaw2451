@@ -22,8 +22,10 @@
             <span>Contact</span>
             <span>FAQ</span>
             <span>Services</span>
-
             @auth
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('user.index') }}" class="admin-panel">Admin Panel</a>
+                @endif
                 <form action="{{ route('logout') }}" method="GET" id="logout-form">
                     @csrf
                     <span class="submit-button" onclick="document.getElementById('logout-form').submit();">Logout</span>
@@ -55,7 +57,6 @@
 
             </form>
             </div>
-
     </div>
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
