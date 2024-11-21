@@ -8,12 +8,12 @@
             <h1>Users</h1>
             <h3><a href="{{ route('user.create') }}">Create User</a></h3>
         </div>
-        <table border="1">
+        <table border="1" id="user-table">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
+                <th>ID<br><input type="text" id="filter-id" placeholder="Filter ID"></th>
+                <th>Username<br><input type="text" id="filter-username" placeholder="Filter Username"></th>
+                <th>Email<br><input type="text" id="filter-email" placeholder="Filter Email"></th>
                 <th>Profile Picture</th>
                 <th>Actions</th>
             </tr>

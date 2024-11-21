@@ -1,5 +1,33 @@
 function addEventListeners() {
     initializeCountdown();
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const filters = {
+      'filter-id': 0,
+      'filter-username': 1,
+      'filter-email': 2
+    };
+
+    Object.keys(filters).forEach(function (filterId) {
+      const filterInput = document.getElementById(filterId);
+      if (filterInput) {
+        filterInput.addEventListener('keyup', function () {7
+          console.log("here now...");
+          const filterValue = this.value.toLowerCase();
+          const columnIndex = filters[filterId];
+          const rows = document.querySelectorAll('#user-table tbody tr');
+
+          rows.forEach(function (row) {
+            const cell = row.cells[columnIndex];
+            if (cell) {
+              const cellText = cell.textContent.toLowerCase();
+              row.style.display = cellText.includes(filterValue) ? '' : 'none';
+            }
+          });
+        });
+      }
+    });
+  });
   }
 
   function initializeCountdown() {
