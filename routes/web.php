@@ -29,8 +29,8 @@ Route::redirect('/', '/login');
 // Cards
 Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
-    Route::get('/auction/{auction}', 'show')->name('auction.show');
     Route::get('/auctions/search', 'search')->name('search.results');
+    Route::get('/auctions/{auction}', 'show')->name('auction.show');
 });
 
 
@@ -47,9 +47,9 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/user/{user}', 'show')->name('user.show');
     Route::post('/user/{user}', 'destroy')->name('user.destroy');
+    Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/admin/users/create', 'create')->name('user.create');
     Route::post('/admin/users/create', 'storeUser')->name('user.store');
 });
