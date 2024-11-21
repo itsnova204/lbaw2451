@@ -44,7 +44,7 @@ class AuctionController extends Controller
             'description' => 'required|string',
             'minimum_bid' => 'required|numeric|min:0',
             'end_date' => 'required|date|after:now',
-            'category_id' => 'required|integer|exists:categories,id',
+            'category_id' => 'required|integer|exists:category,id',
         ]);
 
         // Create the auction
@@ -129,5 +129,26 @@ class AuctionController extends Controller
         $bids = $auction->bids()->orderBy('created_at', 'desc')->get();
 
         return view('pages.auction.bidding_history', compact('auction', 'bids'));
+    }
+
+    public function apiIndex()
+    {
+        $auctions = Auction::select('auction.title', 'auction.description', 'auction.start_date', 'auction.end_date', 'auction.status', 'auction.minimum_bid', 'auction.current_bid', 'category.name as category_name', 'users.username as user_name')
+            ->join('category', 'auction.category_id', '=', 'category.id')
+            ->join('users', 'auction.creator_id', '=', 'users.id')
+            ->get();
+
+        return response()->json($auctions);
+    }
+
+    public function apiShow(Auction $auction)
+    {
+        $auction = Auction::select('auction.title', 'auction.description', 'auction.start_date', 'auction.end_date', 'auction.status', 'auction.minimum_bid', 'auction.current_bid', 'category.name as category_name', 'users.username as user_name')
+            ->join('category', 'auction.category_id', '=', 'category.id')
+            ->join('users', 'auction.creator_id', '=', 'users.id')
+            ->where('auction.id', $auction->id)
+            ->get();
+
+        return response()->json($auction);
     }
 }
