@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\BidController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,7 @@ Route::redirect('/', '/login');
 // Cards
 Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
-    Route::get('/auction/{id}', 'show');
+    Route::get('/auction/{auction}', 'show')->name('auction.show');
 });
 
 
@@ -45,13 +46,22 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/admin/users', [UserController::class, 'index'])->name('user.index');
-    Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
+    Route::get('/admin/users', 'index')->name('user.index');
+    Route::get('/user/{user}', 'show')->name('user.show');
+    Route::post('/user/{user}', 'destroy')->name('user.destroy');
+    Route::get('/admin/users/create', 'create')->name('user.create');
+    Route::post('/admin/users/create', 'storeUser')->name('user.store');
 });
 
 // Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search.results');
 });
+
+Route::controller(BidController::class)->group(function () {
+    Route::post('/auctions/{auction}/bids', 'store')->name('auctions.bids.store');
+    Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
+});
+
 
 

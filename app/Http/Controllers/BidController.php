@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Auction;
 use App\Models\Bid;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BidController extends Controller
 {
+    public function index($auctionId)
+    {
+        // Retrieve the auction with its bids
+        $auction = Auction::with('bids.user')->findOrFail($auctionId);
+
+        // Return the view with the auction and its bids
+        return view('pages.auction.bidding_history', compact('auction'));
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -16,7 +27,7 @@ class BidController extends Controller
         try {
             // Validation for the bid (for example, ensuring the amount is provided)
             $request->validate([
-                'auction_id' => 'required|exists:auctions,id',
+                'auction_id' => 'required|exists:auction,id',
                 'amount' => 'required|numeric|min:0',
             ]);
 
@@ -27,7 +38,15 @@ class BidController extends Controller
                 'amount' => $request->amount,
             ]);
 
-            return response()->json(['message' => 'Bid placed successfully!'], 201);
+            // Update the current bid on the auction
+            $auction = $bid->auction;
+            $auction->current_bid = $bid->amount;
+            // Save the auction with the new current bid
+            $auction->save();
+
+            //we dont need this, we need to return to the place we were, no?
+            return redirect()->back()->with('success', 'Bid placed successfully!');
+            //return response()->json(['message' => 'Bid placed successfully!'], 201);
         } catch (QueryException $exception) {
             // Handle specific PostgreSQL error codes or messages
             if (str_contains($exception->getMessage(), 'User % already has the highest bid on auction %')) {
@@ -42,7 +61,13 @@ class BidController extends Controller
                 return response()->json(['error' => 'You cannot place a bid if you already have the highest bid.'], 400);
             }
 
+            if (str_contains($exception->getMessage(), 'Bid amount must be higher than the current bid')) {
+                return response()->json(['error' => 'Bid amount must be higher than the current bid.'], 400);
+            }
+
             // For other database errors
+            // Log the error for further investigation
+            Log::error('An error occurred while placing the bid: ' . $exception->getMessage());
             return response()->json(['error' => 'An error occurred while placing the bid. Please try again later.'], 500);
         }
     }

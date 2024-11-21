@@ -1,28 +1,68 @@
 function addEventListeners() {
-    let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
-    [].forEach.call(itemCheckers, function(checker) {
-      checker.addEventListener('change', sendItemUpdateRequest);
+    initializeCountdown();
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const filters = {
+      'filter-id': 0,
+      'filter-username': 1,
+      'filter-email': 2
+    };
+
+    Object.keys(filters).forEach(function (filterId) {
+      const filterInput = document.getElementById(filterId);
+      if (filterInput) {
+        filterInput.addEventListener('keyup', function () {
+          const filterValue = this.value.toLowerCase();
+          const columnIndex = filters[filterId];
+          const rows = document.querySelectorAll('#user-table tbody tr');
+
+          rows.forEach(function (row) {
+            const cell = row.cells[columnIndex];
+            if (cell) {
+              const cellText = cell.textContent.toLowerCase();
+              row.style.display = cellText.includes(filterValue) ? '' : 'none';
+            }
+          });
+        });
+      }
     });
-  
-    let itemCreators = document.querySelectorAll('article.card form.new_item');
-    [].forEach.call(itemCreators, function(creator) {
-      creator.addEventListener('submit', sendCreateItemRequest);
-    });
-  
-    let itemDeleters = document.querySelectorAll('article.card li a.delete');
-    [].forEach.call(itemDeleters, function(deleter) {
-      deleter.addEventListener('click', sendDeleteItemRequest);
-    });
-  
-    let cardDeleters = document.querySelectorAll('article.card header a.delete');
-    [].forEach.call(cardDeleters, function(deleter) {
-      deleter.addEventListener('click', sendDeleteCardRequest);
-    });
-  
-    let cardCreator = document.querySelector('article.card form.new_card');
-    if (cardCreator != null)
-      cardCreator.addEventListener('submit', sendCreateCardRequest);
+  });
   }
+
+  function initializeCountdown() {
+    let countdownElement = document.getElementById('countdown');
+    if (countdownElement) {
+      let endDateStr = countdownElement.getAttribute('data-end-date');
+      console.log('End Date String:', endDateStr); // Debugging line
+      let endDate = new Date(endDateStr).getTime();
+
+      if (isNaN(endDate)) {
+        console.error('Invalid end date:', endDateStr);
+        countdownElement.innerHTML = "Invalid end date";
+        return;
+      }
+
+      let countdownInterval = setInterval(function () {
+        let now = new Date().getTime();
+        let distance = endDate - now;
+
+        if (distance < 0) {
+          clearInterval(countdownInterval);
+          countdownElement.innerHTML = "Auction Ended";
+          return;
+        }
+
+        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+      }, 1000);
+    }
+  }
+
+
   
   function encodeForAjax(data) {
     if (data == null) return null;

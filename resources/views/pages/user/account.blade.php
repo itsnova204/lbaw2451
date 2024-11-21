@@ -20,7 +20,8 @@
                 @endfor
             </div>
             <p class="text-sm text-gray-400 mt-2">Accession Date: {{ $user->created_at->format('d.m.Y') }}</p>
-            <a href="{{ route('logout') }}" class="text-blue-500 hover:underline mt-4 inline-block">Log Out</a>
+            <a href="" > Edit Profile </a>
+            <a href="{{ route('logout') }}" class="mt-4 inline-block">Log Out</a>
         </div>
     </div>
 
