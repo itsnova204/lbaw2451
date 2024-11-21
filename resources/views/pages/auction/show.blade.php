@@ -16,7 +16,7 @@
                     @foreach ($bids as $bid)
                         <li class="bid-item">
                             <div class="bid-info">
-                                <span class="bid-username">{{ $bid->user->username }}</span>
+                                <span class="bid-username">{{ $bid->user->getUsername() }}</span>
                                 <span class="bid-amount">${{ number_format($bid->amount, 2) }}</span>
                             </div>
                             <div class="bid-date">{{ $bid->created_at->format('Y-m-d H:i') }}</div>
@@ -38,7 +38,7 @@
                     </span>
                 </div>
                 <span class="auction-seller">
-                    Seller: <a href="{{url('/user/' . $auction->creator->id)}}">{{$auction->creator->username}}</a>
+                    Seller: <a href="{{url('/user/' . $auction->creator->id)}}">{{$auction->creator->getUsername()}}</a>
                 </span>
             </div>
             <div class="auction-description">

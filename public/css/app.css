@@ -530,3 +530,41 @@ h4 {
     flex-direction: row;
     justify-content: space-between;
 }
+
+.table-flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  align-items: center;
+}
+
+td:last-child {
+  padding: 1.2rem 1.5rem;
+}
+
+td:first-child, th:first-child {
+  padding: 1.2rem 1.5rem;
+}
+
+#content h1 {
+  font-weight: bold;
+}
+
+.rectangle-div {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1.deleted {
+  text-align: center;
+}
+
+#user-crate {
+  display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

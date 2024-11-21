@@ -102,4 +102,16 @@ class User extends Authenticatable
     public function isAdmin() : bool {
         return $this->is_admin;
     }
+
+    public function deleteUser() : void {
+        $this->is_deleted = true;
+        $this->save();
+    }
+
+    public function getUsername() : string {
+        if ($this->is_deleted) {
+            return 'Deleted User';
+        }
+        return $this->username;
+    }
 }
