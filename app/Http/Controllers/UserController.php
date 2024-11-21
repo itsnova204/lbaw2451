@@ -110,8 +110,6 @@ class UserController extends Controller
 
         $is_admin = $request->has('is_admin');
 
-        DB::enableQueryLog();
-
         // Create the new user with the validated data
         User::create([
             'username' => $validated['username'],
@@ -119,9 +117,6 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
             'is_admin' => $is_admin,
         ]);
-
-        $queries = DB::getQueryLog();
-        Log::info($queries);
 
         return redirect()->route('user.index')->with('success', 'User created successfully.');
     }

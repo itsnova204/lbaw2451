@@ -7,6 +7,8 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
+
 
 class AuctionController extends Controller
 {
@@ -25,10 +27,7 @@ class AuctionController extends Controller
      */
     public function create()
     {
-        $user = auth()->user();
-        if ($user && !$user->isAdmin()) {
-            return view('pages.auction.create', compact('user'));
-        }
+        $this->authorize('create', Auction::class);
         return redirect()->route('login')->with('error', 'You must be logged in to create an auction.');
     }
 
@@ -38,6 +37,7 @@ class AuctionController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Auction::class);
         // Validate the request data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -69,10 +69,7 @@ class AuctionController extends Controller
      */
     public function show(Auction $auction)
     {
-        // Ensure the auction is not deleted
-        if ($auction->status !== 'active') {
-            abort(404, 'Auction not found.');
-        }
+        $this->authorize('view', $auction);
 
         return view('pages.auction.show', compact('auction'));
     }
@@ -98,11 +95,7 @@ class AuctionController extends Controller
      */
     public function cancel(Auction $auction)
     {
-        $user = auth()->user();
-        if ($user && ($user->id === $auction->creator_id || $user->isAdmin())) {
-            $auction->update(['status' => 'cancelled']);
-            return redirect()->route('auction.index')->with('success', 'Auction cancelled successfully.');
-        }
+        $this->authorize('cancel', $auction);
         return redirect()->route('auction.index')->with('error', 'You cannot delete an auction you do not own');
     }
 
