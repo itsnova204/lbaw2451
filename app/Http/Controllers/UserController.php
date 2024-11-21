@@ -70,7 +70,7 @@ class UserController extends Controller
 
         // If the logged-in user is updating their own profile, redirect them to their profile page
         // If an admin is updating someone else's profile, redirect them to the users' index page
-        $redirectRoute = (auth()->user()->id === $user->id) ? route('index') : route('');
+        $redirectRoute = (auth()->user()->id === $user->id) ? route('user.show', $user) : route('user.index');
 
         return redirect($redirectRoute)->with('success', 'User profile updated successfully.');
     }
