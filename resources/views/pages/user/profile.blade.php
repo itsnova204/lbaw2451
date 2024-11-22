@@ -50,50 +50,6 @@
                     @endif
                 </ul>
             </div>
-
-            <!-- won auctions -->
-            <div class="bg-gray-100 p-4 rounded-lg shadow">
-                <h3 class="text-gray-800 font-semibold mb-4">{{$user->username}}'s Won Auctions</h3>
-                <ul class="space-y-4">
-                    @if ($user->auctionsBought->isEmpty())
-                        <p> This user has not won any auctions at the moment. </p>
-                    @else
-                        @foreach ($user->paginatedAuctionsBought(3) as $auction)
-                        <li class="flex space-x-3">
-                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
-                            <div class="flex-1">
-                                <h4 class="text-sm font-semibold">{{ $auction->name }}</h4>
-                                <p class="text-xs text-gray-500">Final price: ${{ $auction->final_price }}</p>
-                                <p class="text-xs text-gray-500">Purchased on: {{ $auction->purchase_date->format('d.m.Y') }}</p>
-                            </div>
-                        </li>
-                        @endforeach
-                        <a href="{{ route('user.won-auctions', $user) }}" > See all {{ $user->auctionsBought->count() }} </a>
-                    @endif
-                </ul>
-            </div>
-
-            <!-- my auction offers -->
-            <div class="bg-gray-100 p-4 rounded-lg shadow">
-                <h3 class="text-gray-800 font-semibold mb-4">{{$user->username}}'s Auction Offers</h3>
-                <ul class="space-y-4">
-                    @if ($user->bids->isEmpty())
-                        <p> This user has no placed bids at the moment. </p>
-                    @else
-                        @foreach ($user->paginatedBids(3) as $bid)
-                        <li class="flex space-x-3">
-                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($bid->auction->image_url) }}'); background-size: cover;"></div>
-                            <div class="flex-1">
-                                <h4 class="text-sm font-semibold">{{ $bid->auction->name }}</h4>
-                                <p class="text-xs text-gray-500">Your highest offer: ${{ $bid->amount }}</p>
-                                <p class="text-xs text-gray-500">Current highest bid: ${{ $bid->auction->current_highest_bid }}</p>
-                            </div>
-                        </li>
-                        @endforeach
-                        <a href="{{ route('user.bids', $user) }}" > See all {{ $user->bids->count() }} </a>
-                    @endif
-                </ul>
-            </div>
         </div>
     </div>
 </section>
