@@ -25,7 +25,9 @@
     <body>
         <main>
             <header>
+            @if (Auth::check())
             @include('layouts.header')
+            @endif
             </header>
             <section id="content">
                 @yield('content')
