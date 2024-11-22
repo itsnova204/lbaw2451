@@ -470,7 +470,7 @@ INSERT INTO users (username, email, password, created_at, birth_date, is_admin) 
 
 -- Insert Admin Users
 INSERT INTO users (username, email, password, created_at, birth_date, is_admin) VALUES
-    ('admin_user', 'admin@admin.com', '2y$10$HokRQTNn7UNd2cmp0AsJkuTwC0TUHN5dBumc0y4Nq6hhbqcGGf1k.', NOW() - INTERVAL '1 year', '1985-05-15', TRUE);
+    ('admin_user', 'admin@admin.com', '$2y$10$D0ZvErAnuZcWxbBkABw9busMMoWqwyDU80qi2pzBaa4imHrHIOAlW', NOW() - INTERVAL '1 year', '1985-05-15', TRUE);
 
 -- Insert Auctions
 -- Note: Using NOW() + INTERVAL for end dates to ensure they span the next 2 months
