@@ -50,11 +50,9 @@
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.3-4.3" />
             </svg>
-            <form action="{{ route('search.results') }}" method="GET">
+            <form action="{{ route('search.results', ['query' => request('query')]) }}" method="GET">
                 @csrf
-    
                     <input type="search" name="query" id="query" class="form-control" placeholder="Search auctions" required>
-
             </form>
             </div>
     </div>
