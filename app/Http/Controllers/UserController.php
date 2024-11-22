@@ -120,4 +120,22 @@ class UserController extends Controller
 
         return redirect()->route('user.index')->with('success', 'User created successfully.');
     }
+
+    public function showAuctions(User $user)
+    {    
+        $auctions = $user->paginatedAuctionsCreated(9); // Use pagination
+        return view('pages.user.auctions', compact('user', 'auctions'));
+    }
+
+    public function showWonAuctions(User $user)
+    {
+        $wonAuctions = $user->paginatedAuctionsBought(9);
+        return view('pages.user.won-auctions', compact('user', 'wonAuctions'));
+    }
+    
+    public function showBids(User $user)
+    {
+        $bids = $user->paginatedBids(9);
+        return view('pages.user.bids', compact('user', 'bids'));
+    }
 }

@@ -34,7 +34,7 @@
 
             <!-- active auctions -->
             <div class="bg-gray-100 p-4 rounded-lg shadow">
-                <h3 class="text-gray-800 font-semibold mb-4">Active Auctions</h3>
+                <h3 class="text-gray-800 font-semibold mb-4">My Active Auctions</h3>
                 <ul class="space-y-4">
                     @if ($user->auctionsCreated->isEmpty())
                         <p> This user has not created any auctions at the moment. </p>
@@ -49,14 +49,14 @@
                             </div>
                         </li>
                         @endforeach
-                        <a href= > See all ${{ $user->auctionsCreated->count() }} </a>
+                        <a href="{{ route('user.auctions', $user) }}" > See all {{ $user->auctionsCreated->count() }} </a>
                     @endif
                 </ul>
             </div>
 
             <!-- won auctions -->
             <div class="bg-gray-100 p-4 rounded-lg shadow">
-                <h3 class="text-gray-800 font-semibold mb-4">Won Auctions</h3>
+                <h3 class="text-gray-800 font-semibold mb-4">My Won Auctions</h3>
                 <ul class="space-y-4">
                     @if ($user->auctionsBought->isEmpty())
                         <p> This user has not won any auctions at the moment. </p>
@@ -71,7 +71,7 @@
                             </div>
                         </li>
                         @endforeach
-                        <a href= > See all ${{ $user->auctionsBought->count() }} </a>
+                        <a href="{{ route('user.won-auctions', $user) }}" > See all {{ $user->auctionsBought->count() }} </a>
                     @endif
                 </ul>
             </div>
@@ -93,7 +93,7 @@
                             </div>
                         </li>
                         @endforeach
-                        <a href= > See all ${{ $user->bids->count() }} </a>
+                        <a href="{{ route('user.bids', $user) }}" > See all {{ $user->bids->count() }} </a>
                     @endif
                 </ul>
             </div>

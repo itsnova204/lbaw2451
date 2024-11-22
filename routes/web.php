@@ -48,6 +48,9 @@ Route::controller(RegisterController::class)->group(function () {
 
 Route::controller(UserController::class)->group(function () {
     Route::get('/user/{user}', 'show')->name('user.show');
+    Route::get('/user/{user}/won-auctions', [UserController::class, 'showWonAuctions'])->name('user.wonAuctions');
+    Route::get('/user/{user}/bids', [UserController::class, 'showBids'])->name('user.bids');
+    Route::get('/user/{user}/auctions', [UserController::class, 'showAuctions'])->name('user.auctions');
     Route::post('/user/{user}', 'destroy')->name('user.destroy');
     Route::get('/user/{user}/edit', 'edit')->name('user.edit'); //edit form
     Route::post('/user/{user}', 'update')->name('user.update');
