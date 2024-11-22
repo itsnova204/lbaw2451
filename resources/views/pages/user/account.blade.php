@@ -18,7 +18,7 @@
                     <span class="{{ $i <= $rating ? 'text-yellow-400' : 'text-gray-300' }} text-lg">&#9733;</span>
                 @endfor
             </div>
-            <p class="text-sm text-gray-400 mt-2">Accession Date: {{ $user->created_at->format('d.m.Y') }}</p>
+            <p class="">Joined in: {{ $user->created_at->format('d.m.Y') }}</p>
             <a href="{{ route('user.edit', $user) }}" > Edit Profile </a>
             <a href="{{ route('logout') }}" class="mt-4 inline-block">Log Out</a>
         </div>
@@ -27,7 +27,7 @@
     <!-- auction sections -->
     <div class="flex-1 space-y-8">
 
-        <button class="text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500">Create New Auction</button>
+        <button>Create New Auction</button>
 
         <!-- auction lists -->
         <div class="grid grid-cols-3 gap-4">
@@ -42,11 +42,13 @@
                         @foreach ($user->paginatedAuctionsCreated(3) as $auction)
                         <li class="flex space-x-3">
                             <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
+                            <a href="{{route('auction.show', $auction)}}">
                             <div class="flex-1">
-                                <h4 class="text-sm font-semibold">{{ $auction->name }}</h4>
-                                <p class="text-xs text-gray-500">Starting price: ${{ $auction->starting_price }}</p>
+                                <h4 class="text-sm font-semibold">{{ $auction->title }}</h4>
+                                <p class="text-xs text-gray-500">Starting price: ${{ $auction->minimum_bid }}</p>
                                 <p class="text-xs text-gray-500">Ends: {{ $auction->end_date->format('d.m.Y') }}</p>
                             </div>
+                            </a>
                         </li>
                         @endforeach
                         <a href="{{ route('user.auctions', $user) }}" > See all {{ $user->auctionsCreated->count() }} </a>
@@ -65,8 +67,8 @@
                         <li class="flex space-x-3">
                             <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
                             <div class="flex-1">
-                                <h4 class="text-sm font-semibold">{{ $auction->name }}</h4>
-                                <p class="text-xs text-gray-500">Final price: ${{ $auction->final_price }}</p>
+                                <h4 class="text-sm font-semibold">{{ $auction->title }}</h4>
+                                <p class="text-xs text-gray-500">Final price: ${{ $auction->current_bid }}</p>
                                 <p class="text-xs text-gray-500">Purchased on: {{ $auction->purchase_date->format('d.m.Y') }}</p>
                             </div>
                         </li>
@@ -87,7 +89,7 @@
                         <li class="flex space-x-3">
                             <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($bid->auction->image_url) }}'); background-size: cover;"></div>
                             <div class="flex-1">
-                                <h4 class="text-sm font-semibold">{{ $bid->auction->name }}</h4>
+                                <h4 class="text-sm font-semibold">{{ $bid->auction->title }}</h4>
                                 <p class="text-xs text-gray-500">Your highest offer: ${{ $bid->amount }}</p>
                                 <p class="text-xs text-gray-500">Current highest bid: ${{ $bid->auction->current_highest_bid }}</p>
                             </div>
