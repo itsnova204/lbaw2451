@@ -40,7 +40,12 @@
             <a href="#" id="clear-filters" class="clear-filters">Clean filters</a>
 
         </div>
+        <div class="cards-container">
+            @foreach($auctions as $auction)
+                @include('partials.card', ['auction' => $auction])
+            @endforeach
+
+        </div>
 
     </div>
-
 @endsection
