@@ -9,6 +9,7 @@
             <div id="sort-by">
                 <label for="sort-by">Sort By:</label>
                 <select name="sort-by" id="sort-select">
+                    <option value="">Select Price</option>
                     <option value="lowest">Lowest Price</option>
                     <option value="highest">Highest Price</option>
                     <option value="soonest">Ending Soonest</option>

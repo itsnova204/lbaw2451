@@ -151,4 +151,33 @@ class AuctionController extends Controller
 
         return response()->json($auction);
     }
+
+    public function filter(Request $request) { 
+
+        $sortBy = $request->input('sort_by');
+        $categoryId = $request->input('category_id'); 
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+
+        $query = Auction::where('status','active'); 
+
+        if ($categoryId) { 
+            $query->where('category_id',$categoryId);
+        }
+
+        if ($minPrice) { 
+            $query->where('current_bid','>=',$minPrice);
+        }
+
+        if ($maxPrice) { 
+            $query->where('current_bid','<=',$maxPrice);
+        }
+
+        $auctions = $query->get();
+
+        return response()->json([
+            'status' => 'success',
+            'auctions' => $auctions,
+        ]);
+    }
 }
