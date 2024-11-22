@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
@@ -27,6 +28,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+
         $request->validate([
             'username' => 'required|alpha_num|unique:users,username|min:3|max:20',
             'email' => 'required|email|max:250|unique:users',
