@@ -28,7 +28,8 @@ class AuctionController extends Controller
     public function create()
     {
         $this->authorize('create', Auction::class);
-        return redirect()->route('login')->with('error', 'You must be logged in to create an auction.');
+        $categories = Category::all();
+        return view('pages.auction.create', compact('categories'));
     }
 
 
@@ -37,16 +38,19 @@ class AuctionController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug('Creating auction');
         $this->authorize('create', Auction::class);
+        Log::debug($request);
         // Validate the request data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'minimum_bid' => 'required|numeric|min:0',
             'end_date' => 'required|date|after:now',
-            'category_id' => 'required|integer|exists:category,id',
+            'category_id' => 'required|integer',
         ]);
-
+        Log::debug('Validation passed');
+        Log::debug($validated);
         // Create the auction
         Auction::create([
             'title' => $validated['title'],
@@ -57,11 +61,11 @@ class AuctionController extends Controller
             'user_id' => Auth::id(), // Owner of the auction
             'start_date' => now(),
             'status' => 'active',
-            'category_id' => $validated['category_id'],
+            'category' => $validated['category_id'],
             'creator_id' => Auth::id(),
         ]);
 
-        return redirect()->route('auction.index')->with('success', 'Auction created successfully.');
+        return redirect()->route('auctions.index')->with('success', 'Auction created successfully.');
     }
 
     /**
