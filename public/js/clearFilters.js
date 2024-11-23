@@ -1,8 +1,17 @@
 document.getElementById('clear-filters').addEventListener('click', function(event) {
     event.preventDefault();
-    document.getElementById('category').value = '';
-    document.getElementById('brand').value = '';
-    document.getElementById('auctiontype').value = '';
-    document.getElementById('entry-price-range').value = 0;
-    document.getElementById('current-bid-range').value = 0;
+
+    const price = document.getElementById('sort-select');
+    if (price) price.value = '';
+
+    // Clear category
+    const category = document.getElementById('category');
+    if (category) category.value = '';
+
+    // Clear entry price range
+    const entryPriceRange = document.getElementById('entry-price');
+    if (entryPriceRange) entryPriceRange.value = 0;
+
+    // Log success
+    console.log("Filters have been cleared");
 });

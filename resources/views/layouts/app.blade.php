@@ -21,8 +21,9 @@
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
-        <script type="text/javascript" src={{ url('js/brandUpdate.js') }} defer></script>
+      
         <script type="text/javascript" src={{ url('js/clearFilters.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/ajaxFilters.js') }} defer></script>
     </head>
     <body>
         <main>

@@ -32,6 +32,7 @@ Route::controller(AuctionController::class)->group(function () {
     Route::get('/auction/create', 'create')->name('auctions.create');
     Route::post('/auction/store', 'store')->name('auction.store');
     Route::get('/auctions/search', 'search')->name('search.results');
+    Route::get('/auctions/filter', 'filter')->name('auctions.filter');
     Route::get('/auctions/{auction}', 'show')->name('auction.show');
     Route::get('/auction/{auction}/edit', 'edit')->name('auction.edit');
     Route::post('/auction/{auction}/edit', 'update')->name('auction.update');
@@ -68,6 +69,3 @@ Route::controller(BidController::class)->group(function () {
     Route::post('/auctions/{auction}/bids', 'store')->name('auctions.bids.store');
     Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
 });
-
-
-

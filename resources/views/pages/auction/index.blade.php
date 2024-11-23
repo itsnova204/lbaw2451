@@ -9,6 +9,7 @@
             <div id="sort-by">
                 <label for="sort-by">Sort By:</label>
                 <select name="sort-by" id="sort-select">
+                    <option value="">Select Price</option>
                     <option value="lowest">Lowest Price</option>
                     <option value="highest">Highest Price</option>
                     <option value="soonest">Ending Soonest</option>
@@ -36,11 +37,16 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit">Apply Filters</button>
+            <button type="submit" class="apply-filters">Apply Filters</button>
             <a href="#" id="clear-filters" class="clear-filters">Clean filters</a>
+
+        </div>
+        <div class="cards-container">
+            @foreach($auctions as $auction)
+                @include('partials.card', ['auction' => $auction])
+            @endforeach
 
         </div>
 
     </div>
-
 @endsection

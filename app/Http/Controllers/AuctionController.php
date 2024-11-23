@@ -184,4 +184,54 @@ class AuctionController extends Controller
 
         return response()->json($auction);
     }
+
+    public function filter(Request $request)
+{
+    // Sanitize inputs and set defaults for the filters
+    $sortBy = $request->input('sort_by'); // Default to 'lowest'
+    $categoryId = $request->input('category_id'); // Category ID from the request
+    $minPrice = $request->input('min_price'); // Default min price
+    $maxPrice = $request->input('max_price'); // Default max price
+
+    try {
+        $auctions = Auction::query(); // Start with the auction query
+
+        // Apply category filter if category_id is provided
+        if ($categoryId) {
+            $auctions->where('category_id', $categoryId);
+        }
+
+        // Apply price filters
+        if ($minPrice) {
+            $auctions->where('current_bid', '>=', $minPrice);
+        }
+        if ($maxPrice) {
+            $auctions->where('current_bid', '<=', $maxPrice);
+        }
+
+        // Apply sorting
+        if ($sortBy === 'highest') {
+            $auctions->orderBy('current_bid', 'desc');
+        } elseif ($sortBy === 'lowest') {
+            $auctions->orderBy('current_bid', 'asc');
+        } elseif ($sortBy === 'soonest') {
+            $auctions->orderBy('end_date', 'asc');
+        }
+
+        $auctions = $auctions->get(); // Get the filtered auctions
+
+        return response()->json([
+            'status' => 'success',
+            'auctions' => $auctions
+        ]);
+    } catch (\Exception $e) {
+        // Return error response in case of failure
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
 }
