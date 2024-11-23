@@ -29,9 +29,9 @@ Route::redirect('/', '/login');
 // Cards
 Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
-    Route::get('/auction/{auction}', 'show')->name('auction.show');
-    Route::get('/create_auction', 'create')->name('auctions.create');
+    Route::get('/auction/create', 'create')->name('auctions.create');
     Route::post('/auction/store', 'store')->name('auction.store');
+    Route::get('/auction/{auction}', 'show')->name('auction.show');
 });
 
 

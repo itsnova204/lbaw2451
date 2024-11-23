@@ -3,7 +3,7 @@
 @section('title', 'Create Auction')
 
 @section('content')
-<div class="container">
+<div class="container rectangle-div">
     <h1>Create a New Auction</h1>
     <form action="{{ route('auction.store') }}" method="POST">
         @csrf
