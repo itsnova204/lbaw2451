@@ -38,3 +38,7 @@
     
 </html>
 
+<script>
+    const baseUrl = "{{ url('/') }}";
+</script>
+

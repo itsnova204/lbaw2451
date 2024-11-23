@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Loop through each auction and create a card
         auctions.forEach(auction => {
             const auctionCard = `
-                <a href="{{ route('auction.show', ${auction.id}) }}" class="auction-card-link">
+                <a href="${baseUrl}/auction/${auction.id}" class="auction-card-link">
                     <div class="auction-card rectangle-div">
                         <div class="expire-date">
                             <span>Auction expires in: ${timeFromNow(auction.end_date)}</span>
