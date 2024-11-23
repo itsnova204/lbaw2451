@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: AuctionPeer API
   version: 1.0.0
-  description: API for the AuctionPeer application, supporting user authentication, auction management, bidding, and review features.
+  description: Web Resources Specification (A7) for AuctionPeer
 
 servers:
   - url: http://lbaw.fe.up.pt
@@ -23,19 +23,21 @@ paths:
       operationId: R101
       summary: 'R101: Login Form'
       description: 'Provide login form. Access: PUB'
-      tags: [M01: Authentication and User Profile]
+      tags:
+        - 'M01: Authentication and User Profile'
       responses:
         '200':
-          description: Login form displayed successfully
+          description: 'Ok. Show log-in UI'
     post:
       operationId: R102
       summary: 'R102: Login Action'
-      description: 'User login. Access: PUB'
-      tags: [M01: Authentication and User Profile]
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
       requestBody:
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
@@ -43,40 +45,63 @@ paths:
                   type: string
                 password:
                   type: string
+              required:
+                - username
+                - password
       responses:
-        '200':
-          description: Login successful
-        '401':
-          description: Invalid credentials
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/user/{id}'
+                302Error:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
 
   /logout:
     get:
       operationId: R103
       summary: 'R103: Logout Action'
       description: 'User logout. Access: PUB'
-      tags: [M01: Authentication and User Profile]
+      tags:
+        - 'M01: Authentication and User Profile'
       responses:
-        '200':
-          description: Logout successful
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to login form.'
+                  value: '/login'
 
   /register:
     get:
       operationId: R104
       summary: 'R104: Register Form'
       description: 'Provide registration form. Access: PUB'
-      tags: [M01: Authentication and User Profile]
+      tags:
+        - 'M01: Authentication and User Profile'
       responses:
         '200':
-          description: Registration form displayed successfully
+          description: 'Ok. Show sign-up UI'
     post:
       operationId: R105
       summary: 'R105: Register Action'
-      description: 'Register a new user. Access: PUB'
-      tags: [M01: Authentication and User Profile]
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
       requestBody:
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
@@ -86,21 +111,54 @@ paths:
                   type: string
                 email:
                   type: string
+              required:
+                - username
+                - password
+                - email
       responses:
-        '201':
-          description: User registered successfully
-        '400':
-          description: Invalid registration data
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful registration. Redirect to user profile.'
+                  value: '/user/{id}'
+                302Failure:
+                  description: 'Failed registration. Redirect to registration form.'
+                  value: '/register'
+
+  /user/{id}:
+    get:
+      operationId: R106
+      summary: 'R106: View Profile'
+      description: 'Get user profile. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+        '404':
+          description: 'User not found'
 
   /auctions:
     get:
       operationId: R201
       summary: 'R201: View Auctions'
       description: 'List all auctions. Access: PUB'
-      tags: [M02: Auction Management]
+      tags:
+        - 'M02: Auction Management'
       responses:
         '200':
-          description: List of auctions
+          description: 'List of auctions'
           content:
             application/json:
               schema:
@@ -113,7 +171,8 @@ paths:
       operationId: R202
       summary: 'R202: Search Auctions'
       description: 'Search auctions. Access: PUB'
-      tags: [M02: Auction Management]
+      tags:
+        - 'M02: Auction Management'
       parameters:
         - in: query
           name: q
@@ -122,7 +181,7 @@ paths:
           description: Search query
       responses:
         '200':
-          description: Search results
+          description: 'Search results'
           content:
             application/json:
               schema:
@@ -135,7 +194,8 @@ paths:
       operationId: R203
       summary: 'R203: Show Auction'
       description: 'Get auction details. Access: PUB'
-      tags: [M02: Auction Management]
+      tags:
+        - 'M02: Auction Management'
       parameters:
         - in: path
           name: auction
@@ -144,20 +204,21 @@ paths:
             type: string
       responses:
         '200':
-          description: Auction details
+          description: 'Auction details'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Auction'
         '404':
-          description: Auction not found
+          description: 'Auction not found'
 
   /auctions/{auction}/bids:
     get:
       operationId: R302
       summary: 'R302: Show Auction Bids'
       description: 'List bids for an auction. Access: PUB'
-      tags: [M03: Bidding and Auction Updates]
+      tags:
+        - 'M03: Bidding and Auction Updates'
       parameters:
         - in: path
           name: auction
@@ -166,7 +227,7 @@ paths:
             type: string
       responses:
         '200':
-          description: List of bids
+          description: 'List of bids'
           content:
             application/json:
               schema:
@@ -177,7 +238,8 @@ paths:
       operationId: R301
       summary: 'R301: Place Bid'
       description: 'Place a bid on an auction. Access: AUTH'
-      tags: [M03: Bidding and Auction Updates]
+      tags:
+        - 'M03: Bidding and Auction Updates'
       security:
         - bearerAuth: []
       parameters:
@@ -197,23 +259,37 @@ paths:
                   type: number
       responses:
         '201':
-          description: Bid placed successfully
+          description: 'Bid placed successfully'
         '400':
-          description: Invalid bid
+          description: 'Invalid bid'
         '401':
-          description: Unauthorized
+          description: 'Unauthorized'
+        '302':
+          description: 'Redirect after placing bid.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful bid. Redirect to auction page.'
+                  value: '/auctions/{auction}'
+                302Failure:
+                  description: 'Failed bid. Redirect to auction page.'
+                  value: '/auctions/{auction}'
 
   /admin/users:
     get:
       operationId: R113
       summary: 'R113: Administrate User Form'
       description: 'List all user accounts. Access: ADMIN'
-      tags: [M01: Authentication and User Profile]
+      tags:
+        - 'M01: Authentication and User Profile'
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: List of user accounts
+          description: 'List of user accounts'
           content:
             application/json:
               schema:
@@ -221,26 +297,28 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
         '403':
-          description: Forbidden - requires admin privileges
+          description: 'Forbidden - requires admin privileges'
 
   /admin/users/create:
     get:
       operationId: R114
       summary: 'R114: Create User Form'
       description: 'Show user creation form. Access: ADMIN'
-      tags: [M01: Authentication and User Profile]
+      tags:
+        - 'M01: Authentication and User Profile'
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: User creation form displayed successfully
+          description: 'User creation form displayed successfully'
         '403':
-          description: Forbidden - requires admin privileges
+          description: 'Forbidden - requires admin privileges'
     post:
       operationId: R115
       summary: 'R115: Create User Action'
       description: 'Create new user (admin). Access: ADMIN'
-      tags: [M01: Authentication and User Profile]
+      tags:
+        - 'M01: Authentication and User Profile'
       security:
         - bearerAuth: []
       requestBody:
@@ -251,53 +329,24 @@ paths:
               $ref: '#/components/schemas/UserCreate'
       responses:
         '201':
-          description: User created successfully
+          description: 'User created successfully'
         '403':
-          description: Forbidden - requires admin privileges
+          description: 'Forbidden - requires admin privileges'
         '400':
-          description: Invalid user data
-
-  /user/{user}:
-    get:
-      operationId: R106
-      summary: 'R106: View Profile'
-      description: 'Get user profile. Access: PUB'
-      tags: [M01: Authentication and User Profile]
-      parameters:
-        - in: path
-          name: user
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: User profile
-          content:
-            application/json:
+          description: 'Invalid user data'
+        '302':
+          description: 'Redirect after creating user.'
+          headers:
+            Location:
               schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: User not found
-    post:
-      operationId: R110
-      summary: 'R110: Delete User'
-      description: 'Delete user account. Access: AUTH'
-      tags: [M01: Authentication and User Profile]
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: user
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: User deleted successfully
-        '403':
-          description: Forbidden
-        '404':
-          description: User not found
+                type: string
+              examples:
+                302Success:
+                  description: 'User created. Redirect to user list.'
+                  value: '/admin/users'
+                302Failure:
+                  description: 'Failed to create user. Redirect to user creation form.'
+                  value: '/admin/users/create'
 
 components:
   securitySchemes:
