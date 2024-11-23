@@ -592,3 +592,19 @@ h1.deleted {
   gap: 50px;
   width: 100%;
 }
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
