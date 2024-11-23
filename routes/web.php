@@ -26,7 +26,7 @@ use App\Http\Controllers\Auth\RegisterController;
 // Home
 Route::redirect('/', '/login');
 
-// Cards
+// Auctions
 Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
     Route::get('/auction/create', 'create')->name('auctions.create');
@@ -67,5 +67,5 @@ Route::controller(UserController::class)->group(function () {
 
 Route::controller(BidController::class)->group(function () {
     Route::post('/auctions/{auction}/bids', 'store')->name('auctions.bids.store');
-    Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
+    Route::get('/auctions/{auction}/bids', 'index')->name('auctions.bids.index');
 });
