@@ -600,3 +600,11 @@ h1.deleted {
     border-radius: 10px;
     margin: 20px 0;
 }
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
