@@ -70,8 +70,9 @@ class AuctionController extends Controller
     public function show(Auction $auction)
     {
         $this->authorize('view', $auction);
+        $user = Auth::user();
 
-        return view('pages.auction.show', compact('auction'));
+        return view('pages.auction.show', compact('auction', 'user'));
     }
 
     /**
@@ -79,7 +80,10 @@ class AuctionController extends Controller
      */
     public function edit(Auction $auction)
     {
-        //
+        $this->authorize('update', $auction);
+        $categories = Category::all();
+
+        return view('pages.auction.edit', compact('auction', 'categories'));
     }
 
     /**
@@ -87,7 +91,26 @@ class AuctionController extends Controller
      */
     public function update(Request $request, Auction $auction)
     {
-        //
+        $this->authorize('update', $auction);
+
+        // Validate the request data
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'end_date' => 'required|date|after:now',
+            'category_id' => 'required|integer|exists:category,id',
+        ]);
+
+        // Update the auction
+        $auction->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'end_date' => $validated['end_date'],
+            'category_id' => $validated['category_id'],
+        ]);
+
+        $user = Auth::user();
+        return redirect()->route('auction.show', $auction)->with('success', 'Auction updated successfully.');
     }
 
     /**
@@ -96,7 +119,13 @@ class AuctionController extends Controller
     public function cancel(Auction $auction)
     {
         $this->authorize('cancel', $auction);
-        return redirect()->route('auction.index')->with('error', 'You cannot delete an auction you do not own');
+
+        $auction->update([
+            'status' => 'canceled',
+        ]);
+
+        return redirect()->route('auctions.index')->with('success', 'Auction cancelled successfully.');
+
     }
 
     public function search(Request $request)

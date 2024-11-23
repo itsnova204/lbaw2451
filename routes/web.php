@@ -31,6 +31,9 @@ Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
     Route::get('/auctions/search', 'search')->name('search.results');
     Route::get('/auctions/{auction}', 'show')->name('auction.show');
+    Route::get('/auction/{auction}/edit', 'edit')->name('auction.edit');
+    Route::post('/auction/{auction}/edit', 'update')->name('auction.update');
+    Route::get('/auction/{auction}/cancel', 'cancel')->name('auction.cancel');
 });
 
 
