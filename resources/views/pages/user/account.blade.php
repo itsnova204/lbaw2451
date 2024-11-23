@@ -27,7 +27,7 @@
     <!-- auction sections -->
     <div class="flex-1 space-y-8">
 
-        <button>Create New Auction</button>
+        <button onClick="window.location='{{ route('auctions.create') }}'">Create New Auction</button>
 
         <!-- auction lists -->
         <div class="grid grid-cols-3 gap-4">
