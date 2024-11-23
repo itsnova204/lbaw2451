@@ -28,7 +28,8 @@ class AuctionController extends Controller
     public function create()
     {
         $this->authorize('create', Auction::class);
-        return redirect()->route('login')->with('error', 'You must be logged in to create an auction.');
+        $categories = Category::all();
+        return view('pages.auction.create', compact('categories'));
     }
 
 
@@ -44,7 +45,7 @@ class AuctionController extends Controller
             'description' => 'required|string',
             'minimum_bid' => 'required|numeric|min:0',
             'end_date' => 'required|date|after:now',
-            'category_id' => 'required|integer|exists:categories,id',
+            'category' => 'required|integer|exists:categories,id',
         ]);
 
         // Create the auction
@@ -57,7 +58,7 @@ class AuctionController extends Controller
             'user_id' => Auth::id(), // Owner of the auction
             'start_date' => now(),
             'status' => 'active',
-            'category_id' => $validated['category_id'],
+            'category' => $validated['category'],
             'creator_id' => Auth::id(),
         ]);
 
