@@ -91,7 +91,7 @@ class User extends Authenticatable
 
     public function auctionsCreated(): HasMany
     {
-        return $this->hasMany(Auction::class, 'creator_id');
+        return $this->hasMany(Auction::class, 'creator_id')->where('status', 'active');
     }
 
     public function sellerTransactions(): HasManyThrough
