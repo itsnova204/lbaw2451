@@ -152,32 +152,53 @@ class AuctionController extends Controller
         return response()->json($auction);
     }
 
-    public function filter(Request $request) { 
+    public function filter(Request $request)
+{
+    // Sanitize inputs and set defaults for the filters
+    $sortBy = $request->input('sort-by'); // Default to 'lowest'
+    $categoryId = $request->input('category_id'); // Category ID from the request
+    $minPrice = $request->input('min_price'); // Default min price
+    $maxPrice = $request->input('max_price'); // Default max price
 
-        $sortBy = $request->input('sort_by');
-        $categoryId = $request->input('category_id'); 
-        $minPrice = $request->input('min_price');
-        $maxPrice = $request->input('max_price');
+    try {
+        $auctions = Auction::query(); // Start with the auction query
 
-        $query = Auction::where('status','active'); 
-
-        if ($categoryId) { 
-            $query->where('category_id',$categoryId);
+        // Apply category filter if category_id is provided
+        if ($categoryId) {
+            $auctions->where('category_id', $categoryId);
         }
 
-        if ($minPrice) { 
-            $query->where('current_bid','>=',$minPrice);
+        // Apply price filters
+        if ($minPrice) {
+            $auctions->where('price', '>=', $minPrice);
+        }
+        if ($maxPrice) {
+            $auctions->where('price', '<=', $maxPrice);
         }
 
-        if ($maxPrice) { 
-            $query->where('current_bid','<=',$maxPrice);
+        // Apply sorting
+        if ($sortBy === 'highest') {
+            $auctions->orderBy('price', 'desc');
+        } elseif ($sortBy === 'lowest') {
+            $auctions->orderBy('price', 'asc');
+        } elseif ($sortBy === 'soonest') {
+            $auctions->orderBy('end_date', 'asc');
         }
 
-        $auctions = $query->get();
+        $auctions = $auctions->get(); // Get the filtered auctions
 
         return response()->json([
             'status' => 'success',
-            'auctions' => $auctions,
+            'auctions' => $auctions
         ]);
+    } catch (\Exception $e) {
+        // Return error response in case of failure
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred: ' . $e->getMessage()
+        ], 500);
     }
+}
+
+
 }

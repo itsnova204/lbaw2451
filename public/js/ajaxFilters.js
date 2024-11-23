@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const categorySelect = document.getElementById('category');
     const minPriceInput = document.querySelector('.entry-price input');
     const maxPriceInput = document.querySelector('.current-bid input');
-    const applyFiltersButton = document.getElementById('button[type="submit]');
+    const applyFiltersButton = document.querySelector('button[type="submit"]');
     const clearFilterButton = document.getElementById('clear-filters');
     const cardsContainer = document.querySelector('.cards-container');
 
@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const categoryId = categorySelect.value;
         const minPrice = minPriceInput.value;
         const maxPrice = maxPriceInput.value;
-
 
         const queryParams = new URLSearchParams({
             sort_by: sortBy,
@@ -28,28 +27,57 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (data.status === 'success') {
                 renderAuctions(data.auctions);
-            }
-            else {
+            } else {
                 console.error('Failed to fetch auctions');
             }
-        }
-        catch (error) {
-            console.error({ 'Failed to fetch auctions': error });
+        } catch (error) {
+            console.error('Failed to fetch auctions:', error);
         }
     }
 
     function renderAuctions(auctions) {
         cardsContainer.innerHTML = ''; // Clear existing content
 
-        // Populate with new auction cards
+        // Check if auctions exist
+        if (auctions.length === 0) {
+            cardsContainer.innerHTML = '<p>No auctions found.</p>';
+            return;
+        }
+
+        // Loop through each auction and create a card
         auctions.forEach(auction => {
             const auctionCard = `
-                <div class="card">
-                    <h3>${auction.title}</h3>
-                    <p>${auction.description}</p>
-                    <p>Current Bid: $${auction.current_bid}</p>
-                    <p>Ends: ${new Date(auction.end_date).toLocaleString()}</p>
-                </div>
+                <a href="{{ route('auction.show', ${auction.id}) }}" class="auction-card-link">
+                    <div class="auction-card rectangle-div">
+                        <div class="expire-date">
+                            <span>Auction expires in: ${moment(auction.end_date).fromNow()}</span>
+                        </div>
+                        <div class="product-img">
+                            <img src="https://via.placeholder.com/300" alt="${auction.title}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">
+                                <span>${auction.title}</span>
+                            </div>
+                            <div class="border"></div>
+                            <div class="description">
+                                <span>Description</span>
+                                <p>${auction.description}</p>
+                            </div>
+                            <div class="border"></div>
+                            <div class="prices">
+                                <div class="entry-price">
+                                    <span>Entry Price</span>
+                                    <span>$${auction.minimum_bid}</span>
+                                </div>
+                                <div class="current-bid-price">
+                                    <span>Current price</span>
+                                    <span>$${auction.current_bid}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             `;
             cardsContainer.innerHTML += auctionCard;
         });
@@ -61,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchFilteredAuctions();
     });
 
-    clearFiltersButton.addEventListener('click', function (event) {
+    clearFilterButton.addEventListener('click', function (event) {
         event.preventDefault(); // Prevent link navigation
 
         // Reset filters
@@ -70,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
         minPriceInput.value = 0;
         maxPriceInput.value = 10000;
 
-        // Fetch all auctions
+        // Fetch all auctions after clearing filters
         fetchFilteredAuctions();
     });
 });

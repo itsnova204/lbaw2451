@@ -31,6 +31,7 @@ Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
     Route::get('/auctions/search', 'search')->name('search.results');
     Route::get('/auctions/{auction}', 'show')->name('auction.show');
+    Route::get('/auctions/filter', 'filter')->name('auctions.filter');
 });
 
 
@@ -62,11 +63,4 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(BidController::class)->group(function () {
     Route::post('/auctions/{auction}/bids', 'store')->name('auctions.bids.store');
     Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
-});
-
-Route::controller(AuctionController::class)->group(function () {
-    Route::get('/auctions', 'index')->name('auctions.index');
-    Route::get('/auctions/search', 'search')->name('search.results');
-    Route::get('/auctions/{auction}', 'show')->name('auction.show');
-    Route::get('/auctions/filter', 'filter')->name('auctions.filter');
 });
