@@ -38,16 +38,19 @@ class AuctionController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug('Creating auction');
         $this->authorize('create', Auction::class);
+        Log::debug($request);
         // Validate the request data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'minimum_bid' => 'required|numeric|min:0',
             'end_date' => 'required|date|after:now',
-            'category' => 'required|integer|exists:categories,id',
+            'category_id' => 'required|integer',
         ]);
-
+        Log::debug('Validation passed');
+        Log::debug($validated);
         // Create the auction
         Auction::create([
             'title' => $validated['title'],
@@ -58,11 +61,11 @@ class AuctionController extends Controller
             'user_id' => Auth::id(), // Owner of the auction
             'start_date' => now(),
             'status' => 'active',
-            'category' => $validated['category'],
+            'category' => $validated['category_id'],
             'creator_id' => Auth::id(),
         ]);
 
-        return redirect()->route('auction.index')->with('success', 'Auction created successfully.');
+        return redirect()->route('auctions.index')->with('success', 'Auction created successfully.');
     }
 
     /**
