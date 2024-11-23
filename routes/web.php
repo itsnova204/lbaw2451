@@ -31,7 +31,11 @@ Route::controller(AuctionController::class)->group(function () {
     Route::get('/auctions', 'index')->name('auctions.index');
     Route::get('/auction/create', 'create')->name('auctions.create');
     Route::post('/auction/store', 'store')->name('auction.store');
-    Route::get('/auction/{auction}', 'show')->name('auction.show');
+    Route::get('/auctions/search', 'search')->name('search.results');
+    Route::get('/auctions/{auction}', 'show')->name('auction.show');
+    Route::get('/auction/{auction}/edit', 'edit')->name('auction.edit');
+    Route::post('/auction/{auction}/edit', 'update')->name('auction.update');
+    Route::get('/auction/{auction}/cancel', 'cancel')->name('auction.cancel');
 });
 
 
@@ -48,16 +52,16 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/user/{user}', 'show')->name('user.show');
-    Route::post('/user/{user}', 'destroy')->name('user.destroy');
+    Route::get('/user/{user}/won-auctions', [UserController::class, 'showWonAuctions'])->name('user.wonAuctions');
+    Route::get('/user/{user}/bids', [UserController::class, 'showBids'])->name('user.bids');
+    Route::get('/user/{user}/auctions', [UserController::class, 'showAuctions'])->name('user.auctions');
+    Route::post('/user/{user}/destroy', 'destroy')->name('user.destroy');
+    Route::get('/user/{user}/edit', 'edit')->name('user.edit'); //edit form
+    Route::post('/user/{user}', 'update')->name('user.update');
+    Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/admin/users/create', 'create')->name('user.create');
     Route::post('/admin/users/create', 'storeUser')->name('user.store');
-});
-
-// Search
-Route::controller(SearchController::class)->group(function () {
-    Route::get('/search', 'search')->name('search.results');
 });
 
 Route::controller(BidController::class)->group(function () {

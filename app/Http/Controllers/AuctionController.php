@@ -74,8 +74,9 @@ class AuctionController extends Controller
     public function show(Auction $auction)
     {
         $this->authorize('view', $auction);
+        $user = Auth::user();
 
-        return view('pages.auction.show', compact('auction'));
+        return view('pages.auction.show', compact('auction', 'user'));
     }
 
     /**
@@ -83,7 +84,10 @@ class AuctionController extends Controller
      */
     public function edit(Auction $auction)
     {
-        //
+        $this->authorize('update', $auction);
+        $categories = Category::all();
+
+        return view('pages.auction.edit', compact('auction', 'categories'));
     }
 
     /**
@@ -91,7 +95,26 @@ class AuctionController extends Controller
      */
     public function update(Request $request, Auction $auction)
     {
-        //
+        $this->authorize('update', $auction);
+
+        // Validate the request data
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'end_date' => 'required|date|after:now',
+            'category_id' => 'required|integer|exists:category,id',
+        ]);
+
+        // Update the auction
+        $auction->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'end_date' => $validated['end_date'],
+            'category_id' => $validated['category_id'],
+        ]);
+
+        $user = Auth::user();
+        return redirect()->route('auction.show', $auction)->with('success', 'Auction updated successfully.');
     }
 
     /**
@@ -100,7 +123,13 @@ class AuctionController extends Controller
     public function cancel(Auction $auction)
     {
         $this->authorize('cancel', $auction);
-        return redirect()->route('auction.index')->with('error', 'You cannot delete an auction you do not own');
+
+        $auction->update([
+            'status' => 'canceled',
+        ]);
+
+        return redirect()->route('auctions.index')->with('success', 'Auction cancelled successfully.');
+
     }
 
     public function search(Request $request)
@@ -112,9 +141,11 @@ class AuctionController extends Controller
         }
 
         // Call the search function in the Auction model
-        $results = Auction::search($query);
+        $results = Auction::search($query)->all();
 
-        return view('pages.auction.search', compact('results', 'query'));
+        $categories = Category::all();
+
+        return view('pages.auction.search', compact('results', 'query', 'categories'));
     }
 
     public function myAuctions()
@@ -131,5 +162,26 @@ class AuctionController extends Controller
         $bids = $auction->bids()->orderBy('created_at', 'desc')->get();
 
         return view('pages.auction.bidding_history', compact('auction', 'bids'));
+    }
+
+    public function apiIndex()
+    {
+        $auctions = Auction::select('auction.title', 'auction.description', 'auction.start_date', 'auction.end_date', 'auction.status', 'auction.minimum_bid', 'auction.current_bid', 'category.name as category_name', 'users.username as user_name')
+            ->join('category', 'auction.category_id', '=', 'category.id')
+            ->join('users', 'auction.creator_id', '=', 'users.id')
+            ->get();
+
+        return response()->json($auctions);
+    }
+
+    public function apiShow(Auction $auction)
+    {
+        $auction = Auction::select('auction.title', 'auction.description', 'auction.start_date', 'auction.end_date', 'auction.status', 'auction.minimum_bid', 'auction.current_bid', 'category.name as category_name', 'users.username as user_name')
+            ->join('category', 'auction.category_id', '=', 'category.id')
+            ->join('users', 'auction.creator_id', '=', 'users.id')
+            ->where('auction.id', $auction->id)
+            ->get();
+
+        return response()->json($auction);
     }
 }

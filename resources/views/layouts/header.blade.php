@@ -30,12 +30,14 @@
                     @csrf
                     <span class="submit-button" onclick="document.getElementById('logout-form').submit();">Logout</span>
                 </form>
-                <div class="select-wrapper">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
-                        <circle cx="12" cy="8" r="5" />
-                        <path d="M20 21a8 8 0 0 0-16 0" />
-                    </svg>
-                </div>
+                <a href="{{ route('user.show', auth()->user()) }}">
+                    <div class="select-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
+                            <circle cx="12" cy="8" r="5" />
+                            <path d="M20 21a8 8 0 0 0-16 0" />
+                        </svg>
+                    </div>
+                </a>
             @endauth
 
             @guest
@@ -50,16 +52,26 @@
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.3-4.3" />
             </svg>
-            <form action="{{ route('search.results') }}" method="GET">
+            <form action="{{ route('search.results', ['query' => request('query')]) }}" method="GET">
                 @csrf
-    
                     <input type="search" name="query" id="query" class="form-control" placeholder="Search auctions" required>
-
             </form>
             </div>
     </div>
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
+
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 </body>
 
 </html>

@@ -5,7 +5,9 @@
 @section('content')
     <div class="auction-details">
         <div class="auction-image-bids">
-            <img src="{{ asset('storage/images/a1.webp')}}" alt="{{ $auction->title }}" class="auction-image">
+            <div class="auction-image-div">
+                <img src="https://via.placeholder.com/700" alt="{{ $auction->title }}" class="auction-image">
+            </div>
             <div class="bids">
                 <h2><a href="{{ url()->current() }}/bids">Bids</a></h2>
                 <p><strong>Number of Bids:</strong> {{ $auction->bids()->count() }}</p>
@@ -40,6 +42,11 @@
                 <span class="auction-seller">
                     Seller: <a href="{{url('/user/' . $auction->creator->id)}}">{{$auction->creator->getUsername()}}</a>
                 </span>
+
+                @if($auction->creator_id == $user->id)
+                    <a href="{{ route('auction.edit', $auction) }}" class="edit-auction">Edit Auction</a>
+                    <a href="{{route('auction.cancel', $auction)}}" class="delete-auction">Cancel Auction</a>
+                @endif
             </div>
             <div class="auction-description">
                 <p>{{ $auction->description }}</p>

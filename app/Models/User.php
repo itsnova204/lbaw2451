@@ -91,7 +91,7 @@ class User extends Authenticatable
 
     public function auctionsCreated(): HasMany
     {
-        return $this->hasMany(Auction::class, 'creator_id');
+        return $this->hasMany(Auction::class, 'creator_id')->where('status', 'active');
     }
 
     public function sellerTransactions(): HasManyThrough
@@ -103,6 +103,54 @@ class User extends Authenticatable
         return $this->is_admin;
     }
 
+    
+    //paginated fethes
+
+    public function paginatedComments(int $perPage = 10)
+    {
+        return $this->comments()->paginate($perPage);
+    }
+
+    public function paginatedReports(int $perPage = 10)
+    {
+        return $this->reports()->paginate($perPage);
+    }
+
+    public function paginatedAuctions(int $perPage = 10)
+    {
+        return $this->auctions()->paginate($perPage);
+    }
+
+    public function paginatedBids(int $perPage = 10)
+    {
+        return $this->bids()->paginate($perPage);
+    }
+
+    public function paginatedRatingsGiven(int $perPage = 10)
+    {
+        return $this->ratingsGiven()->paginate($perPage);
+    }
+
+    public function paginatedRatingsReceived(int $perPage = 10)
+    {
+        return $this->ratingsReceived()->paginate($perPage);
+    }
+
+    public function paginatedNotifications(int $perPage = 10)
+    {
+        return $this->notifications()->paginate($perPage);
+    }
+
+    public function paginatedAuctionsBought(int $perPage = 10)
+    {
+        return $this->auctionsBought()->paginate($perPage);
+    }
+
+    public function paginatedAuctionsCreated(int $perPage = 10)
+    {
+        return $this->auctionsCreated()->paginate($perPage);
+    }
+    
     public function deleteUser() : void {
         $this->is_deleted = true;
         $this->save();

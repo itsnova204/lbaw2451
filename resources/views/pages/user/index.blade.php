@@ -28,7 +28,7 @@
                     <td><img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" width="50" height="50"></td>
                     <td class="table-flex-row">
                         <!-- Example actions: Edit, Delete -->
-                        <a href="">Edit</a>
+                        <a href="{{route('user.edit', $user)}}">Edit</a>
                         <form action="{{route('user.destroy', $user)}}" method="POST" >
                             @csrf
                             <button type="submit">Delete</button>
