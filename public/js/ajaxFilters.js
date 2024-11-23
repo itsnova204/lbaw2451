@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <a href="{{ route('auction.show', ${auction.id}) }}" class="auction-card-link">
                     <div class="auction-card rectangle-div">
                         <div class="expire-date">
-                            <span>Auction expires in: ${moment(auction.end_date).fromNow()}</span>
+                            <span>Auction expires in: ${timeFromNow(auction.end_date)}</span>
                         </div>
                         <div class="product-img">
                             <img src="https://via.placeholder.com/300" alt="${auction.title}">
@@ -102,3 +102,21 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchFilteredAuctions();
     });
 });
+
+function timeFromNow(endDate) {
+    const now = new Date();
+    const end = new Date(endDate);
+    const distance = end - now;
+
+    if (distance < 0) {
+        return "Auction ended";
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
