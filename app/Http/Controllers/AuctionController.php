@@ -155,7 +155,7 @@ class AuctionController extends Controller
     public function filter(Request $request)
 {
     // Sanitize inputs and set defaults for the filters
-    $sortBy = $request->input('sort-by'); // Default to 'lowest'
+    $sortBy = $request->input('sort_by'); // Default to 'lowest'
     $categoryId = $request->input('category_id'); // Category ID from the request
     $minPrice = $request->input('min_price'); // Default min price
     $maxPrice = $request->input('max_price'); // Default max price
@@ -170,17 +170,17 @@ class AuctionController extends Controller
 
         // Apply price filters
         if ($minPrice) {
-            $auctions->where('price', '>=', $minPrice);
+            $auctions->where('current_bid', '>=', $minPrice);
         }
         if ($maxPrice) {
-            $auctions->where('price', '<=', $maxPrice);
+            $auctions->where('current_bid', '<=', $maxPrice);
         }
 
         // Apply sorting
         if ($sortBy === 'highest') {
-            $auctions->orderBy('price', 'desc');
+            $auctions->orderBy('current_bid', 'desc');
         } elseif ($sortBy === 'lowest') {
-            $auctions->orderBy('price', 'asc');
+            $auctions->orderBy('current_bid', 'asc');
         } elseif ($sortBy === 'soonest') {
             $auctions->orderBy('end_date', 'asc');
         }

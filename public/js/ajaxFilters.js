@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const categorySelect = document.getElementById('category');
     const minPriceInput = document.querySelector('.entry-price input');
     const maxPriceInput = document.querySelector('.current-bid input');
-    const applyFiltersButton = document.querySelector('button[type="submit"]');
+    const applyFiltersButton = document.querySelector('.apply-filters');
     const clearFilterButton = document.getElementById('clear-filters');
     const cardsContainer = document.querySelector('.cards-container');
 
@@ -119,4 +119,5 @@ function timeFromNow(endDate) {
 
     return `${days}d ${hours}h ${minutes}m ${seconds}s`;
 }
+
 

@@ -37,7 +37,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit">Apply Filters</button>
+            <button type="submit" class="apply-filters">Apply Filters</button>
             <a href="#" id="clear-filters" class="clear-filters">Clean filters</a>
 
         </div>
