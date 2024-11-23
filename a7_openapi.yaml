@@ -5,19 +5,33 @@ info:
   description: API for the AuctionPeer application, supporting user authentication, auction management, bidding, and review features.
 
 servers:
-  - url: https://api.auctionpeer.com/v1
+  - url: http://lbaw.fe.up.pt
+    description: Production server
+
+externalDocs:
+  description: Find out more about AuctionPeer
+  url: https://gitlab.up.pt/lbaw/lbaw2425/lbaw2451/-/wikis/home
+
+tags:
+  - name: 'M01: Authentication and User Profile'
+  - name: 'M02: Auction Management'
+  - name: 'M03: Bidding and Auction Updates'
 
 paths:
   /login:
     get:
-      summary: Show login form
-      tags: [Authentication]
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags: [M01: Authentication and User Profile]
       responses:
         '200':
           description: Login form displayed successfully
     post:
-      summary: User login
-      tags: [Authentication]
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'User login. Access: PUB'
+      tags: [M01: Authentication and User Profile]
       requestBody:
         required: true
         content:
@@ -37,22 +51,28 @@ paths:
 
   /logout:
     get:
-      summary: User logout
-      tags: [Authentication]
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'User logout. Access: PUB'
+      tags: [M01: Authentication and User Profile]
       responses:
         '200':
           description: Logout successful
 
   /register:
     get:
-      summary: Show registration form
-      tags: [Authentication]
+      operationId: R104
+      summary: 'R104: Register Form'
+      description: 'Provide registration form. Access: PUB'
+      tags: [M01: Authentication and User Profile]
       responses:
         '200':
           description: Registration form displayed successfully
     post:
-      summary: Register a new user
-      tags: [Authentication]
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'Register a new user. Access: PUB'
+      tags: [M01: Authentication and User Profile]
       requestBody:
         required: true
         content:
@@ -74,8 +94,10 @@ paths:
 
   /auctions:
     get:
-      summary: List all auctions
-      tags: [Auction Management]
+      operationId: R201
+      summary: 'R201: View Auctions'
+      description: 'List all auctions. Access: PUB'
+      tags: [M02: Auction Management]
       responses:
         '200':
           description: List of auctions
@@ -88,8 +110,10 @@ paths:
 
   /auctions/search:
     get:
-      summary: Search auctions
-      tags: [Auction Management]
+      operationId: R202
+      summary: 'R202: Search Auctions'
+      description: 'Search auctions. Access: PUB'
+      tags: [M02: Auction Management]
       parameters:
         - in: query
           name: q
@@ -108,8 +132,10 @@ paths:
 
   /auctions/{auction}:
     get:
-      summary: Get auction details
-      tags: [Auction Management]
+      operationId: R203
+      summary: 'R203: Show Auction'
+      description: 'Get auction details. Access: PUB'
+      tags: [M02: Auction Management]
       parameters:
         - in: path
           name: auction
@@ -128,8 +154,10 @@ paths:
 
   /auctions/{auction}/bids:
     get:
-      summary: List bids for an auction
-      tags: [Bidding]
+      operationId: R302
+      summary: 'R302: Show Auction Bids'
+      description: 'List bids for an auction. Access: PUB'
+      tags: [M03: Bidding and Auction Updates]
       parameters:
         - in: path
           name: auction
@@ -146,8 +174,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/Bid'
     post:
-      summary: Place a bid on an auction
-      tags: [Bidding]
+      operationId: R301
+      summary: 'R301: Place Bid'
+      description: 'Place a bid on an auction. Access: AUTH'
+      tags: [M03: Bidding and Auction Updates]
       security:
         - bearerAuth: []
       parameters:
@@ -175,8 +205,10 @@ paths:
 
   /admin/users:
     get:
-      summary: List all user accounts
-      tags: [User Administration]
+      operationId: R113
+      summary: 'R113: Administrate User Form'
+      description: 'List all user accounts. Access: ADMIN'
+      tags: [M01: Authentication and User Profile]
       security:
         - bearerAuth: []
       responses:
@@ -193,8 +225,10 @@ paths:
 
   /admin/users/create:
     get:
-      summary: Show user creation form
-      tags: [User Administration]
+      operationId: R114
+      summary: 'R114: Create User Form'
+      description: 'Show user creation form. Access: ADMIN'
+      tags: [M01: Authentication and User Profile]
       security:
         - bearerAuth: []
       responses:
@@ -203,8 +237,10 @@ paths:
         '403':
           description: Forbidden - requires admin privileges
     post:
-      summary: Create new user (admin)
-      tags: [User Administration]
+      operationId: R115
+      summary: 'R115: Create User Action'
+      description: 'Create new user (admin). Access: ADMIN'
+      tags: [M01: Authentication and User Profile]
       security:
         - bearerAuth: []
       requestBody:
@@ -223,8 +259,10 @@ paths:
 
   /user/{user}:
     get:
-      summary: Get user profile
-      tags: [User Management]
+      operationId: R106
+      summary: 'R106: View Profile'
+      description: 'Get user profile. Access: PUB'
+      tags: [M01: Authentication and User Profile]
       parameters:
         - in: path
           name: user
@@ -241,8 +279,10 @@ paths:
         '404':
           description: User not found
     post:
-      summary: Delete user account
-      tags: [User Management]
+      operationId: R110
+      summary: 'R110: Delete User'
+      description: 'Delete user account. Access: AUTH'
+      tags: [M01: Authentication and User Profile]
       security:
         - bearerAuth: []
       parameters:
