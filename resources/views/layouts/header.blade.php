@@ -60,6 +60,18 @@
     </div>
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
+
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 </body>
 
 </html>
