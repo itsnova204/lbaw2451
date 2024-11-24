@@ -27,6 +27,21 @@ function addEventListeners() {
       }
     });
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const entryPriceRange = document.getElementById('entry-price-range');
+    const entryPriceValue = document.getElementById('entry-price-value');
+    const currentBidRange = document.getElementById('current-bid-range');
+    const currentBidValue = document.getElementById('current-bid-value');
+
+    entryPriceRange.addEventListener('input', function () {
+      entryPriceValue.textContent = entryPriceRange.value;
+    });
+
+    currentBidRange.addEventListener('input', function () {
+      currentBidValue.textContent = currentBidRange.value;
+    });
+  });
   }
 
   function initializeCountdown() {

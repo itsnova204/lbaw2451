@@ -28,11 +28,13 @@
             <div class="entry-price">
                 <label for="price">Entry Price:</label>
                 <input type="range" id="price-range" name="price" min="0" max="10000" step="100" value="0">
+                <span id="entry-price-value">0</span>
             </div>
 
             <div class="current-bid">
                 <label for="price">Current Bid:</label>
                 <input type="range" id="price-range" name="price" min="0" max="10000" step="100" value="0">
+                <span id="current-bid-value">0</span>
             </div>
 
             <!-- Submit Button -->

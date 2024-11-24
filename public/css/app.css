@@ -608,3 +608,12 @@ h1.deleted {
     border-radius: 10px;
     margin: 20px 0;
 }
+
+input[type="range"] {
+  margin: 0;
+}
+
+.entry-price, .current-bid {
+  margin-bottom: 10px;
+}
+
