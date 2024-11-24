@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         try {
-            const response = await fetch(`/auctions/filter?${queryParams.toString()}`);
+            const response = await fetch(`/api/auction/filter?${queryParams.toString()}`);
             const data = await response.json();
 
             if (data.status === 'success') {

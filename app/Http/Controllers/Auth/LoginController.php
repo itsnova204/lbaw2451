@@ -19,7 +19,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/auctions');
+            return redirect('/auction');
         } else {
             return view('auth.login');
         }

@@ -20,5 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/auctions', [AuctionController::class, 'apiIndex']);
-Route::get('/auctions/{auction}', [AuctionController::class, 'apiShow']); // Get a single auction
+Route::get('/auction/filter', [AuctionController::class, 'filter'])->name('auctions.filter');

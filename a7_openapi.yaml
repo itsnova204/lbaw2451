@@ -176,7 +176,7 @@ paths:
         '400':
           description: 'Invalid input'
 
-  /auctions:
+  /auction:
     get:
       operationId: R201
       summary: 'R201: View Auctions'
@@ -193,7 +193,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Auction'
 
-  /auctions/search:
+  /auction/search:
     get:
       operationId: R202
       summary: 'R202: Search Auctions'
@@ -216,7 +216,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Auction'
 
-  /auctions/{auction}:
+  /auction/{auction}:
     get:
       operationId: R203
       summary: 'R203: Show Auction'
@@ -239,7 +239,7 @@ paths:
         '404':
           description: 'Auction not found'
 
-  /auctions/{auction}/edit:
+  /auction/{auction}/edit:
     get:
       operationId: R204
       summary: 'R204: Edit Auction Form'
@@ -288,7 +288,7 @@ paths:
         '400':
           description: 'Invalid input'
 
-  /auctions/{auction}/cancel:
+  /auction/{auction}/cancel:
     get:
       operationId: R206
       summary: 'R206: Cancel Auction'
@@ -310,3 +310,176 @@ paths:
           description: 'Unauthorized action'
         '404':
           description: 'Auction not found'
+  /api/auction/filter:
+    get:
+      operationId: R207
+      summary: 'R207: Filter Auctions'
+      description: 'Filter auctions based on various criteria. Access: PUB'
+      tags:
+        - 'M02: Auction Management'
+      parameters:
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            description: 'Sort by criteria (e.g., lowest, highest, soonest)'
+        - in: query
+          name: category_id
+          schema:
+            type: string
+            description: 'Category ID to filter auctions'
+        - in: query
+          name: min_price
+          schema:
+            type: number
+            description: 'Minimum price to filter auctions'
+        - in: query
+          name: max_price
+          schema:
+            type: number
+            description: 'Maximum price to filter auctions'
+      responses:
+        '200':
+          description: 'Filtered list of auctions'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Auction'
+        '400':
+          description: 'Invalid input'
+  /auction/{auction}/bids:
+    get:
+      operationId: R302
+      summary: 'R302: View Bids'
+      description: 'View all bids for a specific auction. Access: PUB'
+      tags:
+        - 'M03: Bidding and Auction Updates'
+      parameters:
+        - in: path
+          name: auction
+          required: true
+          schema:
+            type: string
+            description: 'Auction ID'
+      responses:
+        '200':
+          description: 'List of bids'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bid'
+        '404':
+          description: 'Auction not found'
+
+    post:
+      operationId: R301
+      summary: 'R301: Place Bid'
+      description: 'Place a new bid on a specific auction. Access: AUTH'
+      tags:
+        - 'M03: Bidding and Auction Updates'
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: auction
+          required: true
+          schema:
+            type: string
+            description: 'Auction ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Bid amount'
+              required:
+                - amount
+      responses:
+        '201':
+          description: 'Bid placed successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bid'
+        '400':
+          description: 'Invalid input'
+        '403':
+          description: 'Unauthorized action'
+        '404':
+          description: 'Auction not found'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+    UserCreate:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+    Auction:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        minimumBid:
+          type: number
+        status:
+          type: string
+          enum: [active, ended, canceled]
+    Bid:
+      type: object
+      properties:
+        id:
+          type: string
+        auctionId:
+          type: string
+        userId:
+          type: string
+        amount:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+
