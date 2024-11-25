@@ -59,6 +59,7 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/{user}/destroy', 'destroy')->name('user.destroy');
     Route::get('/user/{user}/edit', 'edit')->name('user.edit'); //edit form
     Route::post('/user/{user}', 'update')->name('user.update');
+    Route::get('/admin', 'admin_index')->name('admin.index');
     Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/admin/users/create', 'create')->name('user.create');
     Route::post('/admin/users/create', 'storeUser')->name('user.store');

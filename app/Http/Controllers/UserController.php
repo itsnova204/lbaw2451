@@ -145,4 +145,9 @@ class UserController extends Controller
         $bids = $user->paginatedBids(9);
         return view('pages.user.bids', compact('user', 'bids'));
     }
+
+    public function admin_index(User $user) {
+        $this->authorize('viewAny', User::class);
+        return view('pages.admin.index');
+    }
 }
