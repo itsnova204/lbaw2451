@@ -43,7 +43,7 @@
                     Seller: <a href="{{url('/user/' . $auction->creator->id)}}">{{$auction->creator->getUsername()}}</a>
                 </span>
 
-                @if($auction->creator_id == $user->id)
+                @if($user && $auction->creator_id == $user->id)
                     <a href="{{ route('auction.edit', $auction) }}" class="edit-auction">Edit Auction</a>
                     <a href="{{route('auction.cancel', $auction)}}" class="delete-auction">Cancel Auction</a>
                 @endif
