@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\RedirectResponse;
@@ -34,6 +35,14 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && $user->is_deleted) {
+            return back()->withErrors([
+                'email' => 'Your account has been deleted.',
+            ])->onlyInput('email');
+        }
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();

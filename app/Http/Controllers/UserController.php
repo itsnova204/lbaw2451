@@ -85,9 +85,16 @@ class UserController extends Controller
         // Delete the user's profile
         $user->deleteUser();
 
-        // If the logged-in user is deleting their own profile, redirect them to the login page
-        // If an admin is deleting someone else's profile, redirect them to the users' index page
-        $redirectRoute = (auth()->user()->id === $user->id) ? route('login') : route('user.index');
+        if (auth()->user()->id === $user->id) {
+            // Log out the user if they are deleting their own profile
+            auth()->logout();
+        }
+
+        if (auth()->user() && auth()->user()->isAdmin()) {
+            $redirectRoute = route('user.index');
+        } else {
+            $redirectRoute = route('auctions.index');
+        }
 
         return redirect($redirectRoute)->with('success', 'User profile deleted successfully.');
     }

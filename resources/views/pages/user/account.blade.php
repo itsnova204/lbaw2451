@@ -19,7 +19,11 @@
                 @endfor
             </div>
             <p class="">Joined in: {{ $user->created_at->format('d.m.Y') }}</p>
-            <a href="{{ route('user.edit', $user) }}" > Edit Profile </a>
+            <a href="{{ route('user.edit', $user) }}" id="user-edit"> Edit Profile </a>
+            <form action="{{route('user.destroy', $user)}}" method="POST" id="user-delete">
+                @csrf
+                <button type="submit" id="delete-account-button"><p>Delete User</p></button>
+            </form>
             <a href="{{ route('logout') }}" class="mt-4 inline-block">Log Out</a>
         </div>
     </div>
