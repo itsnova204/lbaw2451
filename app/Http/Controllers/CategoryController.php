@@ -12,7 +12,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //not for this phase of the project
+        $this->authorize('viewAny', Category::class);
+        $categories = Category::all();
+        return view('pages.category.index', compact('categories'));
     }
 
     /**
@@ -20,7 +22,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //not for this phase of the project
+        $this->authorize('create', Category::class);
+        return view('pages.category.create');
     }
 
     /**
@@ -28,7 +31,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //not for this phase of the project
+        $this->authorize('create', Category::class);
+        $category = new Category();
+        $category->name = $request->name;
+        $category->save();
+        return redirect()->route('categories.index');
     }
 
     /**

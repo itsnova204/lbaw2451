@@ -55,6 +55,11 @@ class AuctionPolicy
      */
     public function cancel(User $user, Auction $auction): bool
     {
-        return $user->id === $auction->creator_id;
+        return $user->id === $auction->creator_id || $user->isAdmin();
+    }
+
+    public function viewAdmin(User $user): bool
+    {
+        return $user->isAdmin();
     }
 }

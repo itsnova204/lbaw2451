@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,8 @@ Route::controller(AuctionController::class)->group(function () {
     Route::get('/auction/{auction}/edit', 'edit')->name('auction.edit');
     Route::post('/auction/{auction}/edit', 'update')->name('auction.update');
     Route::get('/auction/{auction}/cancel', 'cancel')->name('auction.cancel');
+    Route::post('/auction/{auction}/cancel', 'cancel')->name('auction.cancel');
+    Route::get('/admin/auctions', 'adminIndex')->name('admin.auctions');
 });
 
 
@@ -59,6 +62,7 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/{user}/destroy', 'destroy')->name('user.destroy');
     Route::get('/user/{user}/edit', 'edit')->name('user.edit'); //edit form
     Route::post('/user/{user}', 'update')->name('user.update');
+    Route::get('/admin', 'admin_index')->name('admin.index');
     Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/admin/users/create', 'create')->name('user.create');
     Route::post('/admin/users/create', 'storeUser')->name('user.store');
@@ -67,4 +71,10 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(BidController::class)->group(function () {
     Route::post('/auction/{auction}/bids', 'store')->name('auctions.bids.store');
     Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
+});
+
+Route::controller(CategoryController::class)->group(function () {
+   Route::get('/admin/categories', 'index')->name('categories.index');
+   Route::get('/admin/categories/create', 'create')->name('categories.create');
+   Route::post('/admin/categories/create', 'store')->name('categories.store');
 });

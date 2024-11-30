@@ -5,7 +5,12 @@ function addEventListeners() {
     const filters = {
       'filter-id': 0,
       'filter-username': 1,
-      'filter-email': 2
+      'filter-email': 2,
+      'filter-date' :3,
+      'filter-status': 4,
+      'filter-bid': 5,
+      'filter-category' : 6,
+      'filter-creator' : 7,
     };
 
     Object.keys(filters).forEach(function (filterId) {

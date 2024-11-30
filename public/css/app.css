@@ -629,4 +629,18 @@ input[type="range"] {
   margin: 0;
 }
 
+.admin-links {
+  width: fit-content;
+  text-align: center;
+}
+
+#admin-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 100px;
+}
+
+#auction-actions > form {
+  margin: auto;
+}
 

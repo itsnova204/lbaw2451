@@ -24,7 +24,7 @@
             <span>Services</span>
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('user.index') }}" class="admin-panel">Admin Panel</a>
+                    <a href="{{ route('admin.index') }}" class="admin-panel">Admin Panel</a>
                 @endif
                 <form action="{{ route('logout') }}" method="GET" id="logout-form">
                     @csrf

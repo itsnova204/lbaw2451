@@ -186,7 +186,7 @@ class AuctionController extends Controller
     }
 
     public function filter(Request $request)
-{
+    {
     // Sanitize inputs and set defaults for the filters
     $sortBy = $request->input('sort_by'); // Default to 'lowest'
     $categoryId = $request->input('category_id'); // Category ID from the request
@@ -231,7 +231,14 @@ class AuctionController extends Controller
             'message' => 'An error occurred: ' . $e->getMessage()
         ], 500);
     }
-}
+    }
+
+    public function adminIndex()
+    {
+        $this->authorize('viewAdmin', Auction::class);
+        $auctions = Auction::all();
+        return view('pages.admin.auction_index', compact('auctions'));
+    }
 
 
 }
