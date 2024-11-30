@@ -39,10 +39,14 @@
                         </svg>
                     </span>
                 </div>
-                <span class="auction-seller">
-                    Seller: <a href="{{url('/user/' . $auction->creator->id)}}">{{$auction->creator->getUsername()}}</a>
-                </span>
-
+                <div id="auction-seller-report">
+                    <span class="auction-seller">
+                        Seller: <a href="{{url('/user/' . $auction->creator->id)}}">{{$auction->creator->getUsername()}}</a>
+                    </span>
+                    <span>
+                        <a href="{{ route('report.create', $auction) }}">Report Auction</a>
+                    </span>
+                </div>
                 @if($user && $auction->creator_id == $user->id)
                     <a href="{{ route('auction.edit', $auction) }}" class="edit-auction">Edit Auction</a>
                     <a href="{{route('auction.cancel', $auction)}}" class="delete-auction">Cancel Auction</a>

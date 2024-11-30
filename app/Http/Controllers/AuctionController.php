@@ -240,5 +240,9 @@ class AuctionController extends Controller
         return view('pages.admin.auction_index', compact('auctions'));
     }
 
-
+    public function report(Auction $auction)
+    {
+        $this->authorize('report', $auction);
+        return view('pages.auction.report', compact('auction'));
+    }
 }
