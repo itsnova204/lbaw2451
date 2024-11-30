@@ -15,7 +15,8 @@ class ReportController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Report::class);
-        return view('pages.report.index');
+        $reports = Report::all();
+        return view('pages.admin.report_index', compact('reports'));
     }
 
     /**
@@ -82,5 +83,23 @@ class ReportController extends Controller
     public function destroy(Report $report)
     {
         //
+    }
+
+    public function discard(Report $report)
+    {
+        $this->authorize('update', $report);
+        $report->status = 'discarded';
+        $report->save();
+
+        return redirect()->route('admin.reports')->with('success', 'Report discarded successfully');
+    }
+
+    public function process(Report $report)
+    {
+        $this->authorize('update', $report);
+        $report->status = 'processed';
+        $report->save();
+
+        return redirect()->route('admin.reports')->with('success', 'Report resolved successfully');
     }
 }

@@ -9,6 +9,12 @@
             <h3><a href="{{ route('categories.create') }}">Create Category</a></h3>
         </div>
         <table border="1" id="user-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
             <tbody>
             @foreach($categories as $category)
                 <tr>
