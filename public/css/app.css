@@ -640,4 +640,7 @@ input[type="range"] {
   column-gap: 100px;
 }
 
+#auction-actions > form {
+  margin: auto;
+}
 

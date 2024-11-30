@@ -233,5 +233,12 @@ class AuctionController extends Controller
     }
     }
 
+    public function adminIndex()
+    {
+        $this->authorize('viewAdmin', Auction::class);
+        $auctions = Auction::all();
+        return view('pages.admin.auction_index', compact('auctions'));
+    }
+
 
 }
