@@ -62,4 +62,9 @@ class AuctionPolicy
     {
         return $user->isAdmin();
     }
+
+    public function report(User $user, Auction $auction): bool
+    {
+        return $user !== null  && $user->id !== $auction->creator_id && !$user->isAdmin();
+    }
 }
