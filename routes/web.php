@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -68,4 +69,10 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(BidController::class)->group(function () {
     Route::post('/auction/{auction}/bids', 'store')->name('auctions.bids.store');
     Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
+});
+
+Route::controller(CategoryController::class)->group(function () {
+   Route::get('/admin/categories', 'index')->name('categories.index');
+   Route::get('/admin/categories/create', 'create')->name('categories.create');
+   Route::post('/admin/categories/create', 'store')->name('categories.store');
 });

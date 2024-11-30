@@ -10,7 +10,7 @@
                 <a href="{{ route('user.index') }}" class="admin-links"><h2>Users</h2></a>
             </div>
             <div class="rectangle-div">
-                <a href="" class="admin-links"><h2>Manage Categories</h2></a>
+                <a href="{{route('categories.index')}}" class="admin-links"><h2>Manage Categories</h2></a>
             </div>
             <div class="rectangle-div">
                 <a href="" class="admin-links"><h2>Manage Auctions</h2></a>
