@@ -636,7 +636,7 @@ input[type="range"] {
 
 #admin-links {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   column-gap: 100px;
 }
 
@@ -649,5 +649,10 @@ input[type="range"] {
     flex-direction: column;
     gap: 10px;
     text-align: center;
+}
+
+.table-flex form {
+  margin: 0;
+
 }
 

@@ -81,6 +81,9 @@ Route::controller(CategoryController::class)->group(function () {
 });
 
 Route::controller(ReportController::class)->group(function () {
+    Route::post('/admin/reports/{report}/discard', 'discard')->name('admin.reports.discard');
+    Route::post('/admin/reports/{report}/process', 'process')->name('admin.reports.process');
     Route::get('/report/create/{auction}', 'create')->name('report.create');
     Route::post('/report/store', 'store')->name('report.store');
+    Route::get('/admin/reports', 'index')->name('admin.reports');
 });

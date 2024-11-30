@@ -15,6 +15,9 @@
             <div class="rectangle-div">
                 <a href="{{route('admin.auctions')}}" class="admin-links"><h2>Manage Auctions</h2></a>
             </div>
+            <div class="rectangle-div">
+                <a href="{{route('admin.reports')}}" class="admin-links"><h2>Manage Reports</h2></a>
+            </div>
         </div>
     </div>
 

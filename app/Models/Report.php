@@ -37,4 +37,14 @@ class Report extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function status() : string
+    {
+        $statuses = [
+            'not_processed' => 'Not Processed',
+            'discarded' => 'Discarded',
+            'processed' => 'Processed',
+        ];
+        return $statuses[$this->status];
+    }
 }
