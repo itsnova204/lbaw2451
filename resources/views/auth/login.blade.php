@@ -34,6 +34,10 @@
                     @enderror
                 </div>
 
+                <p class="text-sm text-gray-600">Forgot your password?
+                    <a href="{{ route('resetPassword') }}" class="text-blue-500 hover:underline">Click Here</a>
+                </p>
+
                 <!-- remember me -->
                 <div class="flex items-center justify-between mb-6">
                     <label for="remember" class="inline-flex items-start">
