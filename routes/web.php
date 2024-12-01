@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReportController;
@@ -86,4 +87,11 @@ Route::controller(ReportController::class)->group(function () {
     Route::get('/report/create/{auction}', 'create')->name('report.create');
     Route::post('/report/store', 'store')->name('report.store');
     Route::get('/admin/reports', 'index')->name('admin.reports');
+});
+
+Route::controller(ForgotPasswordController::class)->group(function () {
+    Route::get('/password/reset', 'showLinkRequestForm')->name('password.request');
+    Route::post('/password/email', 'sendResetLinkEmail')->name('password.email');
+    Route::get('/password/reset/{token}', 'showResetForm')->name('password.reset');
+    Route::post('/password/reset', 'reset')->name('password.update');
 });

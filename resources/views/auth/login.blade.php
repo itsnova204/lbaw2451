@@ -35,7 +35,7 @@
                 </div>
 
                 <p class="text-sm text-gray-600">Forgot your password?
-                    <a href="{{ route('resetPassword') }}" class="text-blue-500 hover:underline">Click Here</a>
+                    <a href="{{ route('password.request') }}" class="text-blue-500 hover:underline">Click Here</a>
                 </p>
 
                 <!-- remember me -->
