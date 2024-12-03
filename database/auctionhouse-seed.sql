@@ -113,6 +113,14 @@ CREATE TABLE transactions (
                               updated_at TIMESTAMP
 );
 
+CREATE TABLE password_resets (
+    id SERIAL PRIMARY KEY,
+    email TEXT NOT NULL,
+    token TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP
+);
+
 CREATE INDEX IDX01 ON auction USING BTREE(creator_id);
 CREATE INDEX IDX02 ON bid USING BTREE(auction_id);
 CREATE INDEX IDX03 ON transactions USING BTREE(auction_id);
