@@ -34,6 +34,13 @@
                 @yield('content')
             </section>
         </main>
+
+        <footer class="footer bg-light text-center py-3">
+            <div class="container">
+                <p>Contact us at: <a href="mailto:support@example.com">support@auctionpeer.com</a></p>
+                <p>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.</p>
+            </div>
+        </footer>
     </body>
     
 </html>
