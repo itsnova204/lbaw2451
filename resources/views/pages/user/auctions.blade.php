@@ -11,7 +11,7 @@
             @foreach ($auctions as $auction)
                 <a href="{{ route('auction.show', $auction) }}">
                 <div class="bg-gray-100 p-4 rounded shadow">
-                    <div class="w-full h-48 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
+                    <div class="w-full h-48 bg-gray-300 rounded" style="background-image: url('{{ asset('storage/' . $auction->picture) }}'); background-size: cover;"></div>
                     <h3 class="mt-2 text-lg font-semibold">{{ $auction->title }}</h3>
                     <p class="text-sm text-gray-500">Starting price: ${{ $auction->minimum_bid }}</p>
                     <p class="text-sm text-gray-500">Ends: {{ $auction->end_date->format('d.m.Y') }}</p>
