@@ -113,6 +113,16 @@ CREATE TABLE transactions (
                               updated_at TIMESTAMP
 );
 
+CREATE TABLE following (
+                              id SERIAL PRIMARY KEY,
+                              user_id INTEGER NOT NULL,
+                              auction_id INTEGER NOT NULL,
+                              created_at TIMESTAMP NOT NULL,
+                              updated_at TIMESTAMP,
+                              FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                              FOREIGN KEY (auction_id) REFERENCES auction(id) ON DELETE CASCADE
+);
+
 CREATE TABLE password_resets (
     id SERIAL PRIMARY KEY,
     email TEXT NOT NULL,

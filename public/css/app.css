@@ -514,9 +514,14 @@ button[type="submit"]:hover {
   background-color: #7a3a9e;
 }
 
-#auction-name-star svg{
-  margin-left : 10px;
-  padding-top: 5px;
+#auction-name-star {
+  text-align: center;
+  span {
+    margin: 0;
+    form {
+      margin: 0;
+    }
+  }
 }
 
 .auction-info {

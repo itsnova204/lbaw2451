@@ -162,4 +162,9 @@ class User extends Authenticatable
         }
         return $this->username;
     }
+
+    public function followedAuctions()
+    {
+        return $this->belongsToMany(Auction::class, 'following')->withTimestamps();
+    }
 }

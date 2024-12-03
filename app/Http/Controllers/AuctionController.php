@@ -245,4 +245,24 @@ class AuctionController extends Controller
         $this->authorize('report', $auction);
         return view('pages.auction.report', compact('auction'));
     }
+
+    public function follow(Auction $auction)
+    {
+        $user = auth()->user();
+        if (!$auction->isFollowedBy($user)) {
+            $auction->followers()->attach($user->id);
+        }
+
+        return redirect()->back()->with('success', 'Auction followed successfully');
+    }
+
+    public function unfollow(Auction $auction)
+    {
+        $user = auth()->user();
+        if ($auction->isFollowedBy($user)) {
+            $auction->followers()->detach($user->id);
+        }
+
+        return redirect()->back()->with('success', 'Auction unfollowed successfully');
+    }
 }
