@@ -38,7 +38,7 @@
                     @else
                         @foreach ($user->paginatedAuctionsCreated(3) as $auction)
                         <li class="flex space-x-3">
-                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
+                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset('storage/' . $auction->picture) }}'); background-size: cover;"></div>
                             <div class="flex-1">
                                 <h4 class="text-sm font-semibold">{{ $auction->name }}</h4>
                                 <p class="text-xs text-gray-500">Starting price: ${{ $auction->starting_price }}</p>

@@ -45,7 +45,7 @@
                     @else
                         @foreach ($user->paginatedAuctionsCreated(3) as $auction)
                         <li class="flex space-x-3">
-                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
+                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset('storage/' . $auction->picture) }}'); background-size: cover;"></div>
                             <a href="{{route('auction.show', $auction)}}">
                             <div class="flex-1">
                                 <h4 class="text-sm font-semibold">{{ $auction->title }}</h4>
@@ -69,7 +69,7 @@
                     @else
                         @foreach ($user->paginatedAuctionsBought(3) as $auction)
                         <li class="flex space-x-3">
-                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($auction->image_url) }}'); background-size: cover;"></div>
+                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset('storage/' . $auction->picture) }}'); background-size: cover;"></div>
                             <div class="flex-1">
                                 <h4 class="text-sm font-semibold">{{ $auction->title }}</h4>
                                 <p class="text-xs text-gray-500">Final price: ${{ $auction->current_bid }}</p>
@@ -91,7 +91,7 @@
                     @else
                         @foreach ($user->paginatedBids(3) as $bid)
                         <li class="flex space-x-3">
-                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset($bid->auction->image_url) }}'); background-size: cover;"></div>
+                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset('storage/' . $auction->picture) }}'); background-size: cover;"></div>
                             <div class="flex-1">
                                 <h4 class="text-sm font-semibold">{{ $bid->auction->title }}</h4>
                                 <p class="text-xs text-gray-500">Your highest offer: ${{ $bid->amount }}</p>

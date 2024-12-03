@@ -50,10 +50,16 @@ class AuctionController extends Controller
                 'minimum_bid' => 'required|numeric|min:0',
                 'end_date' => 'required|date|after:now',
                 'category_id' => 'required|integer',
+                'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
             Log::debug('Validation passed');
-            Log::debug($validated);
-            // Create the auction
+
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $filePath = $file->store('auction-pictures', 'public'); // Store the file in the 'profile_pictures' directory in the 'public' disk
+                $validated['picture'] = $filePath;
+            }
+
             Auction::create([
                 'title' => $validated['title'],
                 'description' => $validated['description'],
@@ -65,6 +71,7 @@ class AuctionController extends Controller
                 'status' => 'active',
                 'category_id' => $validated['category_id'],
                 'creator_id' => Auth::id(),
+                'picture' => $validated['picture'],
             ]);
 
             return redirect()->route('auctions.index')->with('success', 'Auction created successfully.');

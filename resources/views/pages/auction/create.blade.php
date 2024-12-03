@@ -5,7 +5,7 @@
 @section('content')
 <div class="container rectangle-div">
     <h1>Create a New Auction</h1>
-    <form action="{{ route('auction.store') }}" method="POST">
+    <form action="{{ route('auction.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="title">Title</label>
@@ -14,6 +14,13 @@
         <div class="form-group">
             <label for="description">Description</label>
             <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+        <div>
+            <label for="picture" class="form-label">Profile Picture</label>
+            <input type="file" name="picture" id="picture" class="form-control @error('picture') is-invalid @enderror">
+            @error('picture')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="minimum_bid">Minimum Bid</label>

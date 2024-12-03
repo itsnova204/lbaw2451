@@ -4,7 +4,11 @@
             <span>Auction expires in: {{ $auction->end_date->diffForHumans() }}</span>
         </div>
         <div class="product-img">
-            <img src="https://via.placeholder.com/300" alt="{{ $auction->title }}">
+            @if($auction->picture)
+                <img src="{{ asset('storage/' . $auction->picture) }}" alt="{{ $auction->title }}">
+            @else
+                <img src="https://via.placeholder.com/300" alt="{{ $auction->title }}">
+            @endif
         </div>
         <div class="product-info">
             <div class="product-name">
