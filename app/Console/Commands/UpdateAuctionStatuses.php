@@ -37,6 +37,12 @@ class UpdateAuctionStatuses extends Command
 
         foreach ($affected as $auction) {
             // Set the status to 'ended' once the auction is past its end date
+            if (Bid::where('auction_id', $auction->id)->count() === 0) {
+                $auction->status = 'ended';
+                $auction->save();
+                $this->info("Auction '{$auction->title}' has been updated to 'ended'.");
+                continue;
+            }
             $bid = Bid::where('auction_id', $auction->id)->where('amount', $auction->current_bid)->first();
 
             $auction->status = 'ended';
