@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -40,6 +41,8 @@ class ForgotPasswordController extends Controller
             $message->subject('Password Reset Link');
         });
 
-        return back()->with('status', 'We have emailed your password reset link!');
+        Log::debug('Sent');
+
+        return redirect()->route('login')->withSuccess('We have emailed your password reset link!');
     }
 }
