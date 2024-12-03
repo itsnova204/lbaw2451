@@ -65,6 +65,12 @@ class UserController extends Controller
             'address' => 'nullable|string|max:255', // Optional string field for address
         ]);
 
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
+            $filePath = $file->store('profile_pictures', 'public'); // Store the file in the 'profile_pictures' directory in the 'public' disk
+            $validated['profile_picture'] = $filePath;
+        }
+
         // Update the user's profile with the validated data
         $user->update($validated);
 
