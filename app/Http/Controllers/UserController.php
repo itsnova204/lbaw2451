@@ -150,4 +150,10 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
         return view('pages.admin.index');
     }
+
+    public function showFollowed(User $user)
+    {
+        $followedAuctions = $user->followedAuctions()->get();
+        return view('pages.user.followed', compact('user', 'followedAuctions'));
+    }
 }
