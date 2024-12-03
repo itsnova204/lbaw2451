@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Auction;
 use App\Models\Category;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -38,34 +39,46 @@ class AuctionController extends Controller
      */
     public function store(Request $request)
     {
-        Log::debug('Creating auction');
-        $this->authorize('create', Auction::class);
-        Log::debug($request);
-        // Validate the request data
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'minimum_bid' => 'required|numeric|min:0',
-            'end_date' => 'required|date|after:now',
-            'category_id' => 'required|integer',
-        ]);
-        Log::debug('Validation passed');
-        Log::debug($validated);
-        // Create the auction
-        Auction::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'minimum_bid' => $validated['minimum_bid'],
-            'current_bid' => $validated['minimum_bid'],
-            'end_date' => $validated['end_date'],
-            'user_id' => Auth::id(), // Owner of the auction
-            'start_date' => now(),
-            'status' => 'active',
-            'category' => $validated['category_id'],
-            'creator_id' => Auth::id(),
-        ]);
+        try {
+            Log::debug('Creating auction');
+            $this->authorize('create', Auction::class);
+            Log::debug($request);
+            // Validate the request data
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'minimum_bid' => 'required|numeric|min:0',
+                'end_date' => 'required|date|after:now',
+                'category_id' => 'required|integer',
+            ]);
+            Log::debug('Validation passed');
+            Log::debug($validated);
+            // Create the auction
+            Auction::create([
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'minimum_bid' => $validated['minimum_bid'],
+                'current_bid' => $validated['minimum_bid'],
+                'end_date' => $validated['end_date'],
+                'user_id' => Auth::id(), // Owner of the auction
+                'start_date' => now(),
+                'status' => 'active',
+                'category_id' => $validated['category_id'],
+                'creator_id' => Auth::id(),
+            ]);
 
-        return redirect()->route('auctions.index')->with('success', 'Auction created successfully.');
+            return redirect()->route('auctions.index')->with('success', 'Auction created successfully.');
+        } catch (QueryException $exception) {
+            // Handle specific PostgreSQL error codes or messages
+            if (str_contains($exception->getMessage(), 'The auction end date must be at')) {
+                return redirect()->route('auctions.create')->with('error', 'End date must be at least one day greater than start date.');
+            }
+
+            // For other database errors
+            // Log the error for further investigation
+            Log::error('An error occurred while placing the bid: ' . $exception->getMessage());
+            return response()->json(['error' => 'An error occurred while placing the bid. Please try again later.'], 500);
+        }
     }
 
     /**
