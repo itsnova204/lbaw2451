@@ -6,7 +6,11 @@
     <div class="auction-details">
         <div class="auction-image-bids">
             <div class="auction-image-div">
-                <img src="https://via.placeholder.com/700" alt="{{ $auction->title }}" class="auction-image">
+                @if($auction->picture)
+                    <img src="{{ asset('storage/' . $auction->picture) }}" alt="{{ $auction->title }}" class="auction-image">
+                @else
+                    <img src="https://via.placeholder.com/700" alt="{{ $auction->title }}" class="auction-image">
+                @endif
             </div>
             <div class="bids">
                 <h2><a href="{{ url()->current() }}/bids">Bids</a></h2>
