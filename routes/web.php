@@ -41,6 +41,8 @@ Route::controller(AuctionController::class)->group(function () {
     Route::post('/auction/{auction}/edit', 'update')->name('auction.update');
     Route::get('/auction/{auction}/cancel', 'cancel')->name('auction.cancel');
     Route::post('/auction/{auction}/cancel', 'cancel')->name('auction.cancel');
+    Route::post('/auction/{auction}/follow', 'follow')->name('auction.follow');
+    Route::post('/auction/{auction}/unfollow', 'unfollow')->name('auction.unfollow');
     Route::get('/admin/auctions', 'adminIndex')->name('admin.auctions');
 });
 
@@ -65,6 +67,7 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/{user}/destroy', 'destroy')->name('user.destroy');
     Route::get('/user/{user}/edit', 'edit')->name('user.edit'); //edit form
     Route::post('/user/{user}', 'update')->name('user.update');
+    Route::get('/user/{user}/followed', 'showFollowed')->name('user.followed');
     Route::get('/admin', 'admin_index')->name('admin.index');
     Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/admin/users/create', 'create')->name('user.create');

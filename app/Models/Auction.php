@@ -95,4 +95,14 @@ class Auction extends Model
             ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
             ->get();
     }
+
+    public function followers() : \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'following', 'auction_id', 'user_id')->withTimestamps();
+    }
+
+    public function isFollowedBy(User $user) : bool
+    {
+        return $this->followers()->where('user_id', $user->id)->exists();
+    }
 }
