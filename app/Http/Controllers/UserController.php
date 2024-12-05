@@ -167,4 +167,17 @@ class UserController extends Controller
         $this->authorize('viewBalance', $user);
         return view('pages.user.balance', compact('user'));
     }
+
+    public function deposit(Request $request, User $user) {
+        $this->authorize('deposit', $user);
+
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0'
+        ]);
+
+        $user->balance += $validated['amount'];
+        $user->save();
+
+        return back()->with('success', 'Deposit successful.');
+    }
 }

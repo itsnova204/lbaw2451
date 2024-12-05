@@ -6,7 +6,13 @@
     <div class="rectangle-div" id="my-balance">
         <h1>My Balance</h1>
         <h2>You have a balance of {{$user->balance}}€</h2>
-        <a href=""><button>Deposit</button></a>
+        <form action="{{route('user.deposit', $user)}}" method="POST">
+            @csrf
+            <div id="deposit">
+                <input type="number" name="amount" id="amount" placeholder="Amount" required>
+                <button type="submit">Deposit</button>
+            </div>
+        </form>
     </div>
     <div class="rectangle-div">
         <h1>My Transactions</h1>

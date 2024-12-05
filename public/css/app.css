@@ -684,3 +684,15 @@ input[type="range"] {
 #my-balance {
   margin-bottom: 2rem;
 }
+
+#deposit {
+  width: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#deposit input {
+    width: 50%;
+}
+
