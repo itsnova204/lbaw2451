@@ -13,11 +13,21 @@
         <h2>Buying:</h2>
         @foreach($user->buyerTransactions()->get() as $transaction)
             @php($auction = $transaction->auction)
+            <div class="rectangle-div transaction red">
+                <span>{{$auction->title}}</span>
+                <span>{{$transaction->created_at}}</span>
+                <span>{{$transaction->amount}}€</span>
+            </div>
         @endforeach
 
         <h2>Selling:</h2>
         @foreach($user->sellerTransactions()->get() as $transaction)
             @php($auction = $transaction->auction)
+            <div class="rectangle-div transaction green">
+                <span>{{$auction->title}}</span>
+                <span>{{$transaction->created_at}}</span>
+                <span>{{$transaction->amount}}€</span>
+            </div>
         @endforeach
     </div>
 
