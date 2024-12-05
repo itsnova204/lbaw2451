@@ -73,11 +73,11 @@
                             <div class="flex-1">
                                 <h4 class="text-sm font-semibold">{{ $auction->title }}</h4>
                                 <p class="text-xs text-gray-500">Final price: ${{ $auction->current_bid }}</p>
-                                <p class="text-xs text-gray-500">Purchased on: {{ $auction->purchase_date->format('d.m.Y') }}</p>
+                                <p class="text-xs text-gray-500">Purchased on: {{ $auction->end_date->format('d.m.Y') }}</p>
                             </div>
                         </li>
                         @endforeach
-                        <a href="{{ route('user.won-auctions', $user) }}" > See all {{ $user->auctionsBought->count() }} </a>
+                        <a href="{{ route('user.wonAuctions', $user) }}" > See all {{ $user->auctionsBought->count() }} </a>
                     @endif
                 </ul>
             </div>

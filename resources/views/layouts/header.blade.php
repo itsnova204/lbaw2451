@@ -30,8 +30,12 @@
                     @csrf
                     <span class="submit-button" onclick="document.getElementById('logout-form').submit();">Logout</span>
                 </form>
-                @if(!auth()->user()->isAdmin())<a href="{{route('user.followed', auth()->user())}}" class="followed">Followed</a> @endif
-                <a href="{{ route('user.show', auth()->user()) }}">
+                @if(!auth()->user()->isAdmin())
+                        <a href="{{route('user.followed', auth()->user())}}" class="followed">Followed</a>
+                        <a href="{{route('user.balance', auth()->user())}}">{{auth()->user()->balance}}€</a>
+                    @endif
+
+                    <a href="{{ route('user.show', auth()->user()) }}">
                     <div class="select-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
                             <circle cx="12" cy="8" r="5" />

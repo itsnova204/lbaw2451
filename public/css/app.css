@@ -666,3 +666,33 @@ input[type="range"] {
   margin: 0 auto;
 }
 
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.transaction {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+#my-balance {
+  margin-bottom: 2rem;
+}
+
+#deposit {
+  width: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#deposit input {
+    width: 50%;
+}
+
