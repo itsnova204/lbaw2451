@@ -32,7 +32,8 @@ CREATE TABLE users (
                        address TEXT,
                        is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
                        is_admin BOOLEAN NOT NULL DEFAULT FALSE,
-                       remember_token TEXT
+                       remember_token TEXT,
+                       balance NUMERIC CHECK (balance >= 0) DEFAULT 0
 );
 
 CREATE TABLE category (
