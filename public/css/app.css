@@ -677,5 +677,10 @@ input[type="range"] {
 .transaction {
   display: flex;
   flex-direction: row;
-    justify-content: space-between;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+#my-balance {
+  margin-bottom: 2rem;
 }
