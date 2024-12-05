@@ -162,4 +162,9 @@ class UserController extends Controller
         $followedAuctions = $user->followedAuctions()->get();
         return view('pages.user.followed', compact('user', 'followedAuctions'));
     }
+
+    public function showBalance(User $user) {
+        $this->authorize('viewBalance', $user);
+        return view('pages.user.balance', compact('user'));
+    }
 }

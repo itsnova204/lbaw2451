@@ -23,7 +23,7 @@
             <span>FAQ</span>
             <span>Services</span>
             @auth
-                <a href="">{{auth()->user()->balance}}€</a>
+                <a href="{{route('user.balance', auth()->user())}}">{{auth()->user()->balance}}€</a>
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.index') }}" class="admin-panel">Admin Panel</a>
                 @endif

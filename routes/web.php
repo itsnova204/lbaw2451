@@ -68,6 +68,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{user}/edit', 'edit')->name('user.edit'); //edit form
     Route::post('/user/{user}', 'update')->name('user.update');
     Route::get('/user/{user}/followed', 'showFollowed')->name('user.followed');
+    Route::get('/user/{user}/balance', 'showBalance')->name('user.balance');
     Route::get('/admin', 'admin_index')->name('admin.index');
     Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/admin/users/create', 'create')->name('user.create');

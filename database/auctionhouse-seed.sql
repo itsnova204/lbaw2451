@@ -591,3 +591,17 @@ WHERE EXISTS (
     FROM bid b
     WHERE b.auction_id = a.id
 );
+
+-- Insert ended auctions
+INSERT INTO auction (title, description, start_date, end_date, status, minimum_bid, current_bid, category_id, creator_id, buyer_id, created_at) VALUES
+('Old Laptop', 'Used laptop, good condition', NOW() - INTERVAL '30 days', NOW() - INTERVAL '15 days', 'ended', 100, 150, 1, 12, 3, NOW() - INTERVAL '30 days'),
+('Vintage Camera', 'Classic film camera', NOW() - INTERVAL '40 days', NOW() - INTERVAL '20 days', 'ended', 200, 250, 2, 9, 4, NOW() - INTERVAL '40 days'),
+('Antique Vase', 'Beautiful antique vase', NOW() - INTERVAL '50 days', NOW() - INTERVAL '25 days', 'ended', 300, 350, 3, 12, 5, NOW() - INTERVAL '50 days'),
+('Gaming Console', 'Latest model, barely used', NOW() - INTERVAL '60 days', NOW() - INTERVAL '30 days', 'ended', 400, 450, 4, 6, 12, NOW() - INTERVAL '60 days');
+
+-- Insert associated transactions
+INSERT INTO transactions (amount, auction_id, created_at) VALUES
+(150, (SELECT id FROM auction WHERE title = 'Old Laptop'), NOW() - INTERVAL '15 days'),
+(250, (SELECT id FROM auction WHERE title = 'Vintage Camera'), NOW() - INTERVAL '20 days'),
+(350, (SELECT id FROM auction WHERE title = 'Antique Vase'), NOW() - INTERVAL '25 days'),
+(450, (SELECT id FROM auction WHERE title = 'Gaming Console'), NOW() - INTERVAL '30 days');
