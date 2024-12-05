@@ -49,11 +49,11 @@ class UserPolicy
 
     public function viewBalance(User $user, User $model): bool
     {
-        return $user->id === $model->id;
+        return $user->id === $model->id && !$user->is_admin;
     }
     public function deposit(User $user, User $model): bool
     {
-        return $user->id === $model->id;
+        return $user->id === $model->id && !$user->is_admin;
     }
 
 }
