@@ -18,7 +18,7 @@
         </a>
         </div>
         <div class="about">
-            <span>About</span>
+            <span><a href="{{ route('misc.about') }}">About</a></span>
             <span>Contact</span>
             <span>FAQ</span>
             <span>Services</span>
