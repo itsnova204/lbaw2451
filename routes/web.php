@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MiscController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
@@ -103,4 +104,8 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 Route::controller(ResetPasswordController::class)->group( function () {
     Route::get('/password/reset/{token}', 'showResetForm')->name('password.reset');
     Route::post('/password/reset', 'reset')->name('password.update');
+});
+
+Route::controller(MiscController::class)->group(function () {
+    Route::get('/about', 'about')->name('misc.about');
 });
