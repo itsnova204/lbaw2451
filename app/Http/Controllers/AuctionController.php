@@ -269,6 +269,9 @@ class AuctionController extends Controller
     public function follow(Auction $auction)
     {
         $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You must be logged in to follow an auction.');
+        }
         if (!$auction->isFollowedBy($user)) {
             $auction->followers()->attach($user->id);
         }

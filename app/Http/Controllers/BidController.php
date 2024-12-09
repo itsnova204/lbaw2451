@@ -34,6 +34,10 @@ class BidController extends Controller
             $auction = Auction::findOrFail($request->auction_id);
             $user = auth()->user();
 
+            if (!$user) {
+                return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
+            }
+
             if ($user->isAdmin() || $user->id === $auction->creator_id) {
                 return redirect()->back()->with('error', 'You cannot bid on this auction.');
             }
