@@ -25,6 +25,12 @@
                                 <span class="bid-username">{{ $bid->user->getUsername() }}</span>
                                 <span class="bid-amount">${{ number_format($bid->amount, 2) }}</span>
                             </div>
+                            @if($bid->user_id === Auth::id())
+                                <form action="{{ route('bids.withdraw', ['auction' => $auction->id, 'bid' => $bid->id]) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Withdraw Bid</button>
+                                </form>
+                            @endif
                             <div class="bid-date">{{ $bid->created_at->format('Y-m-d H:i') }}</div>
                         </li>
                     @endforeach
@@ -105,3 +111,6 @@
         </div>
     </div>
 @endsection
+
+
+
