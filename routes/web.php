@@ -75,6 +75,8 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/admin/users', 'index')->name('user.index');
     Route::get('/admin/users/create', 'create')->name('user.create');
     Route::post('/admin/users/create', 'storeUser')->name('user.store');
+    Route::post('/admin/users/{user}/block', [UserController::class, 'block'])->name('users.block');
+    Route::post('/admin/users/{user}/unblock', [UserController::class, 'unblock'])->name('users.unblock');
 });
 
 Route::controller(BidController::class)->group(function () {

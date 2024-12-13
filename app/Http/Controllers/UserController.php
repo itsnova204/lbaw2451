@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -179,5 +180,37 @@ class UserController extends Controller
         $user->save();
 
         return back()->with('success', 'Deposit successful.');
+    }
+
+        /**
+     * Block the specified user
+     */
+    public function block(User $user)
+    {
+        //Ensure the authenticated user is an administrator
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->back()->with('error', 'You are not authorized to perform this action.');
+        }
+
+        $user->status = 'blocked';
+        $user->save();
+
+        return redirect()->back()->with('success', 'User account blocked successfully.');
+    }
+
+    /**
+     * Unblock the specified user
+     */
+    public function unblock(User $user)
+    {
+        //Ensure the authenticated user is an administrator
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->back()->with('error', 'You are not authorized to perform this action.');
+        }
+
+        $user->status = 'active';
+        $user->save();
+
+        return redirect()->back()->with('success', 'User account unblocked successfully.');
     }
 }

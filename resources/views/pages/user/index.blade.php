@@ -27,12 +27,27 @@
                     <td>{{ $user->email }}</td>
                     <td><img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" width="50" height="50"></td>
                     <td class="table-flex-row">
-                        <!-- Example actions: Edit, Delete -->
-                        <a href="{{route('user.edit', $user)}}">Edit</a>
-                        <form action="{{route('user.destroy', $user)}}" method="POST" >
+                        <!-- Edit Button -->
+                        <a href="{{ route('user.edit', $user) }}" class="btn btn-primary btn-sm">Edit</a>
+
+                        <!-- Delete Button -->
+                        <form action="{{ route('user.destroy', $user) }}" method="POST" style="display:inline;">
                             @csrf
-                            <button type="submit">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
+
+                        <!-- Block/Unblock Button -->
+                        @if($user->status === 'active')
+                            <form action="{{ route('users.block', $user) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-warning btn-sm">Block</button>
+                            </form>
+                        @else
+                            <form action="{{ route('users.unblock', $user) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-sm">Unblock</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
                 @endif
@@ -40,5 +55,4 @@
             </tbody>
         </table>
     </div>
-
 @endsection
