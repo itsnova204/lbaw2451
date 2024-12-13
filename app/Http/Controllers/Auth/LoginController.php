@@ -43,6 +43,12 @@ class LoginController extends Controller
                 'email' => 'Your account has been deleted.',
             ])->onlyInput('email');
         }
+
+        if ($user && $user->status === 'blocked') {
+            return back()->withErrors([
+                'email' => 'Your account has been blocked.',
+            ])->onlyInput('email');
+        }
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();

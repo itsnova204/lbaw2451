@@ -18,7 +18,7 @@ DROP TYPE IF EXISTS notif_type;
 CREATE TYPE auction_status AS ENUM ('active', 'ended', 'canceled');
 CREATE TYPE report_status AS ENUM ('not_processed', 'discarded', 'processed');
 CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'auction_end', 'new_comment', 'report');
-
+CREATE TYPE user_status AS ENUM ('active', 'blocked');
 
 CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
@@ -33,7 +33,8 @@ CREATE TABLE users (
                        is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
                        is_admin BOOLEAN NOT NULL DEFAULT FALSE,
                        remember_token TEXT,
-                       balance NUMERIC CHECK (balance >= 0) DEFAULT 0
+                       balance NUMERIC CHECK (balance >= 0) DEFAULT 0,
+                       status user_status DEFAULT 'active'
 );
 
 CREATE TABLE category (
