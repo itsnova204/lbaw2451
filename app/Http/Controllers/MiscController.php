@@ -10,4 +10,9 @@ class MiscController extends Controller
     {
         return view('pages.misc.about');
     }
+
+    public function features()
+    {
+        return view('pages.misc.features');
+    }
 }
