@@ -6,6 +6,7 @@ use App\Models\Auction;
 use App\Models\Bid;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class BidController extends Controller
@@ -85,8 +86,29 @@ class BidController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Bid $bid)
+    public function withdraw($auctionId, $bidId)
     {
-        //not for this project phase
+        try {
+            $bid = Bid::findOrFail($bidId);
+
+            //Ensure the authenticated user owns the bid
+            if ($bid->user_id !== Auth::id()) {
+                return redirect()->back()->with('error', 'You are not authorized to withdraw this bid.');
+            }
+            
+            //Perform the withdrawal logic
+            $bid->delete();
+
+            //Update the auction's current highest bid if necessary
+            $auction = Auction::findOrFail($auctionId);
+            $highestBid = $auction->bids()->orderBy('amount', 'desc')->first();
+            $auction->current_bid = $highestBid ? $highestBid->amount : $auction->minimum_bid;
+            $auction->save();
+
+            return redirect()->back()->with('success', 'Bid withdrawn successfully!');
+        } catch (QueryException $exception) {
+            Log::error('An error occurred while withdrawing the bid: ' . $exception->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while withdrawing the bid. Please try again later.');
+        }
     }
 }

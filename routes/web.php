@@ -79,6 +79,7 @@ Route::controller(UserController::class)->group(function () {
 
 Route::controller(BidController::class)->group(function () {
     Route::post('/auction/{auction}/bids', 'store')->name('auctions.bids.store');
+    Route::post('/auction/{auction}/bids/{bid}/withdraw', [BidController::class, 'withdraw'])->name('bids.withdraw');
     Route::get('/auction/{auction}/bids', 'index')->name('auctions.bids.index');
 });
 
