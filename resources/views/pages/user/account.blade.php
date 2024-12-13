@@ -91,7 +91,7 @@
                     @else
                         @foreach ($user->paginatedBids(3) as $bid)
                         <li class="flex space-x-3">
-                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset('storage/' . $auction->picture) }}'); background-size: cover;"></div>
+                            <div class="w-16 h-16 bg-gray-300 rounded" style="background-image: url('{{ asset('storage/' . $bid->auction->picture) }}'); background-size: cover;"></div>
                             <div class="flex-1">
                                 <h4 class="text-sm font-semibold">{{ $bid->auction->title }}</h4>
                                 <p class="text-xs text-gray-500">Your highest offer: ${{ $bid->amount }}</p>
