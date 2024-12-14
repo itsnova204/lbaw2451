@@ -24,7 +24,7 @@
         </div>
         <div class="faq-item mb-4">
             <h2 class="text-2xl font-semibold mb-2">How do I contact customer support?</h2>
-            <p>You can contact our customer support team by emailing us at <a href="mailto:support@auctionpeer.com" class="text-blue-500">support@auctionpeer.com</a>.</p>
+            <p>You can contact our customer support team by emailing us at <a href="mailto:info@auctionpeer.com" class="text-blue-500">info@auctionpeer.com</a>.</p>
         </div>
     </div>
 </div>
