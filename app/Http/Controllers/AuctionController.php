@@ -113,6 +113,22 @@ class AuctionController extends Controller
         $this->authorize('update', $auction);
         $categories = Category::all();
 
+        // Notify the auction owner that the auction has been edited
+        event(new AuctionEdited($auction, $auction->creator, $auction->title));
+
+        // Notify other bidders that the auction has been edited
+        $bidders = $auction->bids()->get();
+
+        foreach ($bidders as $bidder) {
+            event(new AuctionEdited($auction, $bidder, $auction->title));
+        }
+
+        // Notify followers that the auction has been edited
+        $followers = $auction->followers()->get();
+        foreach ($followers as $follower) {
+            event(new AuctionEdited($auction, $follower, $auction->title));
+        }
+
         return view('pages.auction.edit', compact('auction', 'categories'));
     }
 
@@ -159,7 +175,7 @@ class AuctionController extends Controller
         foreach ($bidders as $bidder) {
             event(new AuctionCanceled($auction, $bidder->user, $auction->title));
         }
-        
+
         return redirect()->route('auctions.index')->with('success', 'Auction cancelled successfully.');
     }
 
