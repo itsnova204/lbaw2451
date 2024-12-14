@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Gate;
 use App\Events\AuctionFollowed;
 use App\Events\AuctionCanceled;
 use App\Events\AuctionEnded;
+use App\Events\AuctionEdited;
+
 
 use Pusher\Pusher;
 
