@@ -15,4 +15,9 @@ class MiscController extends Controller
     {
         return view('pages.misc.features');
     }
+
+    public function faq()
+    {
+        return view('pages.misc.faq');
+    }
 }
