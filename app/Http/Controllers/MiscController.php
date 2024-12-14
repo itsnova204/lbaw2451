@@ -19,5 +19,8 @@ class MiscController extends Controller
     public function contacts()
     {
         return view('pages.misc.contacts');
+    public function faq()
+    {
+        return view('pages.misc.faq');
     }
 }
