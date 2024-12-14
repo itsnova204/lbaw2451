@@ -9,6 +9,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MiscController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
@@ -112,4 +113,10 @@ Route::controller(ResetPasswordController::class)->group( function () {
 Route::controller(MiscController::class)->group(function () {
     Route::get('/about', 'about')->name('misc.about');
     Route::get('/features', [MiscController::class, 'features'])->name('features');
+});
+
+// Ratings
+Route::controller(RatingController::class)->group(function () {
+    Route::get('/user/{receiverId}/rate', 'create')->name('ratings.create'); // Rating form
+    Route::post('/user/{receiverId}/rate', 'store')->name('ratings.store'); // Submit rating
 });
