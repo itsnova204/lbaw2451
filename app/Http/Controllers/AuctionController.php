@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use App\Events\AuctionFollowed;
 
 
 class AuctionController extends Controller
@@ -274,6 +275,7 @@ class AuctionController extends Controller
         }
         if (!$auction->isFollowedBy($user)) {
             $auction->followers()->attach($user->id);
+            event(new AuctionFollowed($user, $auction));
         }
 
         return redirect()->back()->with('success', 'Auction followed successfully');
