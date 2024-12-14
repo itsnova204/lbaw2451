@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+use App\Events\AuctionBidPlaced;
+
 class BidController extends Controller
 {
     public function index($auctionId)
@@ -59,6 +61,25 @@ class BidController extends Controller
             $auction->current_bid = $bid->amount;
             // Save the auction with the new current bid
             $auction->save();
+
+            // Notify the auction owner that a new bid has been placed
+            event(new AuctionBidPlaced($user, $bid->amount, $auction->creator, $auction->name));
+
+            // Notify other bidders that a new bid has been placed
+            $bidders = $auction->bids()->where('user_id', '!=', $user->id)->get();
+            foreach ($bidders as $bidder) {
+                event(new AuctionBidPlaced($user, $bid->amount, $bidder->user, $auction->name));
+            }
+
+            // Nofity followers that a new bid has been placed
+            $followers = $auction->followers()->get();
+            // Remove the bidders from this list so they dont get notified twice
+            $followers = $followers->filter(function ($follower) use ($bidders) {
+                return !$bidders->contains('user_id', $follower->user_id);
+            });
+            foreach ($followers as $follower) {
+                event(new AuctionBidPlaced($user, $bid->amount, $follower->user, $auction->name));
+            }
 
             //we dont need this, we need to return to the place we were, no?
             return redirect()->back()->with('success', 'Bid placed successfully!');
