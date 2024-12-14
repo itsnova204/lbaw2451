@@ -12,7 +12,7 @@
         </div>
         <div class="faq-item mb-4">
             <h2 class="text-2xl font-semibold mb-2">How do I create an account?</h2>
-            <p>You can create an account by clicking on the "Register" button at the top right corner of the homepage and filling out the registration form.</p>
+            <p>You can create an account by clicking on the "Login" button at the top right corner of the page and selecting Register.</p>
         </div>
         <div class="faq-item mb-4">
             <h2 class="text-2xl font-semibold mb-2">How do I place a bid?</h2>
