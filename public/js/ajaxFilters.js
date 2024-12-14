@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Loop through each auction and create a card
         auctions.forEach(auction => {
+            const imageUrl = auction.picture ? `${baseUrl}/storage/${auction.picture}` : 'https://via.placeholder.com/300';
             const auctionCard = `
                 <a href="${baseUrl}/auction/${auction.id}" class="auction-card-link">
                     <div class="auction-card rectangle-div">
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span>Auction expires in: ${timeFromNow(auction.end_date)}</span>
                         </div>
                         <div class="product-img">
-                            <img src="https://via.placeholder.com/300" alt="${auction.title}">
+                            <img src="${imageUrl}" alt="${auction.title}">
                         </div>
                         <div class="product-info">
                             <div class="product-name">
