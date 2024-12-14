@@ -47,6 +47,10 @@ class BidController extends Controller
                 return response()->json(['error' => 'Bid amount must be higher than the current bid.'], 400);
             }
 
+            if ($user->balance < $request->amount) {
+                return redirect()->back()->with('error', 'Insufficient balance to place the bid.');
+            }
+
             // Create a new bid
             $bid = Bid::create([
                 'user_id' => auth()->id(),  // Assuming the logged-in user is placing the bid
