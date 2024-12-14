@@ -1,71 +1,48 @@
 <?php
-namespace App\Notifications;
+namespace App\Events;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\BroadcastMessage;
-use Illuminate\Notifications\Notification;
-use App\Models\User;
-use App\Models\Auction;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
-class AuctionFollowedNotification extends Notification implements ShouldQueue
+class AuctionFollowed implements ShouldBroadcast
 {
-    use Queueable;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $follower;
-    protected $auction;
+    public $follower;
+    public $auction;
 
     /**
-     * Create a new notification instance.
+     * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $follower, Auction $auction)
+    public function __construct($follower, $auction)
     {
         $this->follower = $follower;
         $this->auction = $auction;
     }
 
     /**
-     * Get the notification's delivery channels.
+     * Get the channels the event should broadcast on.
      *
-     * @param  mixed  $notifiable
-     * @return array
+     * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function via($notifiable)
+    public function broadcastOn()
     {
-        return ['database', 'broadcast'];
+        return new PrivateChannel('notifications.' . $this->auction->creator_id);
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the name of the event.
      *
-     * @param  mixed  $notifiable
-     * @return array
+     * @return string
      */
-    public function toArray($notifiable)
+    public function broadcastAs()
     {
-        return [
-            'follower_id' => $this->follower->id,
-            'follower_name' => $this->follower->name,
-            'auction_id' => $this->auction->id,
-            'auction_title' => $this->auction->title,
-        ];
-    }
-
-    /**
-     * Get the broadcastable representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return BroadcastMessage
-     */
-    public function toBroadcast($notifiable)
-    {
-        return new BroadcastMessage([
-            'follower_id' => $this->follower->id,
-            'follower_name' => $this->follower->name,
-            'auction_id' => $this->auction->id,
-            'auction_title' => $this->auction->title,
-        ]);
+        return 'auction-followed';
     }
 }
