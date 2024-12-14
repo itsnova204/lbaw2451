@@ -59,7 +59,7 @@
                     encrypted: true
                 });
 
-                var channel = pusher.subscribe('notifications-' + userId);
+                var channel = pusher.subscribe('presense-user.' + userId);
                 channel.bind('notifications', function(data) {
                     alert(JSON.stringify(data));
                 });

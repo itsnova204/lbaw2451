@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
+Broadcast::channel('presense-user.{userId}', function ($user, $userId) {
+    if ($user->id === $userId) {
+      return array('name' => $user->name);
+    }
+});
+
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });

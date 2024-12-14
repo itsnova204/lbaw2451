@@ -27,7 +27,7 @@ class AuctionEnded implements ShouldBroadcast
 
     // You should specify the name of the channel created in Pusher.
     public function broadcastOn() {
-        return 'notifications-' . $this->user_to_be_notified['id'];
+        return 'presense-user.' . $this->user_to_be_notified['id'];
     }
 
     // You should specify the name of the generated notification.
