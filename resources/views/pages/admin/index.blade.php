@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('content')
 
     <div class="rectangle-div">
@@ -19,6 +18,18 @@
                 <a href="{{route('admin.reports')}}" class="admin-links"><h2>Manage Reports</h2></a>
             </div>
         </div>
+    </div>
+
+    <div class="rectangle-div">
+        <h2>Send Global Notification</h2>
+        <form action="{{ route('send-global-notification') }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label for="message">Notification Message:</label>
+                <input type="text" id="message" name="message" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Notification</button>
+        </form>
     </div>
 
 @endsection

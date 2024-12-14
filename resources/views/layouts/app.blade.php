@@ -63,6 +63,11 @@
                 channel.bind('notifications', function(data) {
                     alert(JSON.stringify(data));
                 });
+
+                var channelGLOBAL = pusher.subscribe('GLOBAL');
+                channelGLOBAL.bind('GLOBAL', function(data) {
+                    alert(JSON.stringify(data));
+                });
                 
             });
         </script>

@@ -16,6 +16,7 @@ use App\Http\Controllers\ItemController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,10 @@ Route::controller(AuctionController::class)->group(function () {
     Route::post('/auction/{auction}/follow', 'follow')->name('auction.follow');
     Route::post('/auction/{auction}/unfollow', 'unfollow')->name('auction.unfollow');
     Route::get('/admin/auctions', 'adminIndex')->name('admin.auctions');
+});
+
+Route::controller(NotificationController::class)->group(function () {
+    Route::post('/send-global-notification', 'sendGlobalNotification')->name('send-global-notification');
 });
 
 
