@@ -9,7 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+
 use App\Events\AuctionFollowed;
+use App\Events\AuctionCanceled;
+use App\Events\AuctionEnded;
+
+use Pusher\Pusher;
 
 
 class AuctionController extends Controller
@@ -149,8 +154,13 @@ class AuctionController extends Controller
             'status' => 'canceled',
         ]);
 
+        // Notify all bidders that the auction has been canceled
+        $bidders = $auction->bids()->get();
+        foreach ($bidders as $bidder) {
+            event(new AuctionCanceled($auction, $bidder->user, $auction->title));
+        }
+        
         return redirect()->route('auctions.index')->with('success', 'Auction cancelled successfully.');
-
     }
 
     public function search(Request $request)
@@ -275,7 +285,25 @@ class AuctionController extends Controller
         }
         if (!$auction->isFollowedBy($user)) {
             $auction->followers()->attach($user->id);
-            event(new AuctionFollowed($user, $auction));
+
+            // Trigger the event
+            event(new AuctionFollowed($user, $auction->creator, $auction->title));
+
+            /*
+            $options = array(
+                'cluster' => 'eu',
+                'useTLS' => true
+            );
+            $pusher = new Pusher(
+                '2cb6ea93c01b007bec9f',
+                'b952be1d71bc8d74c357',
+                '1911442',
+                $options
+            );
+            
+            $data['message'] = 'hello world';
+            $pusher->trigger('my-channel', 'my-event', $data);
+            */
         }
 
         return redirect()->back()->with('success', 'Auction followed successfully');

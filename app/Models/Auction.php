@@ -45,6 +45,11 @@ class Auction extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function title()
+    {
+        return $this->title;
+    }
+
     /**
      * The relationship with the User model for the creator of the auction.
      */

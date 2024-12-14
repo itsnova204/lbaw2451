@@ -10,22 +10,24 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 
 
-class AuctionFollowed implements ShouldBroadcast
+class AuctionCanceled implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
-    public $auction_owner_id;
+    public $auction;
+    public $user_to_be_notified;
 
     // Here you create the message to be sent when the event is triggered.
-    public function __construct($follower, $auction_owner_id, $auction_name) {
-        $this->auction_owner_id = $auction_owner_id;
-        $this->message = $follower->username . ' just followed your auction: ' . $auction_name;
+    public function __construct($auction, $user_to_be_notified, $auction_name) {
+        $this->user_to_be_notified = $user_to_be_notified;
+        $this->auction = $auction;
+        $this->message = $auction_name . ' was canceled.';
     }
 
     // You should specify the name of the channel created in Pusher.
     public function broadcastOn() {
-        return 'notifications-' . $this->auction_owner_id['id'];
+        return 'notifications-' . $this->user_to_be_notified['id'];
     }
 
     // You should specify the name of the generated notification.
