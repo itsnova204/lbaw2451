@@ -288,4 +288,29 @@ class AuctionController extends Controller
 
         return redirect()->back()->with('success', 'Auction unfollowed successfully');
     }
+
+    public function withdrawFunds($auctionId) { 
+        $auction = Auction::findOrFail($auctionId);
+        $user = auth()->user(); // Get the logged-in user (auction owner)
+        $userBalance = $auction->user()->first();
+        $highestBid = $auction->highestBid()->first(); // Get the highest bid
+        
+        // Check if the auction owner is the logged-in user
+        if ($auction->user_id === $user->id) {
+            // Update the balance of the auction owner
+            $userBalance->update([
+                'balance' => $user->balance + $highestBid->amount
+            ]);
+        
+            // Optionally, update auction status to withdrawn
+            $auction->update([
+                'status' => 'withdrawn',
+            ]);
+        
+            return redirect()->back()->with('success', 'Funds withdrawn successfully and balance updated.');
+        } else {
+            return redirect()->back()->with('error', 'You cannot withdraw funds from this auction.');
+        }
+        
+    }
 }
