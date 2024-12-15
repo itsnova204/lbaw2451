@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Auction;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -287,5 +288,30 @@ class AuctionController extends Controller
         }
 
         return redirect()->back()->with('success', 'Auction unfollowed successfully');
+    }
+
+    public function withdrawFunds(Auction $auction) { 
+        $user = User::find(auth()->id());// Get the logged-in user (auction owner)
+        $highestBid = $auction->highestBid()->first(); // Get the highest bid
+        $endDate = $auction->end_date;
+
+        Log::info('End Date:' . $endDate);
+        // Check if the auction owner is the logged-in user
+        if ($auction->user_id === $user->id) {
+            // Update the balance of the auction owner
+            $user->update([
+                'balance' => $user->balance + $highestBid->amount
+            ]);
+        
+            // Optionally, update auction status to withdrawn
+            $auction->update([
+                'status' => 'withdrawn',
+            ]);
+        
+            return redirect()->back()->with('success', 'Funds withdrawn successfully and balance updated.');
+        } else {
+            return redirect()->back()->with('error', 'You cannot withdraw funds from this auction.');
+        }
+        
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
+
 class UserController extends Controller
 {
     /**
@@ -213,4 +214,6 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'User account unblocked successfully.');
     }
+
+
 }
