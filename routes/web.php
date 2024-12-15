@@ -46,6 +46,7 @@ Route::controller(AuctionController::class)->group(function () {
     Route::post('/auction/{auction}/follow', 'follow')->name('auction.follow');
     Route::post('/auction/{auction}/unfollow', 'unfollow')->name('auction.unfollow');
     Route::get('/admin/auctions', 'adminIndex')->name('admin.auctions');
+    Route::post('/auction/{auction}/withdraw-funds', 'withdrawFunds')->name('auction.withdrawFunds');
 });
 
 

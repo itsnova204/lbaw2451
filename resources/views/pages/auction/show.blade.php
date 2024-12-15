@@ -15,30 +15,63 @@
             <div class="bids">
                 <h2><a href="{{ url()->current() }}/bids">Bids</a></h2>
                 <p><strong>Number of Bids:</strong> {{ $auction->bids()->count() }}</p>
-                <ul>
+
+                @php
+                    // Check if the auction has ended
+                    $isAuctionEnded = $auction->end_date < now();
+                @endphp
+
+                @if(!$isAuctionEnded)  
+                    <!-- Auction is still active -->
+                    <ul>
+                        @php
+                            $bids = $auction->bids()->get()->reverse()->take(3);
+                        @endphp
+                        @foreach ($bids as $bid)
+                            <li class="bid-item">
+                                <div class="bid-info">
+                                    <span class="bid-username">{{ $bid->user->getUsername() }}</span>
+                                    <span class="bid-amount">${{ number_format($bid->amount, 2) }}</span>
+                                </div>
+                                @if($bid->user_id === Auth::id())
+                                    <form action="{{ route('bids.withdraw', ['auction' => $auction->id, 'bid' => $bid->id]) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">Withdraw Bid</button>
+                                    </form>
+                                @endif
+                                <div class="bid-date">{{ $bid->created_at->format('Y-m-d H:i') }}</div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <!-- Auction has ended -->
+                    <p>The auction has ended. Bidding is no longer available.</p>
+                    
                     @php
-                        $bids = $auction->bids()->get()->reverse()->take(3);
+                        $highestBid = $auction->bids()->orderBy('amount', 'desc')->first();
+                        $isOwner = $auction->user_id === auth()->id(); // Check if the logged-in user is the owner
                     @endphp
-                    @foreach ($bids as $bid)
-                        <li class="bid-item">
-                            <div class="bid-info">
-                                <span class="bid-username">{{ $bid->user->getUsername() }}</span>
-                                <span class="bid-amount">${{ number_format($bid->amount, 2) }}</span>
-                            </div>
-                            @if($bid->user_id === Auth::id())
-                                <form action="{{ route('bids.withdraw', ['auction' => $auction->id, 'bid' => $bid->id]) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm">Withdraw Bid</button>
-                                </form>
-                            @endif
-                            <div class="bid-date">{{ $bid->created_at->format('Y-m-d H:i') }}</div>
-                        </li>
-                    @endforeach
-                </ul>
+
+                    @if ($highestBid)
+                        <div class="highest-bid">
+                            <p><strong>Highest Bid:</strong> ${{ number_format($highestBid->amount, 2) }}</p>
+                            <p><strong>Bidder:</strong> {{ $highestBid->user->getUsername() }}</p>
+                        </div>
+                    @else
+                        <p>No bids were placed in this auction.</p>
+                    @endif
+
+                    @if ($isOwner)
+                        <form action="{{ route('auction.withdrawFunds', $auction) }}" method="POST" style="margin-top: 20px;">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Withdraw Funds</button>
+                        </form>
+                    @endif
+                @endif
             </div>
         </div>
         <div class="auction-body">
-            <div class="auction-title-bid">
+        <div class="auction-title-bid">
                 <div id="auction-name-star">
                     <span>
                     {{ $auction->title }}
@@ -109,8 +142,13 @@
                 @endif
             </div>
         </div>
+        </div>
     </div>
 @endsection
+
+
+
+
 
 
 
