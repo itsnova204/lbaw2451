@@ -114,6 +114,7 @@ Route::controller(ResetPasswordController::class)->group( function () {
 Route::controller(MiscController::class)->group(function () {
     Route::get('/about', 'about')->name('misc.about');
     Route::get('/features', [MiscController::class, 'features'])->name('features');
+    Route::get('/faq', 'faq')->name('faq');
 });
 
 // Ratings

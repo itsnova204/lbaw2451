@@ -33,11 +33,58 @@ class BidController extends Controller
             'amount' => 'required|numeric|min:0',
         ]);
 
-        $auction = Auction::findOrFail($request->auction_id);
-        $user = User::find(auth()->id());
-        
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
+            $auction = Auction::findOrFail($request->auction_id);
+            $user = auth()->user();
+
+            if (!$user) {
+                return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
+            }
+
+            if ($user->isAdmin() || $user->id === $auction->creator_id) {
+                return redirect()->back()->with('error', 'You cannot bid on this auction.');
+            }
+
+            if ($request->amount <= $auction->current_bid) {
+                return response()->json(['error' => 'Bid amount must be higher than the current bid.'], 400);
+            }
+
+            if ($user->balance < $request->amount) {
+                return redirect()->back()->with('error', 'Insufficient balance to place the bid.');
+            }
+
+            // Create a new bid
+            $bid = Bid::create([
+                'user_id' => auth()->id(),  // Assuming the logged-in user is placing the bid
+                'auction_id' => $request->auction_id,
+                'amount' => $request->amount,
+            ]);
+
+            // Update the current bid on the auction
+            $auction = $bid->auction;
+            $auction->current_bid = $bid->amount;
+            // Save the auction with the new current bid
+            $auction->save();
+
+            //we dont need this, we need to return to the place we were, no?
+            return redirect()->back()->with('success', 'Bid placed successfully!');
+            //return response()->json(['message' => 'Bid placed successfully!'], 201);
+        } catch (QueryException $exception) {
+            // Handle specific PostgreSQL error codes or messages
+            if (str_contains($exception->getMessage(), 'User % already has the highest bid on auction %')) {
+                return response()->json(['error' => 'You already have the highest bid on this auction.'], 400);
+            }
+
+            if (str_contains($exception->getMessage(), 'Administrators are not allowed to place bids')) {
+                return response()->json(['error' => 'Administrators cannot place bids.'], 403);
+            }
+
+            if (str_contains($exception->getMessage(), 'You cannot place a bid if you already have the highest bid')) {
+                return response()->json(['error' => 'You cannot place a bid if you already have the highest bid.'], 400);
+            }
+            // For other database errors
+            // Log the error for further investigation
+            Log::error('An error occurred while placing the bid: ' . $exception->getMessage());
+            return response()->json(['error' => 'An error occurred while placing the bid. Please try again later.'], 500);
         }
 
         if ($user->isAdmin() || $user->id === $auction->creator_id) {

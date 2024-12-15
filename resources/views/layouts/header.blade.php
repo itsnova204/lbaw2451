@@ -20,7 +20,7 @@
         <div class="about">
             <span><a href="{{ route('misc.about') }}">About</a></span>
             <span>Contact</span>
-            <span>FAQ</span>
+            <span><a href="{{ route('faq') }}">FAQ</a></span>
             <span>Services</span>
             @auth
                 @if(auth()->user()->isAdmin())
