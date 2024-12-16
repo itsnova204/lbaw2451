@@ -95,7 +95,6 @@
                     notification.remove();
                 }, 200000);
             }
-            displayNotification('Test Notification 1');
         </script>
     @endif
     <script>
