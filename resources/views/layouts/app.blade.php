@@ -54,6 +54,9 @@
                 const notificationsContainer = document.getElementById('notifications-container');
 
                 Pusher.logToConsole = true;
+  
+                const notificationSound = new Audio('{{ asset('sounds/metalpipe.mp3') }}');
+  
 
                 var pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
                     cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
@@ -62,23 +65,23 @@
 
                 var channel = pusher.subscribe('presense-user.' + userId);
                 channel.bind('notifications', function(data) {
-                    displayNotification(data.message);
+                    displayNotification(data.message, notificationSound);
                 });
 
                 var channelGLOBAL = pusher.subscribe('GLOBAL');
                 channelGLOBAL.bind('GLOBAL', function(data) {
-                    displayNotification(data.message);
+                    displayNotification(data.message, notificationSound);
                 });
                 
             });
 
-            function displayNotification(message) {
+            function displayNotification(message, notificationSound) {
                 const notificationsContainer = document.getElementById('notifications-container');
 
                 const notification = document.createElement('div');
                 notification.classList.add('notification');
 
-                console.log(message);
+                notificationSound.play();
 
                 notification.innerHTML = `
                     <div class="message">${message}</div>
@@ -93,7 +96,7 @@
 
                 setTimeout(() => {
                     notification.remove();
-                }, 200000);
+                }, 20000);
             }
         </script>
     @endif
