@@ -49,13 +49,13 @@
     @if(auth()->check())
         <!-- Client-Side JavaScript for Pusher Notifications -->
         <script>
+            const notificationSound = new Audio('{{ asset('storage/sounds/metalpipe.mp3') }}');
             document.addEventListener('DOMContentLoaded', function () {
                 const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
                 const notificationsContainer = document.getElementById('notifications-container');
 
                 Pusher.logToConsole = true;
   
-                const notificationSound = new Audio('{{ asset('sounds/metalpipe.mp3') }}');
   
 
                 var pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
