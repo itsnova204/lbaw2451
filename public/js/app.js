@@ -102,4 +102,25 @@ function addEventListeners() {
   }
   
   addEventListeners();
+
+function displayNotification(message) {
+
+  const notification = document.createElement('div');
+  notification.classList.add('notification');
+
+  notification.innerHTML = `
+      <div class="message">${message}</div>
+      <span class="close-btn">&times;</span>
+  `;
+
+  notificationsContainer.appendChild(notification);
+
+  notification.querySelector('.close-btn').addEventListener('click', () => {
+      notification.remove();
+  });
+
+  setTimeout(() => {
+      notification.remove();
+  }, 5000);
+}
   

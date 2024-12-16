@@ -732,3 +732,42 @@ input[type="range"] {
     width: 50%;
 }
 
+
+#notifications-container {
+  max-width: 350px;
+}
+
+.notification {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.notification .message {
+  font-size: 14px;
+  color: #333;
+}
+
+.notification .close-btn {
+  cursor: pointer;
+  color: #888;
+  font-size: 16px;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
