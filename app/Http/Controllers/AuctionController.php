@@ -59,6 +59,8 @@ class AuctionController extends Controller
                 $file = $request->file('picture');
                 $filePath = $file->store('auction-pictures', 'public'); // Store the file in the 'profile_pictures' directory in the 'public' disk
                 $validated['picture'] = $filePath;
+            } else {
+                $validated['picture'] = 'auction-pictures/placeholder.png';
             }
 
             Auction::create([
