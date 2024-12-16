@@ -28,6 +28,9 @@
 </head>
 <body>
     <div id="app">
+        <div id="notifications-container" class="fixed top-4 right-4 z-50 space-y-4">
+        <!-- Notifications will be dynamically appended here -->
+        </div>
         <main>
             <header>
                 @include('layouts.header')
@@ -61,15 +64,38 @@
 
                 var channel = pusher.subscribe('presense-user.' + userId);
                 channel.bind('notifications', function(data) {
-                    alert(JSON.stringify(data));
+                    displayNotification(data.message);
                 });
 
                 var channelGLOBAL = pusher.subscribe('GLOBAL');
                 channelGLOBAL.bind('GLOBAL', function(data) {
-                    alert(JSON.stringify(data));
+                    displayNotification(data.message);
                 });
                 
             });
+
+            function displayNotification(message) {
+                const notificationsContainer = document.getElementById('notifications-container');
+
+                const notification = document.createElement('div');
+                notification.classList.add('notification');
+
+                notification.innerHTML = `
+                    <div class="message">${message}</div>
+                    <span class="close-btn">&times;</span>
+                `;
+
+                notificationsContainer.appendChild(notification);
+
+                notification.querySelector('.close-btn').addEventListener('click', () => {
+                    notification.remove();
+                });
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+            displayNotification('Test Notification 1');
         </script>
     @endif
     <script>
