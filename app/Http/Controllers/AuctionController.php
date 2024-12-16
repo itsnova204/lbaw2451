@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-
+use App\Models\Rating;
 
 class AuctionController extends Controller
 {
@@ -313,5 +313,39 @@ class AuctionController extends Controller
             return redirect()->back()->with('error', 'You cannot withdraw funds from this auction.');
         }
         
+    }
+
+    public function rateBuyer(Request $request, $auctionId)
+    {
+        // Fetch the auction by its ID
+        $auction = Auction::findOrFail($auctionId);
+        Log::info('Auction found: ' . $auction);
+        // Ensure the auction has ended (closed auction)
+       $user = User::find(auth()->id());
+    
+        // Ensure the authenticated user is the seller (creator of the auction)
+        if ($auction->creator_id !== $user) {
+            return redirect()->route('auction.show', $auctionId)
+                ->withErrors('You can only rate the buyer if you are the seller.');
+        }
+    
+        // Validate the rating input
+        $request->validate([
+            'score' => 'required|integer|min:0|max:5',  // Rating score should be between 1 and 5
+            'comment' => 'nullable|string|max:500',    // Optional comment with a maximum length of 500 characters
+        ]);
+    
+        // Create the rating for the buyer
+        Rating::create([
+            'score' => $request->input('score'),
+            'comment' => $request->input('comment'),
+            'auction_id' => $auctionId,
+            'rater_id' => $user,  // The seller is the rater
+            'receiver_id' => $auction->buyer_id,  // The buyer is being rated
+        ]);
+    
+        // Redirect to the auction page with a success message
+        return redirect()->route('auction.show', $auctionId)
+            ->with('success', 'Buyer rated successfully.');
     }
 }
