@@ -19,7 +19,7 @@
         </div>
         <div class="about">
             <span><a href="{{ route('misc.about') }}">About</a></span>
-            <span>Contact</span>
+            <span><a href="{{ route('contacts') }}">Contact Us</a></span>
             <span><a href="{{ route('faq') }}">FAQ</a></span>
             <span>Services</span>
             @auth
