@@ -28,9 +28,7 @@
 </head>
 <body>
     <div id="app">
-        <div id="notifications-container" class="fixed top-4 right-4 z-50 space-y-4">
-        <!-- Notifications will be dynamically appended here -->
-        </div>
+        <div id="notifications-container" class="fixed class="fixed bottom-4 right-4 z-50 space-y-4"></div>
         <main>
             <header>
                 @include('layouts.header')

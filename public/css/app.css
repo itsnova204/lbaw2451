@@ -734,6 +734,13 @@ input[type="range"] {
 
 
 #notifications-container {
+  position: fixed;
+  bottom: 16px; 
+  left: 16px;  
+  z-index: 50; 
+  display: flex;
+  flex-direction: column; 
+  gap: 8px;
   max-width: 350px;
 }
 
@@ -758,16 +765,17 @@ input[type="range"] {
   cursor: pointer;
   color: #888;
   font-size: 16px;
+  font-weight: bold;
+  float: right;
 }
 
-@keyframes fadeIn {
+@keyframes slide-in {
   from {
+      transform: translateX(-100%);
       opacity: 0;
-      transform: translateY(-10px);
   }
   to {
+      transform: translateX(0);
       opacity: 1;
-      transform: translateY(0);
   }
 }
-
