@@ -78,6 +78,8 @@
                 const notification = document.createElement('div');
                 notification.classList.add('notification');
 
+                console.log(message);
+
                 notification.innerHTML = `
                     <div class="message">${message}</div>
                     <span class="close-btn">&times;</span>
@@ -91,7 +93,7 @@
 
                 setTimeout(() => {
                     notification.remove();
-                }, 5000);
+                }, 200000);
             }
             displayNotification('Test Notification 1');
         </script>
