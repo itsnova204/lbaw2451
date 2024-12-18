@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Events\AuctionBidPlaced;
 use App\Events\AuctionBidWithdrawn;
+use App\Models\User;
 
 class BidController extends Controller
 {
@@ -50,18 +51,24 @@ class BidController extends Controller
                 return response()->json(['error' => 'Bid amount must be higher than the current bid.'], 400);
             }
 
+            if ($user->balance < $request->amount) {
+                return redirect()->back()->with('error', 'Insufficient balance to place the bid.');
+            }
+
             // Create a new bid
             $bid = Bid::create([
-                'user_id' => auth()->id(),  // Assuming the logged-in user is placing the bid
+                'user_id' => auth()->id(),
                 'auction_id' => $request->auction_id,
                 'amount' => $request->amount,
             ]);
 
             // Update the current bid on the auction
             $auction = $bid->auction;
+            $user->balance -= $bid->amount;
+            $user->save();  // Save the updated balance
+
             $auction->current_bid = $bid->amount;
-            // Save the auction with the new current bid
-            $auction->save();
+            $auction->save();  // Save the auction with the new current bid
 
             // Notify the auction owner that a new bid has been placed
             event(new AuctionBidPlaced($user, $bid->amount, $auction->creator, $auction->name));
@@ -82,9 +89,8 @@ class BidController extends Controller
                 event(new AuctionBidPlaced($user, $bid->amount, $follower->user, $auction->name));
             }
 
-            //we dont need this, we need to return to the place we were, no?
+            // Return the updated user information, including balance, to update the frontend
             return redirect()->back()->with('success', 'Bid placed successfully!');
-            //return response()->json(['message' => 'Bid placed successfully!'], 201);
         } catch (QueryException $exception) {
             // Handle specific PostgreSQL error codes or messages
             if (str_contains($exception->getMessage(), 'User % already has the highest bid on auction %')) {
@@ -96,14 +102,15 @@ class BidController extends Controller
             }
 
             if (str_contains($exception->getMessage(), 'You cannot place a bid if you already have the highest bid')) {
-                return response()->json(['error' => 'You cannot place a bid if you already have the highest bid.'], 400);
+                return redirect()->back()->with('error', 'You cannot place a bid if you already have the highest bid.');
             }
+
             // For other database errors
-            // Log the error for further investigation
             Log::error('An error occurred while placing the bid: ' . $exception->getMessage());
             return response()->json(['error' => 'An error occurred while placing the bid. Please try again later.'], 500);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -112,12 +119,15 @@ class BidController extends Controller
     {
         try {
             $bid = Bid::findOrFail($bidId);
+            $user = User::find(auth()->id());
 
+            Log::info('User ID: ' . Auth::id());
+            Log::info('Bid User ID: ' . $bid->user_id);
             //Ensure the authenticated user owns the bid
             if ($bid->user_id !== Auth::id()) {
                 return redirect()->back()->with('error', 'You are not authorized to withdraw this bid.');
             }
-            
+
             //Perform the withdrawal logic
             $bid->delete();
 
@@ -126,6 +136,8 @@ class BidController extends Controller
             $highestBid = $auction->bids()->orderBy('amount', 'desc')->first();
             $auction->current_bid = $highestBid ? $highestBid->amount : $auction->minimum_bid;
             $auction->save();
+            $user->balance += $bid->amount;
+            $user->save();
 
             // Notify the auction owner that a bid has been withdrawn
             event(new AuctionBidWithdrawn($bid->user, $bid->amount, $auction->creator, $auction->name));

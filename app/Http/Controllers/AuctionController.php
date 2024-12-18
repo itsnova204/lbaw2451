@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Auction;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ use App\Events\AuctionEdited;
 
 
 use Pusher\Pusher;
-
+use App\Models\Rating;
 
 class AuctionController extends Controller
 {
@@ -66,6 +67,8 @@ class AuctionController extends Controller
                 $file = $request->file('picture');
                 $filePath = $file->store('auction-pictures', 'public'); // Store the file in the 'profile_pictures' directory in the 'public' disk
                 $validated['picture'] = $filePath;
+            } else {
+                $validated['picture'] = 'auction-pictures/placeholder.png';
             }
 
             Auction::create([
@@ -335,5 +338,64 @@ class AuctionController extends Controller
         }
 
         return redirect()->back()->with('success', 'Auction unfollowed successfully');
+    }
+
+    public function withdrawFunds(Auction $auction) { 
+        $user = User::find(auth()->id());// Get the logged-in user (auction owner)
+        $highestBid = $auction->highestBid()->first(); // Get the highest bid
+        $endDate = $auction->end_date;
+
+        Log::info('End Date:' . $endDate);
+        // Check if the auction owner is the logged-in user
+        if ($auction->user_id === $user->id) {
+            // Update the balance of the auction owner
+            $user->update([
+                'balance' => $user->balance + $highestBid->amount
+            ]);
+        
+            // Optionally, update auction status to withdrawn
+            $auction->update([
+                'status' => 'withdrawn',
+            ]);
+        
+            return redirect()->back()->with('success', 'Funds withdrawn successfully and balance updated.');
+        } else {
+            return redirect()->back()->with('error', 'You cannot withdraw funds from this auction.');
+        }
+        
+    }
+
+    public function rateBuyer(Request $request, $auctionId)
+    {
+        // Fetch the auction by its ID
+        $auction = Auction::findOrFail($auctionId);
+        Log::info('Auction found: ' . $auction);
+        // Ensure the auction has ended (closed auction)
+       $user = User::find(auth()->id());
+    
+        // Ensure the authenticated user is the seller (creator of the auction)
+        if ($auction->creator_id !== $user) {
+            return redirect()->route('auction.show', $auctionId)
+                ->withErrors('You can only rate the buyer if you are the seller.');
+        }
+    
+        // Validate the rating input
+        $request->validate([
+            'score' => 'required|integer|min:0|max:5',  // Rating score should be between 1 and 5
+            'comment' => 'nullable|string|max:500',    // Optional comment with a maximum length of 500 characters
+        ]);
+    
+        // Create the rating for the buyer
+        Rating::create([
+            'score' => $request->input('score'),
+            'comment' => $request->input('comment'),
+            'auction_id' => $auctionId,
+            'rater_id' => $user,  // The seller is the rater
+            'receiver_id' => $auction->buyer_id,  // The buyer is being rated
+        ]);
+    
+        // Redirect to the auction page with a success message
+        return redirect()->route('auction.show', $auctionId)
+            ->with('success', 'Buyer rated successfully.');
     }
 }

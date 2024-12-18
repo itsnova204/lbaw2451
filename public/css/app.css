@@ -287,15 +287,7 @@ label {
 }
 
 
-.cards {
-  padding: 20px;
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  background-color: white;
-  border-radius: 10px;
-}
+
 
 .border {
   border: 1px solid #9c9c9c;
@@ -628,10 +620,11 @@ h1.deleted {
 }
 
 .cards-container {
+  flex:1;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 50px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  border-radius: 10px;
 }
 
 .alert-danger {
