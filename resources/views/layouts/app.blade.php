@@ -99,7 +99,7 @@
                 }, 20000);
             }
 
-            displayNotification('Welcome to AuctionPeer', notificationSound);
+            //displayNotification('Welcome to AuctionPeer', notificationSound);
         </script>
     @endif
     <script>
