@@ -91,12 +91,18 @@
                 notificationsContainer.appendChild(notification);
 
                 notification.querySelector('.close-btn').addEventListener('click', () => {
-                    notification.remove();
+                    notification.classList.add('slide-out');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 500); 
                 });
 
                 setTimeout(() => {
-                    notification.remove();
-                }, 20000);
+                    notification.classList.add('slide-out');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 500); 
+                }, 15000);
             }
 
             //displayNotification('Welcome to AuctionPeer', notificationSound);
