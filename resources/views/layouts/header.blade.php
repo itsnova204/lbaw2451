@@ -35,6 +35,16 @@
                         <a href="{{route('user.balance', auth()->user())}}">{{auth()->user()->balance}}€</a>
                     @endif
 
+                    <a href="{{ route('inbox') }}">
+                        <div class="select-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox">
+                                <path d="M4 4h16v16H4z" />
+                                <path d="M22 12H2" />
+                                <path d="M7 12l5 5 5-5" />
+                            </svg>
+                        </div>
+                    </a>
+
                     <a href="{{ route('user.show', auth()->user()) }}">
                     <div class="select-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round">
