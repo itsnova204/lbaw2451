@@ -49,7 +49,7 @@
     @if(auth()->check())
         <!-- Client-Side JavaScript for Pusher Notifications -->
         <script>
-            const notificationSound = new Audio('{{ asset('storage/sounds/metalpipe.mp3') }}');
+            const notificationSound = new Audio('{{ asset('storage/sounds/mixkit-correct-answer-tone-2870.wav') }}');
             document.addEventListener('DOMContentLoaded', function () {
                 const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
                 const notificationsContainer = document.getElementById('notifications-container');
@@ -98,6 +98,8 @@
                     notification.remove();
                 }, 20000);
             }
+
+            displayNotification('Welcome to AuctionPeer', notificationSound);
         </script>
     @endif
     <script>
