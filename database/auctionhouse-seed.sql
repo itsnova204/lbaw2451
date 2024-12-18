@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS bid CASCADE;
 DROP TABLE IF EXISTS rating CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS report CASCADE;
-DROP TABLE IF EXISTS notification CASCADE;
+DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS transactions CASCADE;
 
 DROP TYPE IF EXISTS auction_status;
@@ -18,7 +18,7 @@ DROP TYPE IF EXISTS notif_type;
 
 CREATE TYPE auction_status AS ENUM ('active', 'ended', 'canceled');
 CREATE TYPE report_status AS ENUM ('not_processed', 'discarded', 'processed');
-CREATE TYPE notif_type AS ENUM ('generic', 'new_bid', 'bid_surpassed', 'auction_end', 'new_comment', 'report');
+CREATE TYPE notif_type AS ENUM ('new_bid', 'bid_withdrawn', 'auction_canceled', 'auction_edited', 'auction_ended', 'auction_followed', 'global_notification');
 CREATE TYPE user_status AS ENUM ('active', 'blocked');
 
 CREATE TABLE users (
@@ -99,13 +99,14 @@ CREATE TABLE report (
                         updated_at TIMESTAMP
 );
 
-CREATE TABLE notification (
-                              id SERIAL PRIMARY KEY,
-                              text TEXT NOT NULL,
-                              type notif_type DEFAULT 'generic',
-                              receiver_id INTEGER REFERENCES users(id),
-                              created_at TIMESTAMP NOT NULL,
-                              updated_at TIMESTAMP
+CREATE TABLE notifications (
+                            id UUID PRIMARY KEY,
+                            receiver_id INTEGER REFERENCES users(id),
+                            type notif_type NOT NULL,
+                            content TEXT NOT NULL,
+                            link TEXT,
+                            created_at TIMESTAMP NOT NULL,
+                            hidden BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE transactions (
@@ -460,7 +461,6 @@ ALTER SEQUENCE bid_id_seq RESTART WITH 1;
 ALTER SEQUENCE rating_id_seq RESTART WITH 1;
 ALTER SEQUENCE comment_id_seq RESTART WITH 1;
 ALTER SEQUENCE report_id_seq RESTART WITH 1;
-ALTER SEQUENCE notification_id_seq RESTART WITH 1;
 ALTER SEQUENCE transactions_id_seq RESTART WITH 1;
 
 -- Insert Categories
@@ -573,13 +573,6 @@ INSERT INTO report (reason, status, auction_id, user_id, created_at) VALUES
                                                                          ('Suspicious pricing', 'not_processed', 1, 2, NOW()),
                                                                          ('Incorrect description', 'not_processed', 3, 4, NOW()),
                                                                          ('Potential counterfeit', 'not_processed', 6, 7, NOW());
-
--- Insert some notifications
-INSERT INTO notification (text, type, receiver_id, created_at) VALUES
-                                                                   ('Your auction has received a new bid!', 'new_bid', 1, NOW()),
-                                                                   ('Someone commented on your auction', 'new_comment', 1, NOW()),
-                                                                   ('Your bid has been surpassed', 'bid_surpassed', 2, NOW()),
-                                                                   ('Auction ending soon!', 'auction_end', 3, NOW());
 
 -- Update current_bid values based on highest bids
 UPDATE auction a

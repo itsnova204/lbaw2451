@@ -19,10 +19,10 @@ class AuctionEnded implements ShouldBroadcast
     public $user_to_be_notified;
 
     // Here you create the message to be sent when the event is triggered.
-    public function __construct($auction, $user_to_be_notified, $auction_name) {
+    public function __construct($auction, $user_to_be_notified) {
         $this->user_to_be_notified = $user_to_be_notified;
         $this->auction = $auction;
-        $this->message = $auction_name . ' just ended.';
+        $this->message = $auction->title . ' just ended.';
     }
 
     // You should specify the name of the channel created in Pusher.

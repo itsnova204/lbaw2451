@@ -43,7 +43,7 @@ class UpdateAuctionStatuses extends Command
                 
                 //auction ended with no bids, notify the creator
                 $this->info("Auction '{$auction->title}' has been updated to 'ended'.");
-                event(new AuctionEnded($auction, $auction->creator, $auction->title));
+                event(new AuctionEnded($auction, $auction->creator));
                 continue;
             }
             $bid = Bid::where('auction_id', $auction->id)->where('amount', $auction->current_bid)->first();
@@ -53,7 +53,7 @@ class UpdateAuctionStatuses extends Command
             $auction->save();
 
             // Notify the creator of the auction that it has ended
-            event(new AuctionEnded($auction, $auction->creator, $auction->title));
+            event(new AuctionEnded($auction, $auction->creator));
 
             // Notify the buyer of the auction that they have won
             // event(new AuctionWon($auction, $bid->user, $auction->title)); //TODO: Implement this event

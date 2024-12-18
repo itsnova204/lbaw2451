@@ -71,22 +71,22 @@ class BidController extends Controller
             $auction->save();  // Save the auction with the new current bid
 
             // Notify the auction owner that a new bid has been placed
-            event(new AuctionBidPlaced($user, $bid->amount, $auction->creator, $auction->name));
+            event(new AuctionBidPlaced($user, $bid->amount, $auction->creator, $auction));
 
-            // Notify other bidders that a new bid has been placed
+            // Notify other bidders and followers that a new bid has been placed
             $bidders = $auction->bids()->where('user_id', '!=', $user->id)->get();
-            foreach ($bidders as $bidder) {
-                event(new AuctionBidPlaced($user, $bid->amount, $bidder->user, $auction->name));
-            }
-
-            // Nofity followers that a new bid has been placed
             $followers = $auction->followers()->get();
-            // Remove the bidders from this list so they dont get notified twice
-            $followers = $followers->filter(function ($follower) use ($bidders) {
-                return !$bidders->contains('user_id', $follower->user_id);
+
+            // Create a group of users that should not be notified
+            $UsersToBeNotified = $bidders->merge($followers);
+
+            // Remove the bidder from the list of UsersToBeNotified
+            $UsersToBeNotified = $UsersToBeNotified->filter(function ($user) use ($bid) {
+                return $user->id !== $bid->user_id;
             });
-            foreach ($followers as $follower) {
-                event(new AuctionBidPlaced($user, $bid->amount, $follower->user, $auction->name));
+
+            foreach ($UsersToBeNotified as $notifiedUser) {
+                event(new AuctionBidPlaced($user, $bid->amount, $notifiedUser, $auction));
             }
 
             // Return the updated user information, including balance, to update the frontend
@@ -140,22 +140,22 @@ class BidController extends Controller
             $user->save();
 
             // Notify the auction owner that a bid has been withdrawn
-            event(new AuctionBidWithdrawn($bid->user, $bid->amount, $auction->creator, $auction->name));
+            event(new AuctionBidWithdrawn($bid->user, $bid->amount, $auction->creator, $auction));
 
-            // Notify other bidders that a bid has been withdrawn
-            $bidders = $auction->bids()->where('user_id', '!=', $bid->user_id)->get();
-            foreach ($bidders as $bidder) {
-                event(new AuctionBidWithdrawn($bid->user, $bid->amount, $bidder->user, $auction->name));
-            }
-
-            // Notify followers that a bid has been withdrawn
+            // Notify other bidders and followers that a new bid has been placed
+            $bidders = $auction->bids()->where('user_id', '!=', $user->id)->get();
             $followers = $auction->followers()->get();
-            // Remove the bidders from this list so they dont get notified twice
-            $followers = $followers->filter(function ($follower) use ($bidders) {
-                return !$bidders->contains('user_id', $follower->user_id);
+
+            // Create a group of users that should not be notified
+            $UsersToBeNotified = $bidders->merge($followers);
+
+            // Remove the bidder from the list of UsersToBeNotified
+            $UsersToBeNotified = $UsersToBeNotified->filter(function ($user) use ($bid) {
+                return $user->id !== $bid->user_id;
             });
-            foreach ($followers as $follower) {
-                event(new AuctionBidWithdrawn($bid->user, $bid->amount, $follower->user, $auction->name));
+
+            foreach ($UsersToBeNotified as $notifiedUser) {
+                event(new AuctionBidWithdrawn($user, $bid->amount, $notifiedUser, $auction));
             }
             
             return redirect()->back()->with('success', 'Bid withdrawn successfully!');
