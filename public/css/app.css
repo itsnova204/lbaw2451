@@ -796,3 +796,15 @@ input[type="range"] {
   border: 1px solid #ccc;    
   border-radius: 4px;        
 }
+
+.notification-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 25%;
+  padding: 1px 4px;
+  font-size: 8px;
+  z-index: 1;
+}

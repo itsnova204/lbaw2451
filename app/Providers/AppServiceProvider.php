@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,5 +31,13 @@ class AppServiceProvider extends ServiceProvider
             $schema = explode(':', $app_url)[0];
             URL::forceScheme($schema);
         }
+
+        View::composer('*', function ($view) {
+            if (Auth::check()) {
+                $notificationCount = Notification::where('receiver_id', Auth::id())->where('hidden', false)->count();
+                $view->with('notificationCount', $notificationCount);
+            }
+        });
     }
+    
 }
