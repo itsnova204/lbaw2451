@@ -34,4 +34,11 @@ class AuctionEnded implements ShouldBroadcast
     public function broadcastAs() {
         return 'notifications';
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'message' => $this->message,
+        ];
+    }
 }

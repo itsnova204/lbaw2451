@@ -27,4 +27,11 @@ class GlobalNotification implements ShouldBroadcast
     public function broadcastAs() {
         return 'GLOBAL';
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'message' => $this->message,
+        ];
+    }
 }
