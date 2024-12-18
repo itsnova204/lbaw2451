@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -215,5 +216,11 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User account unblocked successfully.');
     }
 
-
+    public function inbox()
+    {
+        $user = Auth::user();  
+        $notifications = DB::table('notifications')->where('receiver_id', $user->id)->get();
+        
+        return view('pages.user.inbox', compact('notifications'));
+    }
 }

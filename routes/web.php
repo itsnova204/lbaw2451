@@ -53,8 +53,8 @@ Route::controller(AuctionController::class)->group(function () {
 
 Route::controller(NotificationController::class)->group(function () {
     Route::post('/send-global-notification', 'sendGlobalNotification')->name('send-global-notification');
+    Route::post('/notifications/mark-as-read', 'markAsRead')->name('notifications.markAsRead');
 });
-
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
@@ -85,6 +85,7 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/admin/users/create', 'storeUser')->name('user.store');
     Route::post('/admin/users/{user}/block', [UserController::class, 'block'])->name('users.block');
     Route::post('/admin/users/{user}/unblock', [UserController::class, 'unblock'])->name('users.unblock');
+    Route::get('/inbox', 'inbox')->name('inbox');
 });
 
 Route::controller(BidController::class)->group(function () {

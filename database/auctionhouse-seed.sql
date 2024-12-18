@@ -106,6 +106,7 @@ CREATE TABLE notifications (
                             content TEXT NOT NULL,
                             link TEXT,
                             created_at TIMESTAMP NOT NULL,
+                            updated_at TIMESTAMP,
                             hidden BOOLEAN DEFAULT FALSE
 );
 
