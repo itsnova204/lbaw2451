@@ -48,6 +48,12 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
+7. Link storage:
+
+```bash
+php artisan storage:link
+```
+
 ### Running the Application
 
 Start the development server:
@@ -58,13 +64,6 @@ php artisan serve
 
 Access the application at `http://localhost:8000`.
 
-### Running Tests
-
-To run the test suite, use the following command:
-
-```bash
-php artisan test
-```
 
 ## Contributing
 
