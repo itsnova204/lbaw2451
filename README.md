@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is developed as part of the LBAW course. It is a web application built using the Laravel framework, designed to manage and track tasks efficiently. The application includes features such as user authentication, task creation, task assignment, and progress tracking.
+This project is developed as part of the LBAW course. It is a web application built using the Laravel framework, designed to manage and track tasks efficiently. The application includes features such as user authentication, real time notifications, auction creation and bidding, and buyer and seller reviews.
 
 ## Getting Started
 
